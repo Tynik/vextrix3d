@@ -77,10 +77,27 @@ export const Button = styled<ButtonProps>(
 
         color: ${resolveColor(colorConfig.color)};
         background-color: ${resolveColor(colorConfig.backgroundColor)};
+
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+
+        transition-property: background-color, box-shadow;
+        transition-duration: 0.2s;
+        transition-timing-function: ease;
       }
 
       &:hover {
         background-color: ${resolveColor(colorConfig.hover)};
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+      }
+
+      &:active {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      &:disabled {
+        opacity: 0.6;
+        box-shadow: none;
+        cursor: not-allowed;
       }
 
       &:not(:disabled) {

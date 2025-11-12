@@ -4,7 +4,7 @@ type PrimaryColors = 'primaryIndigo' | 'aquaMintPulse' | 'mintGlow' | 'signalCor
 
 type SecondaryColors = 'cloudMist' | 'slateAlloy' | 'carbonInk';
 
-type NeutralColors = 'white' | 'grayLight' | 'grayMedium' | 'grayDark';
+type NeutralColors = 'black' | 'white' | 'grayLight' | 'grayMedium' | 'grayDark';
 
 type SuccessColors = 'mintGreen' | 'emeraldGreen';
 
@@ -80,6 +80,7 @@ export const theme: HoneyTheme = {
     },
     accent: {},
     neutral: {
+      black: '#000000',
       white: '#FFFFFF',
       grayLight: '#E6E8EC',
       grayMedium: '#A7ABB3',
