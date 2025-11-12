@@ -21,20 +21,25 @@ const BlurOverlay = styled(HoneyBox)`
 `;
 
 interface ShowcaseItem {
+  image: string;
   description: string;
 }
 
 const SHOWCASE_ITEMS: ShowcaseItem[] = [
   {
+    image: '3d-func-proto.jpg',
     description: 'Functional Prototype',
   },
   {
+    image: '3d-vase.png',
     description: 'Decor Model',
   },
   {
+    image: '3d-mech-part.jpg',
     description: 'Mechanical Part',
   },
   {
+    image: '3d-art.jpg',
     description: 'Artwork',
   },
 ];
@@ -75,35 +80,35 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     icon: '🧱',
-    description: 'Wide Range of Filaments: PLA, PETG, ABS, ASA, and more',
+    description: 'Wide Range of Filaments - PLA, PETG, ABS, ASA, and more',
   },
   {
     icon: '⚙️',
-    description: 'Functional Prototypes: Durable, accurate, and ready for testing',
+    description: 'Functional Prototypes - Durable, accurate, and ready for testing',
   },
   {
     icon: '🎨',
-    description: 'Clean Print Quality: Smooth layers with precise detailing',
+    description: 'Clean Print Quality - Smooth layers with precise detailing',
   },
   {
     icon: '🚀',
-    description: 'Fast Turnaround: From upload to print in record time',
+    description: 'Fast Turnaround - From upload to print in record time',
   },
   {
     icon: '📏',
-    description: 'Dimensional Accuracy: Consistent tolerances across all prints',
+    description: 'Dimensional Accuracy - Consistent tolerances across all prints',
   },
   {
     icon: '🔩',
-    description: 'Strong Mechanical Parts: Optimized for strength and durability',
+    description: 'Strong Mechanical Parts - Optimized for strength and durability',
   },
   {
     icon: '🌿',
-    description: 'Eco-Friendly Materials: Sustainable and low-waste printing process',
+    description: 'Eco-Friendly Materials - Sustainable and low-waste printing process',
   },
   {
     icon: '💡',
-    description: 'Design Assistance: Guidance on printability and material choice',
+    description: 'Design Assistance - Guidance on printability and material choice',
   },
 ];
 
@@ -175,6 +180,8 @@ export const App = () => {
                   $height="250px"
                   $backgroundColor="neutral.grayLight"
                   $borderRadius="6px"
+                  $backgroundImage={`url('/assets/images/${showcaseItem.image}')`}
+                  $backgroundSize="cover"
                 />
 
                 <Text variant="subtitle2" $textAlign="center">
@@ -215,7 +222,8 @@ export const App = () => {
                 <HoneyBox
                   key={featureIndex}
                   $display="flex"
-                  $gap={1}
+                  $alignItems="center"
+                  $gap={2}
                   $width="calc(50% - 8px)"
                   $minWidth="250px"
                   $padding={2}
