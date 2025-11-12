@@ -23,7 +23,6 @@ export const GlobalStyle = createGlobalStyle`
     a:focus,
     a:active {
       text-decoration: none;
-      color: inherit;
     }
 
     html {
