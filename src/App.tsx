@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { resolveColor, styled } from '@react-hive/honey-style';
 import { Button, Container, Text } from '~/components';
 import type { Nullable } from '~/types';
-import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyFlexBox, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
 
 const BackgroundVideo = styled('video')`
   width: 100%;
@@ -19,6 +19,25 @@ const BlurOverlay = styled(HoneyBox)`
   height: 100%;
   background-color: ${resolveColor('neutral.grayDark', 0.7)};
 `;
+
+interface ShowcaseItem {
+  description: string;
+}
+
+const SHOWCASE_ITEMS: ShowcaseItem[] = [
+  {
+    description: 'Functional Prototype',
+  },
+  {
+    description: 'Decor Model',
+  },
+  {
+    description: 'Mechanical Part',
+  },
+  {
+    description: 'Artwork',
+  },
+];
 
 interface Filament {
   name: string;
@@ -48,6 +67,46 @@ const FILAMENTS: Filament[] = [
   },
 ];
 
+interface Feature {
+  icon: string;
+  description: string;
+}
+
+const FEATURES: Feature[] = [
+  {
+    icon: '🧱',
+    description: 'Wide Range of Filaments: PLA, PETG, ABS, ASA, and more',
+  },
+  {
+    icon: '⚙️',
+    description: 'Functional Prototypes: Durable, accurate, and ready for testing',
+  },
+  {
+    icon: '🎨',
+    description: 'Clean Print Quality: Smooth layers with precise detailing',
+  },
+  {
+    icon: '🚀',
+    description: 'Fast Turnaround: From upload to print in record time',
+  },
+  {
+    icon: '📏',
+    description: 'Dimensional Accuracy: Consistent tolerances across all prints',
+  },
+  {
+    icon: '🔩',
+    description: 'Strong Mechanical Parts: Optimized for strength and durability',
+  },
+  {
+    icon: '🌿',
+    description: 'Eco-Friendly Materials: Sustainable and low-waste printing process',
+  },
+  {
+    icon: '💡',
+    description: 'Design Assistance: Guidance on printability and material choice',
+  },
+];
+
 export const App = () => {
   const videoRef = useRef<Nullable<HTMLVideoElement>>(null);
 
@@ -67,8 +126,8 @@ export const App = () => {
         $overflow="hidden"
         data-testid="header"
       >
-        <BackgroundVideo ref={videoRef} muted loop playsInline>
-          <source src="/assets/videos/background.mp4" type="video/mp4" />
+        <BackgroundVideo ref={videoRef} muted playsInline>
+          <source src="/assets/videos/background.webm" type="video/webm" />
         </BackgroundVideo>
 
         <BlurOverlay />
@@ -109,27 +168,34 @@ export const App = () => {
           </Text>
 
           <HoneyBox $display="flex" $flexWrap="wrap" $gap={3} $justifyContent="center">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <HoneyBox
-                key={index}
-                $width="250px"
-                $height="250px"
-                $backgroundColor="neutral.grayLight"
-                $borderRadius="6px"
-              />
+            {SHOWCASE_ITEMS.map(showcaseItem => (
+              <HoneyFlexBox key={showcaseItem.description} $gap={1}>
+                <HoneyBox
+                  $width="250px"
+                  $height="250px"
+                  $backgroundColor="neutral.grayLight"
+                  $borderRadius="6px"
+                />
+
+                <Text variant="subtitle2" $textAlign="center">
+                  {showcaseItem.description}
+                </Text>
+              </HoneyFlexBox>
             ))}
           </HoneyBox>
         </Container>
       </HoneyBox>
 
-      <Container $padding={5} $gap={5}>
-        <HoneyBox $display="flex" $gap={2}>
+      <Container $padding={{ xs: 3, md: 5 }} $gap={7}>
+        <HoneyBox $display="flex" $gap={3} $flexWrap={{ xs: 'wrap', lg: 'nowrap' }}>
           <HoneyBox
             $width="100%"
-            $height="350px"
+            $maxWidth="450px"
+            $minHeight="450px"
             $backgroundImage="url('/assets/images/IMG_1660.webp')"
             $backgroundSize="cover"
             $borderRadius="6px"
+            $margin={[0, 'auto']}
           />
 
           <HoneyFlexBox $width="100%" $gap={3}>
@@ -137,11 +203,32 @@ export const App = () => {
               Crafting with Precision, Layer by Layer
             </Text>
 
-            <Text variant="subtitle2">
-              Using advance FDM technology, we create a 3D model of your design, layer by layer,
-              ensuring that each layer is printed with the highest quality possible. Every model is
-              printed with a high-quality filament, ensuring that your design is perfect.
+            <Text variant="body1">
+              Using advanced FDM technology, we bring your designs to life layer by layer with
+              exceptional precision. Each print is crafted using premium-quality filament to ensure
+              outstanding detail, strength, and surface finish — so your model looks exactly as
+              envisioned.
             </Text>
+
+            <HoneyBox $display="flex" $gap={2} $justifyContent="center" $flexWrap="wrap">
+              {FEATURES.map((feature, featureIndex) => (
+                <HoneyBox
+                  key={featureIndex}
+                  $display="flex"
+                  $gap={1}
+                  $width="calc(50% - 8px)"
+                  $minWidth="250px"
+                  $padding={2}
+                  $border="1px solid"
+                  $borderColor="neutral.grayLight"
+                  $borderRadius="6px"
+                >
+                  <div>{feature.icon}</div>
+
+                  <Text variant="body1">{feature.description}</Text>
+                </HoneyBox>
+              ))}
+            </HoneyBox>
           </HoneyFlexBox>
         </HoneyBox>
 
@@ -172,9 +259,9 @@ export const App = () => {
                   $backgroundSize="cover"
                 />
 
-                <HoneyFlexBox $gap={2}>
-                  <Text variant="h6">{filament.name}</Text>
-                  <Text variant="subtitle2">{filament.description}</Text>
+                <HoneyFlexBox $gap={1}>
+                  <Text variant="subtitle1">{filament.name}</Text>
+                  <Text variant="body1">{filament.description}</Text>
                 </HoneyFlexBox>
               </HoneyBox>
             ))}
