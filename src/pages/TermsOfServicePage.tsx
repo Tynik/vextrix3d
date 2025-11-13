@@ -78,8 +78,8 @@ export const TermsOfServicePage = () => {
 
       <Text variant="body1">
         Questions about these Terms? Email:{' '}
-        <Text as="a" variant="body1" $fontWeight={700} href="mailto:m.aliynik@gmail.com">
-          m.aliynik@gmail.com
+        <Text as="a" variant="body1" $fontWeight={700} href="mailto:vextrix3d@gmail.com">
+          vextrix3d@gmail.com
         </Text>
       </Text>
     </Page>

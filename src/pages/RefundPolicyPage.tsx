@@ -66,8 +66,8 @@ export const RefundPolicyPage = () => {
 
       <Text variant="body1">
         Email{' '}
-        <Text as="a" variant="body1" $fontWeight={700} href="mailto:m.aliynik@gmail.com">
-          m.aliynik@gmail.com
+        <Text as="a" variant="body1" $fontWeight={700} href="mailto:vextrix3d@gmail.com">
+          vextrix3d@gmail.com
         </Text>{' '}
         with your order number, a description of the issue, and photos. We will review and respond
         within 3 business days.

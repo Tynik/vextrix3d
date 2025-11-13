@@ -118,7 +118,7 @@ export const LandingPage = () => {
               as="a"
               color="accent"
               size="large"
-              href="mailto:m.aliynik@gmail.com"
+              href="mailto:vextrix3d@gmail.com"
               $height="50px"
             >
               Get a Quote

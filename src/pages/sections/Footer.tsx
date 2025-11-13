@@ -72,8 +72,8 @@ export const Footer = () => (
             <HoneyBox $display="flex" $gap={1} $alignItems="center">
               <MailIcon $color="neutral.grayMedium" />
 
-              <Text as="a" variant="body1" href="mailto:m.aliynik@gmail.com" $color="neutral.white">
-                m.aliynik@gmail.com
+              <Text as="a" variant="body1" href="mailto:vextrix3d@gmail.com" $color="neutral.white">
+                vextrix3d@gmail.com
               </Text>
             </HoneyBox>
           </HoneyFlexBox>

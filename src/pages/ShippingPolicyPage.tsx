@@ -43,8 +43,8 @@ export const ShippingPolicyPage = () => {
       <Text variant="body1">
         If your item arrives damaged, photograph the package and contents and contact us within 48
         hours at{' '}
-        <Text as="a" variant="body1" $fontWeight={700} href="mailto:m.aliynik@gmail.com">
-          m.aliynik@gmail.com
+        <Text as="a" variant="body1" $fontWeight={700} href="mailto:vextrix3d@gmail.com">
+          vextrix3d@gmail.com
         </Text>
         . We will assist with claims against the carrier. Liability passes to the buyer once the
         parcel is marked delivered by the carrier, except where damage during transit is verified.

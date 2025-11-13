@@ -44,8 +44,8 @@ export const IntellectualPropertyPolicyPage = () => {
       <Text variant="body1">
         If you believe your copyrighted work has been used in a way that constitutes copyright
         infringement, please contact us at{' '}
-        <Text as="a" variant="body1" $fontWeight={700} href="mailto:m.aliynik@gmail.com">
-          m.aliynik@gmail.com
+        <Text as="a" variant="body1" $fontWeight={700} href="mailto:vextrix3d@gmail.com">
+          vextrix3d@gmail.com
         </Text>{' '}
         with sufficient detail to allow us to investigate.
       </Text>
