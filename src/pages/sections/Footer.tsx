@@ -27,6 +27,31 @@ export const Footer = () => (
             <Text as={Link} to="/terms-of-service" variant="body1" $color="neutral.white">
               Terms of Service
             </Text>
+
+            <Text as={Link} to="/model-submission-policy" variant="body1" $color="neutral.white">
+              Model Submission Policy
+            </Text>
+
+            <Text as={Link} to="/shipping-policy" variant="body1" $color="neutral.white">
+              Shipping Policy
+            </Text>
+
+            <Text as={Link} to="/refund-policy" variant="body1" $color="neutral.white">
+              Refund Policy
+            </Text>
+
+            <Text as={Link} to="/material-safety-disclaimer" variant="body1" $color="neutral.white">
+              Material Safety Disclaimer
+            </Text>
+
+            <Text
+              as={Link}
+              to="/intellectual-property-policy"
+              variant="body1"
+              $color="neutral.white"
+            >
+              Intellectual Property Policy
+            </Text>
           </HoneyFlexBox>
         </HoneyGridColumn>
 
