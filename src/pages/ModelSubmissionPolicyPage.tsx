@@ -1,6 +1,7 @@
 import React from 'react';
 import { Page } from '~/pages/sections';
 import { Text } from '~/components';
+import { CONTACT_EMAIL } from '~/configs';
 
 export const ModelSubmissionPolicyPage = () => {
   return (
@@ -56,8 +57,8 @@ export const ModelSubmissionPolicyPage = () => {
 
       <Text variant="body1">
         Questions? Email:{' '}
-        <Text as="a" variant="body1" $fontWeight={700} href="mailto:vextrix3d@gmail.com">
-          vextrix3d@gmail.com
+        <Text as="a" variant="body1" $fontWeight={700} href={`mailto:${CONTACT_EMAIL}`}>
+          {CONTACT_EMAIL}
         </Text>
       </Text>
     </Page>

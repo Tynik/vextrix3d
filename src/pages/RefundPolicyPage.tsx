@@ -1,6 +1,7 @@
 import React from 'react';
 import { Text } from '~/components';
 import { Page } from '~/pages/sections';
+import { CONTACT_EMAIL } from '~/configs';
 
 export const RefundPolicyPage = () => {
   return (
@@ -66,8 +67,8 @@ export const RefundPolicyPage = () => {
 
       <Text variant="body1">
         Email{' '}
-        <Text as="a" variant="body1" $fontWeight={700} href="mailto:vextrix3d@gmail.com">
-          vextrix3d@gmail.com
+        <Text as="a" variant="body1" $fontWeight={700} href={`mailto:${CONTACT_EMAIL}`}>
+          {CONTACT_EMAIL}
         </Text>{' '}
         with your order number, a description of the issue, and photos. We will review and respond
         within 3 business days.

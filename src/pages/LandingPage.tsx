@@ -3,7 +3,7 @@ import { useHoneyStyle } from '@react-hive/honey-style';
 import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
 import { Button, Container, Text } from '~/components';
 import type { Nullable } from '~/types';
-import { FILAMENTS } from '~/configs';
+import { CONTACT_EMAIL, FILAMENTS } from '~/configs';
 
 interface ShowcaseItem {
   image: string;
@@ -96,16 +96,18 @@ export const LandingPage = () => {
 
         <HoneyFlexBox
           $position="absolute"
-          $top="50%"
+          $top="40%"
           $left="50%"
           $transform="translate(-50%, -50%)"
           $gap={3}
           $textAlign="center"
         >
-          <Text variant="h1" $color="neutral.white" shadow="strong">
+          <Text variant="h1" $color="primary.aquaMintPulse" shadow="strong">
+            Vextrix3D
+          </Text>
+
+          <Text variant="h2" $color="neutral.white" shadow="medium" $marginTop={3}>
             Precision FDM 3D Printing
-            <br />
-            Made Real
           </Text>
 
           <Text variant="subtitle1" $color="neutral.white" shadow="strong">
@@ -118,7 +120,7 @@ export const LandingPage = () => {
               as="a"
               color="accent"
               size="large"
-              href="mailto:vextrix3d@gmail.com"
+              href={`mailto:${CONTACT_EMAIL}`}
               $height="50px"
             >
               Get a Quote

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { HoneyBox, HoneyFlexBox, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
 import { Container, Text } from '~/components';
 import { MailIcon, PlaceIcon } from '~/icons';
+import { CONTACT_EMAIL } from '~/configs';
 
 export const Footer = () => (
   <HoneyBox as="footer" $backgroundColor="neutral.grayDark">
@@ -72,8 +73,8 @@ export const Footer = () => (
             <HoneyBox $display="flex" $gap={1} $alignItems="center">
               <MailIcon $color="neutral.grayMedium" />
 
-              <Text as="a" variant="body1" href="mailto:vextrix3d@gmail.com" $color="neutral.white">
-                vextrix3d@gmail.com
+              <Text as="a" variant="body1" href={`mailto:${CONTACT_EMAIL}`} $color="neutral.white">
+                {CONTACT_EMAIL}
               </Text>
             </HoneyBox>
           </HoneyFlexBox>
