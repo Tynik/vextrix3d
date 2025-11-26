@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 import { useHoneyStyle } from '@react-hive/honey-style';
 import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
-import { Button, Container, Text } from '~/components';
+
 import type { Nullable } from '~/types';
 import { CONTACT_EMAIL, FILAMENTS } from '~/configs';
+import { calculateModelQuote } from '~/helpers';
+import { Button, Container, Text } from '~/components';
 
 interface ShowcaseItem {
   image: string;
@@ -80,6 +82,31 @@ export const LandingPage = () => {
       video.play().catch(e => console.error('Error playing video:', e));
     }
   }, []);
+
+  const handleSelectModel = async (files: File[]) => {
+    const quote = await calculateModelQuote(
+      files[0],
+      {
+        infill: 0.15,
+        walls: 2,
+        topLayers: 5,
+        bottomLayers: 5,
+        layerHeight: 0.2,
+        nozzleDiameter: 0.4,
+      },
+      {
+        materialDensity: 1.04,
+        materialPriceKg: 25,
+        basePrintTime: 0.15,
+        speedMm3PerSec: 12,
+        machineCostPerHour: 0,
+        fixedFee: 0,
+        markup: 0,
+      },
+    );
+
+    console.log(quote);
+  };
 
   return (
     <>
@@ -174,7 +201,7 @@ export const LandingPage = () => {
                 $width="100%"
                 $maxWidth="450px"
                 $minHeight="450px"
-                $backgroundImage="url('/assets/images/IMG_1660.webp')"
+                $backgroundImage="url('/assets/images/IMG_1742.webp')"
                 $backgroundSize="cover"
                 $borderRadius="6px"
                 $margin={[0, 'auto']}
@@ -238,7 +265,7 @@ export const LandingPage = () => {
                       $flexShrink={0}
                       $width="100px"
                       $height="100px"
-                      $backgroundImage="url('/assets/images/filament.webp')"
+                      $backgroundImage="url('/assets/images/filament-1.webp')"
                       $backgroundSize="cover"
                     />
 
@@ -252,6 +279,22 @@ export const LandingPage = () => {
             </HoneyFlexBox>
           </Container>
         </HoneyBox>
+
+        {/*<HoneyBox as="section" aria-label="Get a quote" data-testid="quote">*/}
+        {/*  <Container $padding={{ xs: 3, md: 5 }}>*/}
+        {/*    <FilePicker*/}
+        {/*      accept={['.stl', '.obj', '.3mf']}*/}
+        {/*      inputProps={{*/}
+        {/*        multiple: false,*/}
+        {/*      }}*/}
+        {/*      onSelectFiles={handleSelectModel}*/}
+        {/*    >*/}
+        {/*      <Button as="div" color="accent">*/}
+        {/*        Upload Model*/}
+        {/*      </Button>*/}
+        {/*    </FilePicker>*/}
+        {/*  </Container>*/}
+        {/*</HoneyBox>*/}
       </main>
     </>
   );

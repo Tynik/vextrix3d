@@ -1,6 +1,6 @@
 import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox } from '@react-hive/honey-layout';
-import { resolveColor } from '@react-hive/honey-style';
+import { pxToRem, resolveColor } from '@react-hive/honey-style';
 import type { HoneyColor, HoneyCSSDimensionValue } from '@react-hive/honey-style';
 import { css, styled } from '@react-hive/honey-style';
 
@@ -23,25 +23,25 @@ interface ColorConfig {
 
 const COLORS_MAP: Record<ButtonColor, ColorConfig> = {
   primary: {
-    backgroundColor: 'primary.primaryIndigo', // #5D6FFF
+    backgroundColor: 'primary.primaryIndigo',
     hover: '#4B5EDB',
     color: 'neutral.white',
     border: '#4B5EDB',
   },
   secondary: {
-    backgroundColor: 'secondary.slateAlloy', // #5C6470
+    backgroundColor: 'secondary.slateAlloy',
     hover: '#4B5360',
     color: 'neutral.white',
     border: '#4B5360',
   },
   accent: {
-    backgroundColor: 'primary.aquaMintPulse', // #00BFA6
+    backgroundColor: 'primary.aquaMintPulse',
     hover: '#00A58F',
     color: 'neutral.white',
     border: '#009A85',
   },
   success: {
-    backgroundColor: 'success.emeraldGreen', // #00A86B
+    backgroundColor: 'success.emeraldGreen',
     hover: '#008E58',
     color: 'neutral.white',
     border: '#007A4B',
@@ -73,7 +73,7 @@ export const Button = styled<ButtonProps>(
         border-radius: 4px;
         border: 1px solid ${resolveColor(colorConfig.border)};
 
-        font-size: 16px;
+        font-size: ${pxToRem(16)};
 
         color: ${resolveColor(colorConfig.color)};
         background-color: ${resolveColor(colorConfig.backgroundColor)};
