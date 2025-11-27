@@ -34,12 +34,22 @@ export const handler = createHandler<CalculateQuotePayload>(
       to: 'vextrix3d@gmail.com',
       subject: 'Quote',
       parameters: {
-        name: payload.fullName,
+        fullName: payload.fullName,
         description: payload.description,
       },
     });
 
     console.log(response);
+
+    if (!response.ok) {
+      return {
+        status: 'error',
+        statusCode: 400,
+        data: {
+          error: response.statusText,
+        },
+      };
+    }
 
     return {
       status: 'ok',
