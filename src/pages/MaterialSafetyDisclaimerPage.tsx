@@ -1,14 +1,11 @@
 import React from 'react';
-import { Page } from '~/pages/sections';
+
 import { Text } from '~/components';
+import { Page } from './sections';
 
 export const MaterialSafetyDisclaimerPage = () => {
   return (
-    <Page>
-      <Text variant="h3">Material Safety & Print Quality</Text>
-
-      <Text variant="body2">Last updated: Last updated: 12/11/2025</Text>
-
+    <Page title="Material Safety & Print Quality">
       <Text variant="subtitle1" $marginTop={2}>
         Intended use
       </Text>
@@ -48,6 +45,16 @@ export const MaterialSafetyDisclaimerPage = () => {
         Material temperature resistance varies (e.g., PLA ~60°C, PETG ~80°C, ABS ~100°C, ASA
         ~105°C). Chemical resistance depends on material and exposure conditions. Consult material
         datasheets or contact us for specific use cases.
+      </Text>
+
+      <Text
+        variant="body2"
+        $color="secondary.slateAlloy"
+        $fontStyle="italic"
+        $textAlign="right"
+        $marginTop={2}
+      >
+        Last updated: 12/11/2025
       </Text>
     </Page>
   );

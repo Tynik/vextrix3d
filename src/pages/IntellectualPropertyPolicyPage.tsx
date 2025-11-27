@@ -5,11 +5,7 @@ import { CONTACT_EMAIL } from '~/configs';
 
 export const IntellectualPropertyPolicyPage = () => {
   return (
-    <Page>
-      <Text variant="h3">Intellectual Property & Copyright</Text>
-
-      <Text variant="body2">Last updated: Last updated: 12/11/2025</Text>
-
+    <Page title="Intellectual Property & Copyright">
       <Text variant="subtitle1" $marginTop={2}>
         Customer-owned content
       </Text>
@@ -49,6 +45,16 @@ export const IntellectualPropertyPolicyPage = () => {
           {CONTACT_EMAIL}
         </Text>{' '}
         with sufficient detail to allow us to investigate.
+      </Text>
+
+      <Text
+        variant="body2"
+        $color="secondary.slateAlloy"
+        $fontStyle="italic"
+        $textAlign="right"
+        $marginTop={2}
+      >
+        Last updated: 12/11/2025
       </Text>
     </Page>
   );

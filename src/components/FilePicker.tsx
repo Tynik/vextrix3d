@@ -4,7 +4,6 @@ import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import { fileListToFiles } from '@react-hive/honey-utils';
 import { styled } from '@react-hive/honey-style';
 import { HoneyBox } from '@react-hive/honey-layout';
-
 import type { Nullable } from '~/types';
 
 type AcceptFilesPattern = `.${string}`;

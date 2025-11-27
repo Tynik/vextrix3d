@@ -8,6 +8,8 @@ export const Header = () => {
   return (
     <HoneyBox
       as="header"
+      $position="sticky"
+      $top={0}
       $display="flex"
       $alignItems="center"
       $flexShrink={0}

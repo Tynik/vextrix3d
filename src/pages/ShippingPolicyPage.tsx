@@ -1,15 +1,12 @@
 import React from 'react';
-import { Page } from '~/pages/sections';
-import { Text } from '~/components';
+
 import { CONTACT_EMAIL } from '~/configs';
+import { Text } from '~/components';
+import { Page } from './sections';
 
 export const ShippingPolicyPage = () => {
   return (
-    <Page>
-      <Text variant="h3">Shipping & Delivery Policy</Text>
-
-      <Text variant="body2">Last updated: Last updated: 12/11/2025</Text>
-
+    <Page title="Shipping & Delivery Policy">
       <Text variant="subtitle1" $marginTop={2}>
         Processing time
       </Text>
@@ -49,6 +46,16 @@ export const ShippingPolicyPage = () => {
         </Text>
         . We will assist with claims against the carrier. Liability passes to the buyer once the
         parcel is marked delivered by the carrier, except where damage during transit is verified.
+      </Text>
+
+      <Text
+        variant="body2"
+        $color="secondary.slateAlloy"
+        $fontStyle="italic"
+        $textAlign="right"
+        $marginTop={2}
+      >
+        Last updated: 12/11/2025
       </Text>
     </Page>
   );

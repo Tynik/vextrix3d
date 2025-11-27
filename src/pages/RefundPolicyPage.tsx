@@ -1,15 +1,12 @@
 import React from 'react';
-import { Text } from '~/components';
-import { Page } from '~/pages/sections';
+
 import { CONTACT_EMAIL } from '~/configs';
+import { Text } from '~/components';
+import { Page } from './sections';
 
 export const RefundPolicyPage = () => {
   return (
-    <Page>
-      <Text variant="h3">Refund & Reprint Policy</Text>
-
-      <Text variant="body2">Last updated: Last updated: 12/11/2025</Text>
-
+    <Page title="Refund & Reprint Policy">
       <Text variant="body1" $marginTop={2}>
         Vextrix3D aims to deliver prints that match your expectations. Due to the custom nature of
         3D prints, refunds are limited and handled case-by-case.
@@ -72,6 +69,16 @@ export const RefundPolicyPage = () => {
         </Text>{' '}
         with your order number, a description of the issue, and photos. We will review and respond
         within 3 business days.
+      </Text>
+
+      <Text
+        variant="body2"
+        $color="secondary.slateAlloy"
+        $fontStyle="italic"
+        $textAlign="right"
+        $marginTop={2}
+      >
+        Last updated: 12/11/2025
       </Text>
     </Page>
   );

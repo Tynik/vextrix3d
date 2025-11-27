@@ -6,7 +6,7 @@ import { css, resolveFont, styled } from '@react-hive/honey-style';
 
 type TextShadow = 'none' | 'soft' | 'medium' | 'strong';
 
-const SHADOW_MAP: Record<TextShadow, string> = {
+const SHADOWS_CONFIG: Record<TextShadow, string> = {
   none: 'none',
   soft: '1px 1px 2px rgba(0, 0, 0, 0.25)',
   medium: '2px 2px 4px rgba(0, 0, 0, 0.35)',
@@ -25,6 +25,6 @@ export const Text = styled<TextProps>(HoneyBox, ({ as = 'p', $color = 'secondary
   ${({ variant, shadow = 'none' }) => css`
     ${resolveFont(variant)};
 
-    text-shadow: ${SHADOW_MAP[shadow]};
+    text-shadow: ${SHADOWS_CONFIG[shadow]};
   `}
 `;

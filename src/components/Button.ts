@@ -14,14 +14,14 @@ const SIZES_MAP: Record<ButtonSize, HoneyCSSDimensionValue> = {
   large: '160px',
 };
 
-interface ColorConfig {
+interface ColorsConfig {
   backgroundColor: HoneyColor;
   hover: HoneyColor;
   color: HoneyColor;
   border: HoneyColor;
 }
 
-const COLORS_MAP: Record<ButtonColor, ColorConfig> = {
+const COLORS_CONFIG: Record<ButtonColor, ColorsConfig> = {
   primary: {
     backgroundColor: 'primary.primaryIndigo',
     hover: '#4B5EDB',
@@ -48,10 +48,10 @@ const COLORS_MAP: Record<ButtonColor, ColorConfig> = {
   },
 };
 
-type ButtonProps = HoneyBoxProps<'button'> & {
+interface ButtonProps extends HoneyBoxProps<'button'> {
   size?: ButtonSize;
   color?: ButtonColor;
-};
+}
 
 export const Button = styled<ButtonProps>(
   HoneyBox,
@@ -62,7 +62,7 @@ export const Button = styled<ButtonProps>(
   }),
 )<ButtonProps>`
   ${({ size = 'medium', color = 'primary' }) => {
-    const colorConfig = COLORS_MAP[color];
+    const colorConfig = COLORS_CONFIG[color];
 
     return css`
       @honey-center {
@@ -87,7 +87,7 @@ export const Button = styled<ButtonProps>(
 
       &:hover {
         background-color: ${resolveColor(colorConfig.hover)};
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
       }
 
       &:active {

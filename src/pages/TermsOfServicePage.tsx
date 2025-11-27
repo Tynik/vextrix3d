@@ -1,15 +1,12 @@
 import React from 'react';
-import { Page } from '~/pages/sections';
-import { Text } from '~/components';
+
 import { CONTACT_EMAIL } from '~/configs';
+import { Text } from '~/components';
+import { Page } from './sections';
 
 export const TermsOfServicePage = () => {
   return (
-    <Page>
-      <Text variant="h3">Terms of Service</Text>
-
-      <Text variant="body2">Last updated: 12/11/2025</Text>
-
+    <Page title="Terms of Service">
       <Text variant="body1" $marginTop={2}>
         These Terms of Service govern your use of Vextrix3D's website and printing services. By
         placing an order or using the site, you agree to these terms.
@@ -71,6 +68,16 @@ export const TermsOfServicePage = () => {
       <Text variant="body1">
         These Terms are governed by the laws of the United Kingdom. Any disputes will be subject to
         the competent courts of the UK.
+      </Text>
+
+      <Text
+        variant="body2"
+        $color="secondary.slateAlloy"
+        $fontStyle="italic"
+        $textAlign="right"
+        $marginTop={2}
+      >
+        Last updated: 12/11/2025
       </Text>
 
       <Text variant="h6" $marginTop={3}>

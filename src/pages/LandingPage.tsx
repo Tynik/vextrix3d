@@ -6,6 +6,7 @@ import type { Nullable } from '~/types';
 import { CONTACT_EMAIL, FILAMENTS } from '~/configs';
 import { calculateModelQuote } from '~/helpers';
 import { Button, Container, Text } from '~/components';
+import { GetQuoteButton } from './widgets';
 
 interface ShowcaseItem {
   image: string;

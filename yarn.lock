@@ -7587,10 +7587,10 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
-netlify-cli@23.12.0:
-  version "23.12.0"
-  resolved "https://registry.yarnpkg.com/netlify-cli/-/netlify-cli-23.12.0.tgz#efe1a496497e969ea5ec5cb11d40ab7f1cb02151"
-  integrity sha512-Hep++x0J8b7l64A/cFOOu12OxSKS16MQgUYIdpqA3RoGK+d5Oqfb5A6RRH6U6Z5nl+cLcpeOPbWmLPuxT1NsWA==
+netlify-cli@23.12.1:
+  version "23.12.1"
+  resolved "https://registry.yarnpkg.com/netlify-cli/-/netlify-cli-23.12.1.tgz#79d05ba64bc353a919000a98e7f139c327f0ad0e"
+  integrity sha512-5WNd25AYs3nvhL6lHALGxTUtKXXYkYZB0v8rKOgYvT8aG7Xty5+lcaD4R8znznHWzOB+RPBpE2Vgy3A9E+fAlw==
   dependencies:
     "@fastify/static" "7.0.4"
     "@netlify/ai" "0.3.3"

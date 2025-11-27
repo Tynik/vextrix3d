@@ -1,5 +1,5 @@
 interface Filament {
-  name: string;
+  name: 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ASA' | 'ASA-CF' | 'PA';
   description: string;
 }
 
@@ -38,5 +38,10 @@ export const FILAMENTS: Filament[] = [
     name: 'ASA-CF',
     description:
       'Carbon-fiber-reinforced ASA offering superior stiffness, UV stability, and heat resistance up to ~105°C. Ideal for outdoor mechanical parts, automotive components, and applications requiring high rigidity with excellent weather durability.',
+  },
+  {
+    name: 'PA',
+    description:
+      'High-performance nylon filament offering exceptional toughness, impact resistance, and wear resistance. Ideal for gears, mechanical parts, hinges, and engineering components that require flexibility and long-term durability. Heat resistance up to ~120°C.',
   },
 ];
