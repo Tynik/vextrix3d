@@ -108,20 +108,37 @@ export const QuoteRequestPage = () => {
               inputProps={{
                 multiple: false,
               }}
-              onSelectFiles={handleSelectModel}
+              onSelectFiles={files => formFields.model.setValue(files[0])}
             >
               <Button as="div" color="accent">
                 Select Model
               </Button>
             </FilePicker>
 
-            <TextInput label="First Name" {...formFields.firstName.props} />
+            <TextInput
+              label="First Name"
+              error={formFields.firstName.errors[0]?.message}
+              {...formFields.firstName.props}
+            />
 
-            <TextInput label="Last Name" {...formFields.lastName.props} />
+            <TextInput
+              label="Last Name"
+              error={formFields.lastName.errors[0]?.message}
+              {...formFields.lastName.props}
+            />
 
-            <TextInput label="Email" {...formFields.email.props} />
+            <TextInput
+              label="Email"
+              error={formFields.email.errors[0]?.message}
+              {...formFields.email.props}
+            />
 
-            <TextInput label="Description" multiline {...formFields.description.props} />
+            <TextInput
+              label="Description"
+              error={formFields.description.errors[0]?.message}
+              multiline={true}
+              {...formFields.description.props}
+            />
 
             <Button type="submit" color="success" $marginLeft="auto">
               Submit
