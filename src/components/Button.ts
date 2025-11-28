@@ -85,15 +85,6 @@ export const Button = styled<ButtonProps>(
         transition-timing-function: ease;
       }
 
-      &:hover {
-        background-color: ${resolveColor(colorConfig.hover)};
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
-      }
-
-      &:active {
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      }
-
       &:disabled {
         opacity: 0.6;
         box-shadow: none;
@@ -102,6 +93,15 @@ export const Button = styled<ButtonProps>(
 
       &:not(:disabled) {
         cursor: pointer;
+
+        &:active {
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        &:hover {
+          background-color: ${resolveColor(colorConfig.hover)};
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+        }
       }
     `;
   }}

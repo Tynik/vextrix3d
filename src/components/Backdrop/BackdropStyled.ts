@@ -16,6 +16,8 @@ export const BackdropStyled = styled('div')<BackdropStyledProps>`
     background-color: ${resolveColor('neutral.black', 0.7)};
     pointer-events: ${show ? 'auto' : 'none'};
 
-    transition: all 400ms;
+    transition-property: opacity, background-color;
+    transition-timing-function: ease-in-out;
+    transition-duration: 250ms;
   `}
 `;

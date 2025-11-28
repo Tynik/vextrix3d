@@ -6,9 +6,7 @@ import { CONTACT_EMAIL } from '~/configs';
 export const IntellectualPropertyPolicyPage = () => {
   return (
     <Page title="Intellectual Property & Copyright">
-      <Text variant="subtitle1" $marginTop={2}>
-        Customer-owned content
-      </Text>
+      <Text variant="subtitle1">Customer-owned content</Text>
 
       <Text variant="body1">
         Customers retain ownership of the 3D models they submit. By submitting a file, you grant

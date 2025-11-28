@@ -7,7 +7,7 @@ import { Page } from './sections';
 export const RefundPolicyPage = () => {
   return (
     <Page title="Refund & Reprint Policy">
-      <Text variant="body1" $marginTop={2}>
+      <Text variant="body1">
         Vextrix3D aims to deliver prints that match your expectations. Due to the custom nature of
         3D prints, refunds are limited and handled case-by-case.
       </Text>

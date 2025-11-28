@@ -7,7 +7,7 @@ import { Page } from './sections';
 export const TermsOfServicePage = () => {
   return (
     <Page title="Terms of Service">
-      <Text variant="body1" $marginTop={2}>
+      <Text variant="body1">
         These Terms of Service govern your use of Vextrix3D's website and printing services. By
         placing an order or using the site, you agree to these terms.
       </Text>

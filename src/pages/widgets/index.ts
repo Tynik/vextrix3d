@@ -1,2 +1,2 @@
-export * from './GetQuoteButton';
+export * from './QuoteRequestButton';
 export * from './ModelSubmissionPolicyContent';

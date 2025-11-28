@@ -1,15 +1,10 @@
 import type { Handler, HandlerResponse, HandlerEvent, HandlerContext } from '@netlify/functions';
+import { assert } from '@react-hive/honey-utils';
 
-import type { Nullable } from './netlify-types';
-import { NETLIFY_EMAILS_SECRET, URL, SITE_DOMAIN } from './netlify-constants';
+import type { Nullable } from './types';
+import { NETLIFY_EMAILS_SECRET, URL, SITE_DOMAIN } from './constants';
 
 type HTTPMethod = 'POST' | 'GET' | 'OPTIONS' | 'PUT' | 'PATCH' | 'DELETE';
-
-export function assert(condition: any, message: string): asserts condition {
-  if (!condition) {
-    throw new Error(message);
-  }
-}
 
 interface CreateResponseOptions {
   statusCode?: number;
@@ -111,17 +106,27 @@ export const createHandler = <Payload = unknown>(
   };
 };
 
+interface SendEmailAttachment {
+  // Base64 encoded string
+  content: string;
+  filename: string;
+  type: string;
+}
+
 interface SendEmailOptions {
   from: string;
   to: string;
+  cc?: string;
   subject: string;
   parameters: Record<string, string | undefined>;
+  attachments?: SendEmailAttachment[];
 }
 
 export const sendEmail = (
-  emailTemplate: 'calculate-quote',
-  { from, to, subject, parameters }: SendEmailOptions,
+  emailTemplate: 'quote-request',
+  { from, to, subject, parameters, attachments }: SendEmailOptions,
 ) => {
+  assert(URL, 'The `URL` must be set as environment variable');
   assert(NETLIFY_EMAILS_SECRET, 'The `NETLIFY_EMAILS_SECRET` must be set as environment variable');
 
   return fetch(`${URL}/.netlify/functions/emails/${emailTemplate}`, {
@@ -134,6 +139,7 @@ export const sendEmail = (
       to,
       subject,
       parameters,
+      attachments,
     }),
   });
 };

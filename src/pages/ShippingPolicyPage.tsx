@@ -7,9 +7,7 @@ import { Page } from './sections';
 export const ShippingPolicyPage = () => {
   return (
     <Page title="Shipping & Delivery Policy">
-      <Text variant="subtitle1" $marginTop={2}>
-        Processing time
-      </Text>
+      <Text variant="subtitle1">Processing time</Text>
 
       <Text variant="body1">
         Typical processing time is 1–3 business days for small/standard prints. Larger or complex

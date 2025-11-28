@@ -1,6 +1,6 @@
 import type { HTTPRequestMethod, Nullable } from '~/types';
 
-export type NetlifyFunction = 'calculate-quote';
+export type NetlifyFunction = 'quote-request' | 'upload-quote-request-model';
 
 export interface NetlifyRequestResponse<Response = unknown> {
   status: string;

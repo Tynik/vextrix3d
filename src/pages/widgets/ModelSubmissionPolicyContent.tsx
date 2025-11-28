@@ -7,9 +7,7 @@ import { Text } from '~/components';
 export const ModelSubmissionPolicyContent = (props: HoneyFlexBoxProps) => {
   return (
     <HoneyFlexBox $gap={1} {...props}>
-      <Text variant="subtitle1" $marginTop={2}>
-        Accepted file types
-      </Text>
+      <Text variant="subtitle1">Accepted file types</Text>
 
       <Text variant="body1">
         We accept standard 3D file formats such as <strong>.stl</strong>, <strong>.obj</strong>, and{' '}

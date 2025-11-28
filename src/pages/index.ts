@@ -1,3 +1,4 @@
+export * from './sections';
 export * from './LandingPage';
 export * from './TermsOfServicePage';
 export * from './ShippingPolicyPage';
@@ -5,3 +6,4 @@ export * from './RefundPolicyPage';
 export * from './ModelSubmissionPolicyPage';
 export * from './MaterialSafetyDisclaimerPage';
 export * from './IntellectualPropertyPolicyPage';
+export * from './QuoteRequestPage';

@@ -3,10 +3,9 @@ import { useHoneyStyle } from '@react-hive/honey-style';
 import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
 
 import type { Nullable } from '~/types';
-import { CONTACT_EMAIL, FILAMENTS } from '~/configs';
-import { calculateModelQuote } from '~/helpers';
+import { FILAMENTS } from '~/configs';
 import { Button, Container, Text } from '~/components';
-import { GetQuoteButton } from './widgets';
+import { QuoteRequestButton } from './widgets';
 
 interface ShowcaseItem {
   image: string;
@@ -84,31 +83,6 @@ export const LandingPage = () => {
     }
   }, []);
 
-  const handleSelectModel = async (files: File[]) => {
-    const quote = await calculateModelQuote(
-      files[0],
-      {
-        infill: 0.15,
-        walls: 2,
-        topLayers: 5,
-        bottomLayers: 5,
-        layerHeight: 0.2,
-        nozzleDiameter: 0.4,
-      },
-      {
-        materialDensity: 1.04,
-        materialPriceKg: 25,
-        basePrintTime: 0.15,
-        speedMm3PerSec: 12,
-        machineCostPerHour: 0,
-        fixedFee: 0,
-        markup: 0,
-      },
-    );
-
-    console.log(quote);
-  };
-
   return (
     <>
       <HoneyBox as="header" $position="relative" $height="700px" $flexShrink={0} $overflow="hidden">
@@ -144,15 +118,7 @@ export const LandingPage = () => {
           </Text>
 
           <HoneyBox $display="flex" $justifyContent="center" $gap={2} $marginTop={3}>
-            <Button
-              as="a"
-              color="accent"
-              size="large"
-              href={`mailto:${CONTACT_EMAIL}`}
-              $height="50px"
-            >
-              Get a Quote
-            </Button>
+            <QuoteRequestButton />
 
             <Button color="secondary" size="large" $height="50px">
               See Details
@@ -280,22 +246,6 @@ export const LandingPage = () => {
             </HoneyFlexBox>
           </Container>
         </HoneyBox>
-
-        {/*<HoneyBox as="section" aria-label="Get a quote" data-testid="quote">*/}
-        {/*  <Container $padding={{ xs: 3, md: 5 }}>*/}
-        {/*    <FilePicker*/}
-        {/*      accept={['.stl', '.obj', '.3mf']}*/}
-        {/*      inputProps={{*/}
-        {/*        multiple: false,*/}
-        {/*      }}*/}
-        {/*      onSelectFiles={handleSelectModel}*/}
-        {/*    >*/}
-        {/*      <Button as="div" color="accent">*/}
-        {/*        Upload Model*/}
-        {/*      </Button>*/}
-        {/*    </FilePicker>*/}
-        {/*  </Container>*/}
-        {/*</HoneyBox>*/}
       </main>
     </>
   );

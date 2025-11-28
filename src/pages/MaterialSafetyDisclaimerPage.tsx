@@ -6,9 +6,7 @@ import { Page } from './sections';
 export const MaterialSafetyDisclaimerPage = () => {
   return (
     <Page title="Material Safety & Print Quality">
-      <Text variant="subtitle1" $marginTop={2}>
-        Intended use
-      </Text>
+      <Text variant="subtitle1">Intended use</Text>
 
       <Text variant="body1">
         Unless explicitly stated in a written agreement, printed parts are intended for prototyping,

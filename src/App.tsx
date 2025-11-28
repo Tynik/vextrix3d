@@ -8,8 +8,10 @@ import {
   ShippingPolicyPage,
   TermsOfServicePage,
   IntellectualPropertyPolicyPage,
+  QuoteRequestPage,
+  Footer,
 } from '~/pages';
-import { Footer } from '~/pages/sections';
+import { ToastContainer } from 'react-toastify';
 
 export const App = () => {
   const location = useLocation();
@@ -32,10 +34,13 @@ export const App = () => {
         <Route path="/model-submission-policy" element={<ModelSubmissionPolicyPage />} />
         <Route path="/material-safety-disclaimer" element={<MaterialSafetyDisclaimerPage />} />
         <Route path="/intellectual-property-policy" element={<IntellectualPropertyPolicyPage />} />
+        <Route path="/quote-request" element={<QuoteRequestPage />} />
         <Route path="/" element={<LandingPage />} />
       </Routes>
 
       <Footer />
+
+      <ToastContainer position="bottom-center" />
     </>
   );
 };
