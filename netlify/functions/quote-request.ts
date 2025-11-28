@@ -7,19 +7,22 @@ import { initFirebaseApp } from '../firebase';
 
 initFirebaseApp();
 
-interface ModelPayload {
-  filename: string;
-  type: string;
+interface DataPart {
   name: string;
   data: Buffer;
 }
 
+interface ModelPayload extends DataPart {
+  filename: string;
+  type: string;
+}
+
 type QuoteRequestPayload = {
   model: ModelPayload;
-  firstName: string;
-  lastName: string;
-  email: string;
-  description: string;
+  firstName: DataPart;
+  lastName: DataPart;
+  email: DataPart;
+  description: DataPart;
 };
 
 export const handler = createHandler({ allowMethods: ['POST'] }, async ({ event }) => {
@@ -59,14 +62,17 @@ export const handler = createHandler({ allowMethods: ['POST'] }, async ({ event 
 
   const bodyParts = parse(Buffer.from(event.body, 'base64'), boundary);
 
-  const payload = bodyParts.reduce<QuoteRequestPayload>((result, part) => {
-    if (part.name) {
-      // @ts-expect-error
-      result[part.name] = part;
-    }
+  const { model, email, firstName, lastName, description } = bodyParts.reduce<QuoteRequestPayload>(
+    (result, part) => {
+      if (part.name) {
+        // @ts-expect-error
+        result[part.name] = part;
+      }
 
-    return result;
-  }, {} as never);
+      return result;
+    },
+    {} as never,
+  );
 
   // const bucket = getStorage().bucket(FIREBASE_STORAGE_BUCKET);
   //
@@ -84,29 +90,30 @@ export const handler = createHandler({ allowMethods: ['POST'] }, async ({ event 
   // const modelUrl = await getDownloadURL(file);
 
   const response = await sendEmail('quote-request', {
-    from: payload.email,
+    from: email.data.toString(),
     to: COMPANY_EMAIL,
     subject: 'Quote Request',
     parameters: {
-      firstName: payload.firstName,
-      lastName: payload.lastName,
-      description: payload.description,
+      firstName: firstName.data.toString(),
+      lastName: lastName.data.toString(),
+      description: description.data.toString(),
     },
     attachments: [
       {
-        content: payload.model.data.toString('base64'),
-        filename: payload.model.filename,
-        type: payload.model.type,
+        content: model.data.toString('base64'),
+        filename: model.filename,
+        type: model.type,
       },
     ],
   });
 
   if (!response.ok) {
-    console.error(await response.text());
+    console.error(await response.json());
   }
 
   return {
     status: response.ok ? 'ok' : 'error',
+    statusCode: response.status,
     data: {},
   };
 });

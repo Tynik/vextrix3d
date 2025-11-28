@@ -1,16 +1,19 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
 import { HoneyForm } from '@react-hive/honey-form';
-import { HoneyFlexBox } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
 import { toast } from 'react-toastify';
 
 import { handleApiError, netlifyRequest } from '~/api';
-import { Button, FilePicker, TextInput } from '~/components';
+import { Button, FilePicker, Text, TextInput } from '~/components';
 import { Page } from './sections';
-import { useNavigate } from 'react-router-dom';
+import { IconButton } from '~/components/IconButton';
+import { DeleteIcon } from '~/icons';
+import { assert } from '@react-hive/honey-utils';
 
 type QuoteRequestFormData = {
-  model: File;
+  model: File | undefined;
   firstName: string;
   lastName: string;
   email: string;
@@ -74,6 +77,8 @@ export const QuoteRequestPage = () => {
   };
 
   const submitQuoteRequest: HoneyFormOnSubmit<QuoteRequestFormData> = async data => {
+    assert(data.model, 'Model is required');
+
     const formData = new FormData();
 
     formData.append('model', data.model);
@@ -92,7 +97,9 @@ export const QuoteRequestPage = () => {
         type: 'success',
       });
 
-      navigate('/');
+      navigate('/', {
+        replace: true,
+      });
     } catch (e) {
       handleApiError(e);
     }
@@ -101,19 +108,39 @@ export const QuoteRequestPage = () => {
   return (
     <Page title="Quote Request">
       <HoneyForm fields={QUOTE_REQUEST_FORM_FIELDS} onSubmit={submitQuoteRequest}>
-        {({ formFields }) => (
-          <HoneyFlexBox $gap={2}>
-            <FilePicker
-              accept={['.stl', '.obj', '.3mf']}
-              inputProps={{
-                multiple: false,
-              }}
-              onSelectFiles={files => formFields.model.setValue(files[0])}
-            >
-              <Button as="div" color="accent">
-                Select Model
-              </Button>
-            </FilePicker>
+        {({ formValues, formFields }) => (
+          <HoneyFlexBox $gap={2} $width="100%" $maxWidth="700px">
+            {formValues.model ? (
+              <HoneyBox
+                $display="flex"
+                $gap={2}
+                $alignItems="center"
+                $padding={2}
+                $borderRadius="4px"
+                $border="1px solid"
+                $borderColor="neutral.grayLight"
+              >
+                <Text variant="subtitle1" ellipsis>
+                  {formValues.model.name}
+                </Text>
+
+                <IconButton onClick={() => formFields.model.setValue(undefined)} $marginLeft="auto">
+                  <DeleteIcon $color="error.signalCoral" $size="medium" />
+                </IconButton>
+              </HoneyBox>
+            ) : (
+              <FilePicker
+                accept={['.stl', '.obj', '.3mf']}
+                inputProps={{
+                  multiple: false,
+                }}
+                onSelectFiles={files => formFields.model.setValue(files[0])}
+              >
+                <Button as="div" color="accent">
+                  Select Model
+                </Button>
+              </FilePicker>
+            )}
 
             <TextInput
               label="First Name"

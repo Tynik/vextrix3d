@@ -12,8 +12,8 @@ export type IconStyledProps = SVGAttributes<SVGElement> & {
 
 const SIZES_MAP: Record<IconSize, HoneyCSSDimensionValue> = {
   small: '16px',
-  medium: '20px',
-  large: '24px',
+  medium: '24px',
+  large: '32px',
 };
 
 export const IconStyled = styled('svg')<IconStyledProps>`

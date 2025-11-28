@@ -16,15 +16,23 @@ const SHADOWS_CONFIG: Record<TextShadow, string> = {
 export type TextProps<Element extends ElementType = 'p'> = HoneyBoxProps<Element> & {
   variant: keyof HoneyFonts;
   shadow?: TextShadow;
+  ellipsis?: boolean;
 };
 
 export const Text = styled<TextProps>(HoneyBox, ({ as = 'p', $color = 'secondary.carbonInk' }) => ({
   as,
   $color,
 }))<TextProps>`
-  ${({ variant, shadow = 'none' }) => css`
+  ${({ variant, ellipsis = false, shadow = 'none' }) => css`
     ${resolveFont(variant)};
 
     text-shadow: ${SHADOWS_CONFIG[shadow]};
+
+    ${ellipsis &&
+    css`
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    `}
   `}
 `;
