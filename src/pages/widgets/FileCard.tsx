@@ -22,7 +22,7 @@ export const FileCard = ({ file, onRemove }: FileCardProps) => {
         $border="1px solid"
         $borderColor="neutral.grayLight"
       >
-        <HoneyFlexBox $gap={0.5}>
+        <HoneyFlexBox $gap={0.5} $overflow="hidden">
           <Text variant="subtitle1" ellipsis>
             {file.name}
           </Text>
