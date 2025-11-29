@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 import { handleApiError, quoteRequest } from '~/api';
 import { ErrorIcon } from '~/icons';
-import { Button, FilePicker, Form, Text, TextInput } from '~/components';
+import { Alert, Button, FilePicker, Form, Text, TextInput } from '~/components';
 import { Page } from './sections';
 import { FileCard } from './widgets';
 
@@ -118,6 +118,8 @@ export const QuoteRequestPage = () => {
       <Form fields={QUOTE_REQUEST_FORM_FIELDS} onSubmit={submitQuoteRequest}>
         {({ formValues, formFields, isFormSubmitting }) => (
           <>
+            <Alert variant="info">We support *.3mf, *.obj and *.stl files</Alert>
+
             <HoneyFlexBox $gap={0.5}>
               {formValues.model ? (
                 <FileCard
@@ -126,7 +128,7 @@ export const QuoteRequestPage = () => {
                 />
               ) : (
                 <FilePicker
-                  accept={['model/stl', 'model/obj', 'model/3mf', '.stl', '.obj', '.3mf']}
+                  accept={['*/*']}
                   inputProps={{
                     multiple: false,
                   }}

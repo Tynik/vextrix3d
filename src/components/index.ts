@@ -1,3 +1,4 @@
+export * from './Alert';
 export * from './Backdrop';
 export * from './CueShadows';
 export * from './Dialog';
