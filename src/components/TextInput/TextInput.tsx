@@ -9,7 +9,7 @@ interface TextInputProps
   extends Omit<TextInputStyledProps, 'onChange'>,
     Pick<
       InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>,
-      'value' | 'placeholder' | 'onChange'
+      'value' | 'placeholder' | 'name' | 'type' | 'onChange'
     > {
   label: string;
   error?: ReactNode;
@@ -26,6 +26,8 @@ interface TextInputProps
 export const TextInput = ({
   value,
   label,
+  name,
+  type,
   placeholder = 'Type here...',
   error,
   multiline = false,
@@ -43,6 +45,8 @@ export const TextInput = ({
 
       <Component
         id={id}
+        name={name}
+        type={type}
         value={value}
         placeholder={placeholder}
         rows={multiline ? 10 : undefined}
