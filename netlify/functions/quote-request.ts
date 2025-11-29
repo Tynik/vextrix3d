@@ -60,6 +60,7 @@ export const handler = createHandler<QuoteRequestPayload>(
         downloadModelUrl,
         firstName: payload.firstName,
         lastName: payload.lastName,
+        email: payload.email,
         description: payload.description,
       },
     });

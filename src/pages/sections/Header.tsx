@@ -15,6 +15,7 @@ export const Header = () => {
       $flexShrink={0}
       $height="50px"
       $backgroundColor="neutral.grayDark"
+      $zIndex={1}
     >
       <Container $padding={{ xs: 3, md: 5 }}>
         <Text as={Link} to="/" variant="h4" $color="neutral.white">

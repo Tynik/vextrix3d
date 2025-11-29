@@ -40,7 +40,7 @@ export const App = () => {
 
       <Footer />
 
-      <ToastContainer position="bottom-center" />
+      <ToastContainer position="top-center" />
     </>
   );
 };

@@ -37,6 +37,9 @@ const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<QuoteRequestFormData> = {
     required: true,
     validator: model =>
       (model?.size ?? 0) < 250 * 1024 * 1024 || 'Model size must be less than 250MB',
+    errorMessages: {
+      required: 'Model is required',
+    },
   },
   firstName: {
     type: 'string',
@@ -157,36 +160,36 @@ export const QuoteRequestPage = () => {
             }
           >
             <HoneyFlexBox $gap={2} $width="100%" $maxWidth="700px">
-              {formValues.model ? (
-                <HoneyFlexBox $gap={0.5}>
+              <HoneyFlexBox $gap={0.5}>
+                {formValues.model ? (
                   <FileCard
                     file={formValues.model}
                     onRemove={() => formFields.model.setValue(undefined)}
                   />
+                ) : (
+                  <FilePicker
+                    accept={['.stl', '.obj', '.3mf']}
+                    inputProps={{
+                      multiple: false,
+                    }}
+                    onSelectFiles={files => formFields.model.setValue(files[0])}
+                  >
+                    <Button as="div" color="accent">
+                      Select Model
+                    </Button>
+                  </FilePicker>
+                )}
 
-                  {formFields.model.errors.length > 0 && (
-                    <HoneyBox $display="flex" $gap={0.5} $alignItems="center">
-                      <ErrorIcon size="small" color="error.signalCoral" />
+                {formFields.model.errors.length > 0 && (
+                  <HoneyBox $display="flex" $gap={0.5} $alignItems="center">
+                    <ErrorIcon size="small" color="error.signalCoral" />
 
-                      <Text variant="caption1" $color="error.crimsonRed" aria-label="File error">
-                        {formFields.model.errors[0]?.message}
-                      </Text>
-                    </HoneyBox>
-                  )}
-                </HoneyFlexBox>
-              ) : (
-                <FilePicker
-                  accept={['.stl', '.obj', '.3mf']}
-                  inputProps={{
-                    multiple: false,
-                  }}
-                  onSelectFiles={files => formFields.model.setValue(files[0])}
-                >
-                  <Button as="div" color="accent">
-                    Select Model
-                  </Button>
-                </FilePicker>
-              )}
+                    <Text variant="caption1" $color="error.crimsonRed" aria-label="File error">
+                      {formFields.model.errors[0]?.message}
+                    </Text>
+                  </HoneyBox>
+                )}
+              </HoneyFlexBox>
 
               <TextInput
                 label="* First Name"
