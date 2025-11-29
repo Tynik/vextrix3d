@@ -2565,10 +2565,10 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@react-hive/honey-form@7.4.0":
-  version "7.4.0"
-  resolved "https://registry.yarnpkg.com/@react-hive/honey-form/-/honey-form-7.4.0.tgz#19ae30d0cee702f74282f549b2d0937eb78ec16f"
-  integrity sha512-RNXSRCgwF+aH15klvsREoUZKEKYcHVGq0e6p/ixzp5Ys90/gVW8RpbHINO/XLJLgbXcE3K4hAG0sH/kfSBKDMw==
+"@react-hive/honey-form@7.5.0":
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/@react-hive/honey-form/-/honey-form-7.5.0.tgz#b9e15c3c4c87c16ab8892ea04cb0556c503e8586"
+  integrity sha512-c1+65BhSvHwzbtJvDr6bnwaPieoE1wi4j/0WHAfqSgmOvGDRAjwf2HUUiMWiyAbrAekkhVCdzH7GIXSZFRsR3g==
   dependencies:
     "@react-hive/honey-utils" "3.4.0"
 

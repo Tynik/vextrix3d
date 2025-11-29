@@ -3,7 +3,7 @@ import type { PropsWithChildren } from 'react';
 import type { HoneyFlexBoxProps } from '@react-hive/honey-layout';
 import { HoneyFlexBox } from '@react-hive/honey-layout';
 
-import { Container, Text } from '~/components';
+import { Container, Divider, Text } from '~/components';
 import { Header } from '~/pages';
 
 interface PageProps {
@@ -16,12 +16,14 @@ export const Page = ({ children, title, contentProps }: PropsWithChildren<PagePr
     <>
       <Header />
 
-      <Container as="main" $padding={{ xs: 3, md: 5 }} $flexGrow={1}>
+      <Container as="main" $padding={3} $gap={1} $flexGrow={1}>
         <Text variant="h3" aria-label="Page title">
           {title}
         </Text>
 
-        <HoneyFlexBox $marginTop={3} {...contentProps}>
+        <Divider />
+
+        <HoneyFlexBox $marginTop={2} {...contentProps}>
           {children}
         </HoneyFlexBox>
       </Container>

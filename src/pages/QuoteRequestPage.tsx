@@ -1,27 +1,15 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
-import { HoneyForm } from '@react-hive/honey-form';
-import { HoneyBox, HoneyEffect, HoneyFlexBox, HoneyStatusContent } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
 import { assert } from '@react-hive/honey-utils';
 import { toast } from 'react-toastify';
 
 import { handleApiError, quoteRequest } from '~/api';
-import { Button, FilePicker, Progress, Text, TextInput } from '~/components';
+import { ErrorIcon } from '~/icons';
+import { Button, FilePicker, Form, Text, TextInput } from '~/components';
 import { Page } from './sections';
 import { FileCard } from './widgets';
-import { ErrorIcon } from '~/icons';
-import { css } from '@react-hive/honey-style';
-
-const FormEffect: HoneyEffect = () => css`
-  > form {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-
-    padding: ${2};
-  }
-`;
 
 type QuoteRequestFormData = {
   model: File | undefined;
@@ -126,103 +114,78 @@ export const QuoteRequestPage = () => {
   };
 
   return (
-    <Page
-      title="Quote Request"
-      contentProps={{
-        effects: [FormEffect],
-      }}
-    >
-      <HoneyForm fields={QUOTE_REQUEST_FORM_FIELDS} onSubmit={submitQuoteRequest}>
+    <Page title="Quote Request">
+      <Form fields={QUOTE_REQUEST_FORM_FIELDS} onSubmit={submitQuoteRequest}>
         {({ formValues, formFields, isFormSubmitting }) => (
-          <HoneyStatusContent
-            loading={isFormSubmitting}
-            loadingOverContent={true}
-            loadingContent={
-              <>
-                {/* Overlay behind the spinner */}
-                <HoneyBox
-                  $position="absolute"
-                  $inset={0}
-                  $backgroundColor="neutral.grayMedium"
-                  $borderRadius="4px"
-                  $opacity={0.2}
-                  // ARIA
-                  aria-hidden="true"
+          <>
+            <HoneyFlexBox $gap={0.5}>
+              {formValues.model ? (
+                <FileCard
+                  file={formValues.model}
+                  onRemove={() => formFields.model.setValue(undefined)}
                 />
+              ) : (
+                <FilePicker
+                  accept={['.stl', '.obj', '.3mf']}
+                  inputProps={{
+                    multiple: false,
+                  }}
+                  onSelectFiles={files => formFields.model.setValue(files[0])}
+                >
+                  <Button as="div" color="accent">
+                    Select Model
+                  </Button>
+                </FilePicker>
+              )}
 
-                <Progress
-                  $position="absolute"
-                  $top="50%"
-                  $left="50%"
-                  $transform="translate(-50%, -50%)"
-                />
-              </>
-            }
-          >
-            <HoneyFlexBox $gap={2} $width="100%" $maxWidth="700px">
-              <HoneyFlexBox $gap={0.5}>
-                {formValues.model ? (
-                  <FileCard
-                    file={formValues.model}
-                    onRemove={() => formFields.model.setValue(undefined)}
-                  />
-                ) : (
-                  <FilePicker
-                    accept={['.stl', '.obj', '.3mf']}
-                    inputProps={{
-                      multiple: false,
-                    }}
-                    onSelectFiles={files => formFields.model.setValue(files[0])}
-                  >
-                    <Button as="div" color="accent">
-                      Select Model
-                    </Button>
-                  </FilePicker>
-                )}
+              {formFields.model.errors.length > 0 && (
+                <HoneyBox $display="flex" $gap={0.5} $alignItems="center">
+                  <ErrorIcon size="small" color="error.signalCoral" />
 
-                {formFields.model.errors.length > 0 && (
-                  <HoneyBox $display="flex" $gap={0.5} $alignItems="center">
-                    <ErrorIcon size="small" color="error.signalCoral" />
-
-                    <Text variant="caption1" $color="error.crimsonRed" aria-label="File error">
-                      {formFields.model.errors[0]?.message}
-                    </Text>
-                  </HoneyBox>
-                )}
-              </HoneyFlexBox>
-
-              <TextInput
-                label="* First Name"
-                error={formFields.firstName.errors[0]?.message}
-                {...formFields.firstName.props}
-              />
-
-              <TextInput
-                label="* Last Name"
-                error={formFields.lastName.errors[0]?.message}
-                {...formFields.lastName.props}
-              />
-
-              <TextInput
-                label="* Email"
-                error={formFields.email.errors[0]?.message}
-                {...formFields.email.props}
-              />
-
-              <TextInput
-                label="* Description"
-                error={formFields.description.errors[0]?.message}
-                multiline={true}
-                {...formFields.description.props}
-              />
-
-              <Button disabled={isFormSubmitting} type="submit" color="success" $marginLeft="auto">
-                Send
-              </Button>
+                  <Text variant="caption1" $color="error.crimsonRed" aria-label="File error">
+                    {formFields.model.errors[0]?.message}
+                  </Text>
+                </HoneyBox>
+              )}
             </HoneyFlexBox>
-          </HoneyStatusContent>
+
+            <TextInput
+              label="* First Name"
+              error={formFields.firstName.errors[0]?.message}
+              {...formFields.firstName.props}
+            />
+
+            <TextInput
+              label="* Last Name"
+              error={formFields.lastName.errors[0]?.message}
+              {...formFields.lastName.props}
+            />
+
+            <TextInput
+              label="* Email"
+              error={formFields.email.errors[0]?.message}
+              {...formFields.email.props}
+            />
+
+            <TextInput
+              label="* Description"
+              error={formFields.description.errors[0]?.message}
+              multiline={true}
+              {...formFields.description.props}
+            />
+
+            <Button
+              loading={isFormSubmitting}
+              disabled={isFormSubmitting}
+              type="submit"
+              color="success"
+              $marginLeft="auto"
+            >
+              Send
+            </Button>
+          </>
         )}
-      </HoneyForm>
+      </Form>
     </Page>
   );
 };

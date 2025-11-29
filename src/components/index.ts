@@ -9,3 +9,5 @@ export * from './FilePicker';
 export * from './TextInput';
 export * from './IconButton';
 export * from './Progress';
+export * from './Divider';
+export * from './Form';

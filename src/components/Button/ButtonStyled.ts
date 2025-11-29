@@ -3,6 +3,7 @@ import { HoneyBox } from '@react-hive/honey-layout';
 import { pxToRem, resolveColor } from '@react-hive/honey-style';
 import type { HoneyColor, HoneyCSSDimensionValue } from '@react-hive/honey-style';
 import { css, styled } from '@react-hive/honey-style';
+import type { ElementType } from 'react';
 
 type ButtonColor = 'primary' | 'secondary' | 'accent' | 'success';
 
@@ -48,19 +49,19 @@ const COLORS_CONFIG: Record<ButtonColor, ColorsConfig> = {
   },
 };
 
-interface ButtonProps extends HoneyBoxProps<'button'> {
+export type ButtonStyledProps<Element extends ElementType = 'button'> = HoneyBoxProps<Element> & {
   size?: ButtonSize;
   color?: ButtonColor;
-}
+};
 
-export const Button = styled<ButtonProps>(
+export const ButtonStyled = styled<ButtonStyledProps>(
   HoneyBox,
   ({ as = 'button', type = 'button', $height = { xs: '42px', md: '34px' } }) => ({
     as,
     type,
     $height,
   }),
-)<ButtonProps>`
+)<ButtonStyledProps>`
   ${({ size = 'medium', color = 'primary' }) => {
     const colorConfig = COLORS_CONFIG[color];
 
@@ -68,6 +69,7 @@ export const Button = styled<ButtonProps>(
       @honey-center {
         width: ${SIZES_MAP[size]};
 
+        gap: ${0.5};
         flex-shrink: 0;
 
         border-radius: 4px;
