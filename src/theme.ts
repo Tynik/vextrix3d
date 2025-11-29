@@ -1,6 +1,6 @@
 import type { HoneyCSSColor, HoneyFont, HoneyTheme } from '@react-hive/honey-style';
 
-type PrimaryColors = 'primaryIndigo' | 'aquaMintPulse' | 'mintGlow' | 'signalCoral';
+type PrimaryColors = 'primaryIndigo' | 'aquaMintPulse' | 'mintGlow';
 
 type SecondaryColors = 'cloudMist' | 'slateAlloy' | 'carbonInk';
 
@@ -71,7 +71,6 @@ export const theme: HoneyTheme = {
       primaryIndigo: '#5D6FFF', // Main brand blue — confidence, precision
       aquaMintPulse: '#00BFA6', // Accent — energy, freshness
       mintGlow: '#E8FBF8', // Background accent or hover
-      signalCoral: '#FF5C5C', // Alert / highlight
     },
     secondary: {
       cloudMist: '#F5F6FA', // Clean, light background
@@ -95,7 +94,7 @@ export const theme: HoneyTheme = {
       orange: '#FF8C00',
     },
     error: {
-      signalCoral: '#FF5C5C', // Brand-tied alert red
+      signalCoral: '#FF5C5C',
       crimsonRed: '#DC143C',
     },
   },

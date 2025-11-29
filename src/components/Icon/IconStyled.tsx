@@ -4,10 +4,10 @@ import { css, styled, resolveColor } from '@react-hive/honey-style';
 
 type IconSize = 'small' | 'medium' | 'large';
 
-export type IconStyledProps = SVGAttributes<SVGElement> & {
-  $size?: IconSize;
-  $color?: HoneyColorKey;
-  $rotate?: 90 | 180;
+export type IconStyledProps = Omit<SVGAttributes<SVGElement>, 'color' | 'rotate'> & {
+  size?: IconSize;
+  color?: HoneyColorKey;
+  rotate?: 90 | 180;
 };
 
 const SIZES_MAP: Record<IconSize, HoneyCSSDimensionValue> = {
@@ -17,7 +17,7 @@ const SIZES_MAP: Record<IconSize, HoneyCSSDimensionValue> = {
 };
 
 export const IconStyled = styled('svg')<IconStyledProps>`
-  ${({ width, height, $color = 'neutral.black', $size = 'medium', $rotate, stroke, scale }) => css`
+  ${({ width, height, color = 'neutral.black', size = 'medium', rotate, stroke, scale }) => css`
     display: flex;
     align-items: center;
     justify-content: center;
@@ -25,16 +25,16 @@ export const IconStyled = styled('svg')<IconStyledProps>`
 
     transition: all 0.3s linear;
 
-    width: ${width ?? SIZES_MAP[$size]};
-    height: ${height ?? SIZES_MAP[$size]};
+    width: ${width ?? SIZES_MAP[size]};
+    height: ${height ?? SIZES_MAP[size]};
 
-    transform: ${$rotate && `rotate(${$rotate}deg)`} scale(${scale || 1});
+    transform: ${rotate && `rotate(${rotate}deg)`} scale(${scale || 1});
 
     &,
     path,
     rect {
       stroke: ${stroke};
-      fill: ${$color && resolveColor($color)};
+      fill: ${color && resolveColor(color)};
     }
   `};
 `;

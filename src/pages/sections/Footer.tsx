@@ -63,7 +63,7 @@ export const Footer = () => (
 
           <HoneyFlexBox $gap={1}>
             <HoneyBox $display="flex" $gap={1} $alignItems="center">
-              <PlaceIcon $color="neutral.grayMedium" />
+              <PlaceIcon color="neutral.grayMedium" />
 
               <Text variant="body1" $color="neutral.white">
                 Chelmsford, Essex
@@ -71,7 +71,7 @@ export const Footer = () => (
             </HoneyBox>
 
             <HoneyBox $display="flex" $gap={1} $alignItems="center">
-              <MailIcon $color="neutral.grayMedium" />
+              <MailIcon color="neutral.grayMedium" />
 
               <Text as="a" variant="body1" href={`mailto:${CONTACT_EMAIL}`} $color="neutral.white">
                 {CONTACT_EMAIL}

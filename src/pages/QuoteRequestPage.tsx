@@ -2,15 +2,26 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
 import { HoneyForm } from '@react-hive/honey-form';
-import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyEffect, HoneyFlexBox, HoneyStatusContent } from '@react-hive/honey-layout';
+import { assert } from '@react-hive/honey-utils';
 import { toast } from 'react-toastify';
 
-import { handleApiError, netlifyRequest } from '~/api';
-import { Button, FilePicker, Text, TextInput } from '~/components';
+import { handleApiError, quoteRequest } from '~/api';
+import { Button, FilePicker, Progress, Text, TextInput } from '~/components';
 import { Page } from './sections';
-import { IconButton } from '~/components/IconButton';
-import { DeleteIcon } from '~/icons';
-import { assert } from '@react-hive/honey-utils';
+import { FileCard } from './widgets';
+import { ErrorIcon } from '~/icons';
+import { css } from '@react-hive/honey-style';
+
+const FormEffect: HoneyEffect = () => css`
+  > form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    padding: ${2};
+  }
+`;
 
 type QuoteRequestFormData = {
   model: File | undefined;
@@ -24,6 +35,8 @@ const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<QuoteRequestFormData> = {
   model: {
     type: 'file',
     required: true,
+    validator: model =>
+      (model?.size ?? 0) < 250 * 1024 * 1024 || 'Model size must be less than 250MB',
   },
   firstName: {
     type: 'string',
@@ -79,18 +92,22 @@ export const QuoteRequestPage = () => {
   const submitQuoteRequest: HoneyFormOnSubmit<QuoteRequestFormData> = async data => {
     assert(data.model, 'Model is required');
 
-    const formData = new FormData();
-
-    formData.append('model', data.model);
-    formData.append('firstName', data.firstName);
-    formData.append('lastName', data.lastName);
-    formData.append('email', data.email);
-    formData.append('description', data.description);
-
     try {
-      await netlifyRequest('quote-request', {
-        method: 'POST',
-        payload: formData,
+      const uploadModelUrl = await quoteRequest({
+        fileName: data.model.name,
+        contentType: data.model.type,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        description: data.description,
+      });
+
+      await fetch(uploadModelUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': data.model.type,
+        },
+        body: data.model,
       });
 
       toast('Quote request successfully submitted', {
@@ -106,71 +123,101 @@ export const QuoteRequestPage = () => {
   };
 
   return (
-    <Page title="Quote Request">
+    <Page
+      title="Quote Request"
+      contentProps={{
+        effects: [FormEffect],
+      }}
+    >
       <HoneyForm fields={QUOTE_REQUEST_FORM_FIELDS} onSubmit={submitQuoteRequest}>
-        {({ formValues, formFields }) => (
-          <HoneyFlexBox $gap={2} $width="100%" $maxWidth="700px">
-            {formValues.model ? (
-              <HoneyBox
-                $display="flex"
-                $gap={2}
-                $alignItems="center"
-                $padding={2}
-                $borderRadius="4px"
-                $border="1px solid"
-                $borderColor="neutral.grayLight"
-              >
-                <Text variant="subtitle1" ellipsis>
-                  {formValues.model.name}
-                </Text>
+        {({ formValues, formFields, isFormSubmitting }) => (
+          <HoneyStatusContent
+            loading={isFormSubmitting}
+            loadingOverContent={true}
+            loadingContent={
+              <>
+                {/* Overlay behind the spinner */}
+                <HoneyBox
+                  $position="absolute"
+                  $inset={0}
+                  $backgroundColor="neutral.grayMedium"
+                  $borderRadius="4px"
+                  $opacity={0.2}
+                  // ARIA
+                  aria-hidden="true"
+                />
 
-                <IconButton onClick={() => formFields.model.setValue(undefined)} $marginLeft="auto">
-                  <DeleteIcon $color="error.signalCoral" $size="medium" />
-                </IconButton>
-              </HoneyBox>
-            ) : (
-              <FilePicker
-                accept={['.stl', '.obj', '.3mf']}
-                inputProps={{
-                  multiple: false,
-                }}
-                onSelectFiles={files => formFields.model.setValue(files[0])}
-              >
-                <Button as="div" color="accent">
-                  Select Model
-                </Button>
-              </FilePicker>
-            )}
+                <Progress
+                  $position="absolute"
+                  $top="50%"
+                  $left="50%"
+                  $transform="translate(-50%, -50%)"
+                />
+              </>
+            }
+          >
+            <HoneyFlexBox $gap={2} $width="100%" $maxWidth="700px">
+              {formValues.model ? (
+                <HoneyFlexBox $gap={0.5}>
+                  <FileCard
+                    file={formValues.model}
+                    onRemove={() => formFields.model.setValue(undefined)}
+                  />
 
-            <TextInput
-              label="First Name"
-              error={formFields.firstName.errors[0]?.message}
-              {...formFields.firstName.props}
-            />
+                  {formFields.model.errors.length > 0 && (
+                    <HoneyBox $display="flex" $gap={0.5} $alignItems="center">
+                      <ErrorIcon size="small" color="error.signalCoral" />
 
-            <TextInput
-              label="Last Name"
-              error={formFields.lastName.errors[0]?.message}
-              {...formFields.lastName.props}
-            />
+                      <Text variant="caption1" $color="error.crimsonRed" aria-label="File error">
+                        {formFields.model.errors[0]?.message}
+                      </Text>
+                    </HoneyBox>
+                  )}
+                </HoneyFlexBox>
+              ) : (
+                <FilePicker
+                  accept={['.stl', '.obj', '.3mf']}
+                  inputProps={{
+                    multiple: false,
+                  }}
+                  onSelectFiles={files => formFields.model.setValue(files[0])}
+                >
+                  <Button as="div" color="accent">
+                    Select Model
+                  </Button>
+                </FilePicker>
+              )}
 
-            <TextInput
-              label="Email"
-              error={formFields.email.errors[0]?.message}
-              {...formFields.email.props}
-            />
+              <TextInput
+                label="* First Name"
+                error={formFields.firstName.errors[0]?.message}
+                {...formFields.firstName.props}
+              />
 
-            <TextInput
-              label="Description"
-              error={formFields.description.errors[0]?.message}
-              multiline={true}
-              {...formFields.description.props}
-            />
+              <TextInput
+                label="* Last Name"
+                error={formFields.lastName.errors[0]?.message}
+                {...formFields.lastName.props}
+              />
 
-            <Button type="submit" color="success" $marginLeft="auto">
-              Submit
-            </Button>
-          </HoneyFlexBox>
+              <TextInput
+                label="* Email"
+                error={formFields.email.errors[0]?.message}
+                {...formFields.email.props}
+              />
+
+              <TextInput
+                label="* Description"
+                error={formFields.description.errors[0]?.message}
+                multiline={true}
+                {...formFields.description.props}
+              />
+
+              <Button disabled={isFormSubmitting} type="submit" color="success" $marginLeft="auto">
+                Send
+              </Button>
+            </HoneyFlexBox>
+          </HoneyStatusContent>
         )}
       </HoneyForm>
     </Page>

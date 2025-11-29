@@ -13,6 +13,7 @@ type FilePickerStyledProps = HoneyBoxProps<'label'>;
 const FilePickerStyled = styled(HoneyBox, {
   as: 'label',
 })<FilePickerStyledProps>`
+  width: max-content;
   cursor: pointer;
 
   input {

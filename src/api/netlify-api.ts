@@ -1,17 +1,21 @@
 import { netlifyRequest } from '~/api/netlify-request';
 
-interface UploadedModel {
-  url: string;
+interface QuoteRequestPayload {
+  fileName: string;
+  contentType: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  description: string;
 }
 
-export const uploadQuoteRequestModel = async (file: File) => {
-  const formData = new FormData();
-  formData.append('file', file);
-
-  return (
-    await netlifyRequest<UploadedModel>('upload-quote-request-model', {
-      payload: formData,
+export const quoteRequest = async (payload: QuoteRequestPayload) => {
+  const { uploadModelUrl } = (
+    await netlifyRequest<{ uploadModelUrl: string }>('quote-request', {
       method: 'POST',
+      payload,
     })
   ).data;
+
+  return uploadModelUrl;
 };

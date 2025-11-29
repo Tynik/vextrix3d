@@ -55,7 +55,7 @@ interface ButtonProps extends HoneyBoxProps<'button'> {
 
 export const Button = styled<ButtonProps>(
   HoneyBox,
-  ({ as = 'button', type = 'button', $height = '34px' }) => ({
+  ({ as = 'button', type = 'button', $height = { xs: '42px', md: '34px' } }) => ({
     as,
     type,
     $height,

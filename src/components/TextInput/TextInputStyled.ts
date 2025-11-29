@@ -1,4 +1,4 @@
-import { bpMedia, HoneyBoxProps } from '@react-hive/honey-layout';
+import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox } from '@react-hive/honey-layout';
 import { css, resolveFont, styled } from '@react-hive/honey-style';
 
@@ -10,6 +10,8 @@ export const TextInputStyled = styled(HoneyBox)`
 
     label {
       ${resolveFont('body2')};
+
+      color: ${colors.secondary.carbonInk};
 
       &:has(~ input:focus) {
         //
@@ -31,7 +33,7 @@ export const TextInputStyled = styled(HoneyBox)`
       }
 
       &:has(~ .text-input__error) {
-        border-color: ${colors.error.crimsonRed};
+        border-color: ${colors.error.signalCoral};
       }
     }
 
@@ -49,9 +51,12 @@ export const TextInputStyled = styled(HoneyBox)`
     }
 
     .text-input__error {
-      ${resolveFont('caption1')}
+      @honey-center (vertical) {
+        ${resolveFont('caption1')}
 
-      color: ${colors.error.crimsonRed};
+        gap: ${0.5};
+        color: ${colors.error.crimsonRed};
+      }
     }
   `}
 `;

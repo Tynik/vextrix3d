@@ -1,6 +1,7 @@
 import React, { useId } from 'react';
 import type { InputHTMLAttributes, ReactNode } from 'react';
 
+import { ErrorIcon } from '~/icons';
 import type { TextInputStyledProps } from './TextInputStyled';
 import { TextInputStyled } from './TextInputStyled';
 
@@ -51,7 +52,13 @@ export const TextInput = ({
         {...inputProps}
       />
 
-      {error && <p className="text-input__error">{error}</p>}
+      {error && (
+        <p className="text-input__error">
+          <ErrorIcon size="small" color="error.signalCoral" />
+
+          {error}
+        </p>
+      )}
     </TextInputStyled>
   );
 };

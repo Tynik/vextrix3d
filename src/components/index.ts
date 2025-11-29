@@ -7,3 +7,5 @@ export * from './Button';
 export * from './Icon';
 export * from './FilePicker';
 export * from './TextInput';
+export * from './IconButton';
+export * from './Progress';

@@ -1,5 +1,6 @@
 import React from 'react';
 import type { PropsWithChildren } from 'react';
+import type { HoneyFlexBoxProps } from '@react-hive/honey-layout';
 import { HoneyFlexBox } from '@react-hive/honey-layout';
 
 import { Container, Text } from '~/components';
@@ -7,9 +8,10 @@ import { Header } from '~/pages';
 
 interface PageProps {
   title: string;
+  contentProps?: HoneyFlexBoxProps;
 }
 
-export const Page = ({ children, title }: PropsWithChildren<PageProps>) => {
+export const Page = ({ children, title, contentProps }: PropsWithChildren<PageProps>) => {
   return (
     <>
       <Header />
@@ -19,7 +21,9 @@ export const Page = ({ children, title }: PropsWithChildren<PageProps>) => {
           {title}
         </Text>
 
-        <HoneyFlexBox $marginTop={3}>{children}</HoneyFlexBox>
+        <HoneyFlexBox $marginTop={3} {...contentProps}>
+          {children}
+        </HoneyFlexBox>
       </Container>
     </>
   );
