@@ -6,7 +6,7 @@ import { styled } from '@react-hive/honey-style';
 import { HoneyBox } from '@react-hive/honey-layout';
 import type { Nullable } from '~/types';
 
-type AcceptFilesPattern = `.${string}`;
+type AcceptFilesPattern = `model/${string}` | `.${string}`;
 
 type FilePickerStyledProps = HoneyBoxProps<'label'>;
 

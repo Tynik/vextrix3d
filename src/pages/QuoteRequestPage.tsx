@@ -126,7 +126,7 @@ export const QuoteRequestPage = () => {
                 />
               ) : (
                 <FilePicker
-                  accept={['.stl', '.obj', '.3mf']}
+                  accept={['model/stl', 'model/obj', 'model/3mf', '.stl', '.obj', '.3mf']}
                   inputProps={{
                     multiple: false,
                   }}
