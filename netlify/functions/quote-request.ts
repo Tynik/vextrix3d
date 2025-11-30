@@ -53,7 +53,7 @@ export const handler = createHandler<QuoteRequestPayload>(
     });
 
     const response = await sendEmail('quote-request', {
-      from: payload.email,
+      from: 'Vextrix3D <no-reply@vextrix3d.co.uk>',
       to: COMPANY_EMAIL,
       subject: 'Quote Request',
       parameters: {
