@@ -68,7 +68,7 @@ export const theme: HoneyTheme = {
   dimensions: {},
   colors: {
     primary: {
-      primaryIndigo: '#5D6FFF', // Main brand blue — confidence, precision
+      primaryIndigo: '#617BFF', // Main brand blue — confidence, precision
       aquaMintPulse: '#00BFA6', // Accent — energy, freshness
       mintGlow: '#E8FBF8', // Background accent or hover
     },

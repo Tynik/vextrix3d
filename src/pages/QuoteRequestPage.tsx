@@ -6,7 +6,7 @@ import { assert } from '@react-hive/honey-utils';
 import { toast } from 'react-toastify';
 
 import { handleApiError, quoteRequest } from '~/api';
-import { ErrorIcon } from '~/icons';
+import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
 import { Alert, Button, FilePicker, Form, Text, TextInput } from '~/components';
 import { Page } from './sections';
 import { FileCard } from './widgets';
@@ -134,7 +134,8 @@ export const QuoteRequestPage = () => {
                   }}
                   onSelectFiles={files => formFields.model.setValue(files[0])}
                 >
-                  <Button as="div" color="accent">
+                  <Button as="div" color="accent" size="large">
+                    <AttachFileIcon size="small" color="neutral.white" />
                     Select Model
                   </Button>
                 </FilePicker>
@@ -180,9 +181,10 @@ export const QuoteRequestPage = () => {
               loading={isFormSubmitting}
               disabled={isFormSubmitting}
               type="submit"
-              color="success"
+              color="primary"
               $marginLeft="auto"
             >
+              <SendIcon size="small" color="neutral.white" />
               Send
             </Button>
           </>

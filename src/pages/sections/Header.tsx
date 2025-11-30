@@ -17,8 +17,22 @@ export const Header = () => {
       $backgroundColor="neutral.grayDark"
       $zIndex={1}
     >
-      <Container $padding={{ xs: 3, md: 5 }}>
-        <Text as={Link} to="/" variant="h4" $color="neutral.white">
+      <Container $padding={3}>
+        <Text
+          as={Link}
+          to="/"
+          variant="h4"
+          $display="flex"
+          $gap={1}
+          $alignItems="center"
+          $color="neutral.white"
+        >
+          <HoneyBox
+            $width="36px"
+            $height="36px"
+            $background="url('/assets/images/logo.png')"
+            $backgroundSize="cover"
+          />
           Vextrix3D
         </Text>
       </Container>

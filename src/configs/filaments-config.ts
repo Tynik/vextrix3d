@@ -1,5 +1,5 @@
 interface Filament {
-  name: 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ASA' | 'ASA-CF' | 'PA';
+  name: 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ASA' | 'ASA-CF' | 'PA' | 'TPU';
   description: string;
 }
 
@@ -43,5 +43,10 @@ export const FILAMENTS: Filament[] = [
     name: 'PA',
     description:
       'High-performance nylon filament offering exceptional toughness, impact resistance, and wear resistance. Ideal for gears, mechanical parts, hinges, and engineering components that require flexibility and long-term durability. Heat resistance up to ~120°C.',
+  },
+  {
+    name: 'TPU',
+    description:
+      'Flexible, impact-resistant material ideal for parts requiring elasticity and vibration damping. Perfect for phone cases, gaskets, seals, RC tires, and functional components that must withstand repeated bending. Offers excellent layer adhesion and abrasion resistance with heat resistance up to ~90°C.',
   },
 ];
