@@ -147,7 +147,7 @@ export const LandingPage = () => {
                     $width="250px"
                     $height="250px"
                     $backgroundColor="neutral.grayLight"
-                    $borderRadius="6px"
+                    $borderRadius="4px"
                     $backgroundImage={`url('/assets/images/${showcaseItem.image}')`}
                     $backgroundSize="cover"
                   />
@@ -170,7 +170,7 @@ export const LandingPage = () => {
                 $minHeight="450px"
                 $backgroundImage="url('/assets/images/IMG_1742.webp')"
                 $backgroundSize="cover"
-                $borderRadius="6px"
+                $borderRadius="4px"
                 $margin={[0, 'auto']}
               />
 
@@ -198,7 +198,7 @@ export const LandingPage = () => {
                       $padding={2}
                       $border="1px solid"
                       $borderColor="neutral.grayLight"
-                      $borderRadius="6px"
+                      $borderRadius="4px"
                     >
                       <div aria-label="Icon">{feature.icon}</div>
 
@@ -224,7 +224,7 @@ export const LandingPage = () => {
                     $maxWidth="450px"
                     $minHeight="150px"
                     $padding={2}
-                    $borderRadius="6px"
+                    $borderRadius="4px"
                     $border="1px solid"
                     $borderColor="neutral.grayLight"
                   >
@@ -232,7 +232,7 @@ export const LandingPage = () => {
                       $flexShrink={0}
                       $width="100px"
                       $height="100px"
-                      $backgroundImage="url('/assets/images/filament-1.webp')"
+                      $backgroundImage={`url('/assets/images/${filament.image}')`}
                       $backgroundSize="cover"
                     />
 

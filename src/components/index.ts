@@ -1,4 +1,5 @@
 export * from './Alert';
+export * from './Scale';
 export * from './Backdrop';
 export * from './CueShadows';
 export * from './Dialog';
