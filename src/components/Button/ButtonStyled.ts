@@ -7,12 +7,13 @@ import type { ElementType } from 'react';
 
 type ButtonColor = 'primary' | 'secondary' | 'accent' | 'success';
 
-type ButtonSize = 'small' | 'medium' | 'large';
+type ButtonSize = 'small' | 'medium' | 'large' | 'full';
 
 const SIZES_MAP: Record<ButtonSize, HoneyCSSDimensionValue> = {
   small: '80px',
   medium: '120px',
   large: '160px',
+  full: '100%',
 };
 
 interface ColorsConfig {

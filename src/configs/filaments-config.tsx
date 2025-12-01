@@ -15,7 +15,7 @@ import {
 } from '~/icons';
 
 type FilamentIcon =
-  | 'ecoFriendly'
+  | 'eco'
   | 'surfaceQuality'
   | 'durability'
   | 'strength'
@@ -42,7 +42,7 @@ export const FILAMENTS: Filament[] = [
     image: 'filament-1.webp',
     price: 18,
     maxTemperature: 60,
-    icons: ['ecoFriendly', 'surfaceQuality'],
+    icons: ['eco', 'surfaceQuality'],
     description:
       'Dimensionally stable, and perfect for prototypes, decorative models, and general-purpose parts. Offers good surface finish with minimal warping. Heat resistance up to ~60°C.',
     shortDescription: 'Stable, great for prototypes and decorative parts.',
@@ -52,7 +52,7 @@ export const FILAMENTS: Filament[] = [
     image: 'filament-1.webp',
     price: 19,
     maxTemperature: 60,
-    icons: ['ecoFriendly', 'surfaceQuality'],
+    icons: ['eco', 'durability', 'surfaceQuality'],
     description:
       'Enhanced PLA formulated for higher impact strength and improved durability. Ideal for functional parts, prototypes, and assemblies requiring better toughness than standard PLA. Heat resistance up to ~60°C with excellent dimensional accuracy.',
     shortDescription: 'Stronger, less brittle PLA suitable for light functional prints.',
@@ -137,7 +137,7 @@ export const FILAMENTS: Filament[] = [
 ];
 
 export const FILAMENT_ICONS_CONFIG: Record<FilamentIcon, ReactElement<IconProps>> = {
-  ecoFriendly: <RecyclingIcon />,
+  eco: <RecyclingIcon />,
   surfaceQuality: <TextureIcon />,
   durability: <ShieldIcon />,
   strength: <FitnessCenterIcon />,

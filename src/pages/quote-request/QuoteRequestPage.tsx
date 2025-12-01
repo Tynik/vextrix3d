@@ -1,58 +1,19 @@
 import React, { cloneElement } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
+import type { HoneyFormOnSubmit } from '@react-hive/honey-form';
 import { HoneyBox, HoneyFlexBox, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
 import { assert } from '@react-hive/honey-utils';
 import { toast } from 'react-toastify';
+import sortBy from 'lodash.sortby';
 
 import { handleApiError, quoteRequest } from '~/api';
 import { AttachFileIcon, CurrencyPoundIcon, ErrorIcon, SendIcon, ThermostatIcon } from '~/icons';
 import { FILAMENT_ICONS_CONFIG, FILAMENTS } from '~/configs';
 import { useFilaments } from '~/hooks';
 import { Alert, Button, FilePicker, Form, Scale, Text, TextInput } from '~/components';
-import { Page } from './sections';
-import { FileCard } from './widgets';
-
-type QuoteRequestFormData = {
-  model: File | undefined;
-  firstName: string;
-  lastName: string;
-  email: string;
-  description: string;
-};
-
-const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<QuoteRequestFormData> = {
-  model: {
-    type: 'file',
-    required: true,
-    validator: model =>
-      (model?.size ?? 0) < 250 * 1024 * 1024 || 'Model size must be less than 250MB',
-    errorMessages: {
-      required: 'Model is required',
-    },
-  },
-  firstName: {
-    type: 'string',
-    required: true,
-    max: 50,
-  },
-  lastName: {
-    type: 'string',
-    required: true,
-    max: 50,
-  },
-  email: {
-    type: 'email',
-    required: true,
-    mode: 'blur',
-    max: 255,
-  },
-  description: {
-    type: 'string',
-    required: true,
-    max: 5000,
-  },
-};
+import { Page, FileCard } from '~/pages';
+import type { QuoteRequestFormData } from './quote-request-model';
+import { QUOTE_REQUEST_FORM_FIELDS } from './quote-request-model';
 
 export const QuoteRequestPage = () => {
   const navigate = useNavigate();
@@ -122,8 +83,74 @@ export const QuoteRequestPage = () => {
       <Form fields={QUOTE_REQUEST_FORM_FIELDS} onSubmit={submitQuoteRequest}>
         {({ formValues, formFields, isFormSubmitting }) => (
           <HoneyFlexBox $gap={2}>
-            <HoneyGrid columns={2} spacing={2}>
-              <HoneyGridColumn $gap={2} $minWidth="350px">
+            <HoneyGrid columns={2} spacing={3}>
+              <HoneyGridColumn $gap={2}>
+                <HoneyBox
+                  $display="grid"
+                  $gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
+                  $gap={2}
+                  $flexWrap="wrap"
+                >
+                  {FILAMENTS.map(filament => (
+                    <HoneyFlexBox
+                      key={filament.name}
+                      $gap={1}
+                      $minHeight="150px"
+                      $padding={2}
+                      $borderRadius="4px"
+                      $border="1px solid"
+                      $borderColor="neutral.grayLight"
+                    >
+                      <HoneyBox $display="flex" $gap={1} $alignItems="center">
+                        <Text variant="subtitle1">{filament.name}</Text>
+
+                        {Boolean(filament.icons?.length) && (
+                          <HoneyBox
+                            $display="flex"
+                            $gap={0.5}
+                            $alignItems="center"
+                            $marginLeft="auto"
+                          >
+                            {sortBy(filament.icons).map(iconName =>
+                              cloneElement(FILAMENT_ICONS_CONFIG[iconName], {
+                                key: iconName,
+                                size: 'small',
+                                color: 'secondary.slateAlloy',
+                              }),
+                            )}
+                          </HoneyBox>
+                        )}
+                      </HoneyBox>
+
+                      <Text variant="body1">{filament.shortDescription}</Text>
+
+                      <HoneyFlexBox $gap={1.5} $marginTop={1}>
+                        {filament.price && (
+                          <Scale
+                            label="Price"
+                            icon={<CurrencyPoundIcon />}
+                            min={filamentPriceRange.min}
+                            max={filamentPriceRange.max}
+                            value={filament.price * (filament.difficulty ?? 1)}
+                          />
+                        )}
+
+                        {filament.maxTemperature && (
+                          <Scale
+                            label="Temp. Resistance"
+                            icon={<ThermostatIcon />}
+                            min={filamentTemperatureRange.min}
+                            max={filamentTemperatureRange.max}
+                            value={filament.maxTemperature}
+                          />
+                        )}
+                      </HoneyFlexBox>
+                    </HoneyFlexBox>
+                  ))}
+                </HoneyBox>
+              </HoneyGridColumn>
+
+              <HoneyGridColumn $gap={2} $minWidth="300px">
                 <Alert variant="info">We support *.3mf, *.obj and *.stl files</Alert>
 
                 <HoneyFlexBox $gap={0.5}>
@@ -182,85 +209,19 @@ export const QuoteRequestPage = () => {
                   multiline={true}
                   {...formFields.description.props}
                 />
-              </HoneyGridColumn>
 
-              <HoneyGridColumn $gap={2}>
-                <HoneyBox
-                  $display="grid"
-                  $gridTemplateColumns="repeat(auto-fill, minmax(200px, 1fr))"
-                  $gap={2}
-                  $flexWrap="wrap"
+                <Button
+                  loading={isFormSubmitting}
+                  disabled={isFormSubmitting}
+                  type="submit"
+                  color="primary"
+                  icon={<SendIcon color="neutral.white" />}
+                  $marginLeft="auto"
                 >
-                  {FILAMENTS.map(filament => (
-                    <HoneyFlexBox
-                      key={filament.name}
-                      $gap={1}
-                      $minHeight="150px"
-                      $padding={2}
-                      $borderRadius="4px"
-                      $border="1px solid"
-                      $borderColor="neutral.grayLight"
-                    >
-                      <HoneyBox $display="flex" $gap={1} $alignItems="center">
-                        <Text variant="subtitle1">{filament.name}</Text>
-
-                        {Boolean(filament.icons?.length) && (
-                          <HoneyBox
-                            $display="flex"
-                            $gap={0.5}
-                            $alignItems="center"
-                            $marginLeft="auto"
-                          >
-                            {filament.icons?.map(iconName =>
-                              cloneElement(FILAMENT_ICONS_CONFIG[iconName], {
-                                key: iconName,
-                                size: 'small',
-                                color: 'secondary.slateAlloy',
-                              }),
-                            )}
-                          </HoneyBox>
-                        )}
-                      </HoneyBox>
-
-                      <Text variant="body1">{filament.shortDescription}</Text>
-
-                      <HoneyFlexBox $gap={1.5} $marginTop={1}>
-                        {filament.price && (
-                          <Scale
-                            label="Price"
-                            icon={<CurrencyPoundIcon />}
-                            min={filamentPriceRange.min}
-                            max={filamentPriceRange.max}
-                            value={filament.price * (filament.difficulty ?? 1)}
-                          />
-                        )}
-
-                        {filament.maxTemperature && (
-                          <Scale
-                            label="Temp. Resistance"
-                            icon={<ThermostatIcon />}
-                            min={filamentTemperatureRange.min}
-                            max={filamentTemperatureRange.max}
-                            value={filament.maxTemperature}
-                          />
-                        )}
-                      </HoneyFlexBox>
-                    </HoneyFlexBox>
-                  ))}
-                </HoneyBox>
+                  Send
+                </Button>
               </HoneyGridColumn>
             </HoneyGrid>
-
-            <Button
-              loading={isFormSubmitting}
-              disabled={isFormSubmitting}
-              type="submit"
-              color="primary"
-              icon={<SendIcon color="neutral.white" />}
-              $marginLeft="auto"
-            >
-              Send
-            </Button>
           </HoneyFlexBox>
         )}
       </Form>

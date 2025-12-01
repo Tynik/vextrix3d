@@ -25,7 +25,8 @@
     "react-router-dom": "7.9.6",
     "react-toastify": "11.0.5",
     "stripe": "20.0.0",
-    "three": "0.181.2"
+    "three": "0.181.2",
+    "lodash.sortby": "4.7.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "7.28.5",
@@ -36,6 +37,7 @@
     "@types/node": "22.19.1",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
+    "@types/lodash.sortby": "4.7.9",
     "copy-webpack-plugin": "13.0.1",
     "css-loader": "7.1.2",
     "eslint": "9.39.1",
