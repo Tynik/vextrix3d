@@ -1,5 +1,9 @@
-import React, { useId } from 'react';
+import React, { cloneElement, useId } from 'react';
+import type { ReactElement } from 'react';
 import { css, resolveFont, styled } from '@react-hive/honey-style';
+
+import type { IconProps } from '~/components';
+import { Text } from '~/components';
 
 interface ScaleStyledProps {
   value: number;
@@ -21,7 +25,9 @@ const ScaleStyled = styled('div')<ScaleStyledProps>`
       width: 100%;
 
       > .scale__label {
-        ${resolveFont('body2')};
+        @honey-center (vertical) {
+          gap: ${0.5};
+        }
       }
 
       > .scale__range {
@@ -50,12 +56,14 @@ const ScaleStyled = styled('div')<ScaleStyledProps>`
 
 interface ScaleProps extends ScaleStyledProps {
   label?: string;
+  icon?: ReactElement<IconProps>;
   showValue?: boolean;
 }
 
 export const Scale = ({
-  label,
   value,
+  label,
+  icon,
   showValue = false,
   min = 0,
   max = 100,
@@ -78,7 +86,15 @@ export const Scale = ({
     >
       {label && (
         <div id={labelId} className="scale__label">
-          {label}
+          {icon &&
+            cloneElement(icon, {
+              size: 'small',
+              color: 'secondary.carbonInk',
+            })}
+
+          <Text variant="body2" ellipsis>
+            {label}
+          </Text>
         </div>
       )}
 

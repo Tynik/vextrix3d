@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { cloneElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
 import { HoneyBox, HoneyFlexBox, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
@@ -6,12 +6,12 @@ import { assert } from '@react-hive/honey-utils';
 import { toast } from 'react-toastify';
 
 import { handleApiError, quoteRequest } from '~/api';
-import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
+import { AttachFileIcon, CurrencyPoundIcon, ErrorIcon, SendIcon, ThermostatIcon } from '~/icons';
+import { FILAMENT_ICONS_CONFIG, FILAMENTS } from '~/configs';
+import { useFilaments } from '~/hooks';
 import { Alert, Button, FilePicker, Form, Scale, Text, TextInput } from '~/components';
 import { Page } from './sections';
 import { FileCard } from './widgets';
-import { FILAMENTS } from '~/configs';
-import { useFilaments } from '~/hooks';
 
 type QuoteRequestFormData = {
   model: File | undefined;
@@ -57,7 +57,7 @@ const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<QuoteRequestFormData> = {
 export const QuoteRequestPage = () => {
   const navigate = useNavigate();
 
-  const { filamentPriceRange } = useFilaments();
+  const { filamentPriceRange, filamentTemperatureRange } = useFilaments();
 
   const handleSelectModel = async (files: File[]) => {
     // const quote = await calculateModelQuote(
@@ -201,17 +201,50 @@ export const QuoteRequestPage = () => {
                       $border="1px solid"
                       $borderColor="neutral.grayLight"
                     >
-                      <Text variant="subtitle1">{filament.name}</Text>
+                      <HoneyBox $display="flex" $gap={1} $alignItems="center">
+                        <Text variant="subtitle1">{filament.name}</Text>
+
+                        {Boolean(filament.icons?.length) && (
+                          <HoneyBox
+                            $display="flex"
+                            $gap={0.5}
+                            $alignItems="center"
+                            $marginLeft="auto"
+                          >
+                            {filament.icons?.map(iconName =>
+                              cloneElement(FILAMENT_ICONS_CONFIG[iconName], {
+                                key: iconName,
+                                size: 'small',
+                                color: 'secondary.slateAlloy',
+                              }),
+                            )}
+                          </HoneyBox>
+                        )}
+                      </HoneyBox>
+
                       <Text variant="body1">{filament.shortDescription}</Text>
 
-                      {filament.price && (
-                        <Scale
-                          label="Price"
-                          min={filamentPriceRange.min}
-                          max={filamentPriceRange.max}
-                          value={filament.price * (filament.difficulty ?? 1)}
-                        />
-                      )}
+                      <HoneyFlexBox $gap={1.5} $marginTop={1}>
+                        {filament.price && (
+                          <Scale
+                            label="Price"
+                            icon={<CurrencyPoundIcon />}
+                            min={filamentPriceRange.min}
+                            max={filamentPriceRange.max}
+                            value={filament.price * (filament.difficulty ?? 1)}
+                          />
+                        )}
+
+                        {filament.maxTemperature && (
+                          <Scale
+                            label="Temp. Resistance"
+                            icon={<ThermostatIcon />}
+                            min={filamentTemperatureRange.min}
+                            max={filamentTemperatureRange.max}
+                            value={filament.maxTemperature}
+                          />
+                        )}
+                      </HoneyFlexBox>
                     </HoneyFlexBox>
                   ))}
                 </HoneyBox>

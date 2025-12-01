@@ -13,7 +13,17 @@ export const useFilaments = () => {
     };
   }, []);
 
+  const filamentTemperatureRange = useMemo(() => {
+    const temperature = FILAMENTS.map(filament => filament.maxTemperature ?? 0);
+
+    return {
+      min: Math.min(...temperature) * 0.9,
+      max: Math.max(...temperature) * 1.1,
+    };
+  }, []);
+
   return {
     filamentPriceRange,
+    filamentTemperatureRange,
   };
 };
