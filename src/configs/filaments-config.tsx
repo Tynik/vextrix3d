@@ -147,3 +147,15 @@ export const FILAMENT_ICONS_CONFIG: Record<FilamentIcon, ReactElement<IconProps>
   wearResistance: <GavelIcon />,
   flexibility: <WavesIcon />,
 };
+
+export const FILAMENT_ICONS_TOOLTIP_CONTENT: Record<FilamentIcon, string> = {
+  eco: 'Environmentally friendly material with low emissions',
+  surfaceQuality: 'Produces smooth, high-detail surfaces with minimal layer visibility',
+  durability: 'Resistant to impacts, stress, and long-term wear',
+  strength: 'High mechanical strength for functional or load-bearing parts',
+  temperatureResistance: 'Withstands higher temperatures without deforming',
+  rigidity: 'Very stiff material ideal for structural or precision parts',
+  uvResistance: 'Resistant to sunlight and outdoor weather exposure',
+  wearResistance: 'Ideal for moving parts thanks to low friction and abrasion resistance',
+  flexibility: 'Can bend without breaking-perfect for elastic or soft components',
+};

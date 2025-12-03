@@ -2565,46 +2565,46 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@react-hive/honey-form@7.5.0":
-  version "7.5.0"
-  resolved "https://registry.yarnpkg.com/@react-hive/honey-form/-/honey-form-7.5.0.tgz#b9e15c3c4c87c16ab8892ea04cb0556c503e8586"
-  integrity sha512-c1+65BhSvHwzbtJvDr6bnwaPieoE1wi4j/0WHAfqSgmOvGDRAjwf2HUUiMWiyAbrAekkhVCdzH7GIXSZFRsR3g==
+"@react-hive/honey-form@7.7.0":
+  version "7.7.0"
+  resolved "https://registry.yarnpkg.com/@react-hive/honey-form/-/honey-form-7.7.0.tgz#e107e053e0e72a33a516e630f596b1b03650bb4c"
+  integrity sha512-7LY0inY2hNSbpRfcaBBHZIbNCdCclCx83G5PDrHqZiTMEpd0pcIa7VldEnQzTnxs4dfCiYI3Hs+omASVR/Dv3A==
   dependencies:
-    "@react-hive/honey-utils" "3.4.0"
+    "@react-hive/honey-utils" "3.6.0"
 
-"@react-hive/honey-layout@9.7.0":
-  version "9.7.0"
-  resolved "https://registry.yarnpkg.com/@react-hive/honey-layout/-/honey-layout-9.7.0.tgz#fd877a3613b2ac13599c1c8eacb0a729a423773a"
-  integrity sha512-/+Dc6wKSQ0JWZxtrIlvobRu6AhgUp90ObaiaGZG3hOxxBxFDAFkKCvaHQlvH8XQL0dUirbZaWz9D8Vv+Ier3ug==
+"@react-hive/honey-layout@9.8.0":
+  version "9.8.0"
+  resolved "https://registry.yarnpkg.com/@react-hive/honey-layout/-/honey-layout-9.8.0.tgz#a4fe8603efd93092fb003278a962bb2af7bdb880"
+  integrity sha512-hTGs5dtEP70/3kfj4xHYA2Khxu557ojaKMsT0NynPT14O74catUTtlGf8M3dY1dFm5jx6wutEQc/dq9B+oquSg==
   dependencies:
     "@floating-ui/dom" "1.7.4"
     "@floating-ui/react" "0.27.16"
-    "@react-hive/honey-utils" "2.4.0"
+    "@react-hive/honey-utils" "3.6.0"
     csstype "3.2.3"
     highlight.js "11.11.1"
     lodash.merge "4.6.2"
     lodash.throttle "4.1.1"
     react-router-dom "6.30.1"
 
-"@react-hive/honey-style@2.11.0":
-  version "2.11.0"
-  resolved "https://registry.yarnpkg.com/@react-hive/honey-style/-/honey-style-2.11.0.tgz#334ed28083d504d3b70fa7c4aa6b1c188316b234"
-  integrity sha512-TH9jmObNuwcxT1hUeN2qI8LQwL4xE5pn6/elG0TA9NB/dTg+kv/yg8jgPKmqG13Snai8gG9dp5zUQCsDr0Ceyw==
+"@react-hive/honey-style@2.12.0":
+  version "2.12.0"
+  resolved "https://registry.yarnpkg.com/@react-hive/honey-style/-/honey-style-2.12.0.tgz#e5ca5f444422ac9d25d7bfeae71ff003764be04a"
+  integrity sha512-3QLckzPzJYP5FUSMLvVnozeBHLQ3CmOAzGSyM0LVDIgbN6Xj4wn1HEmZ/pSX9+1z98YgGLXIH1oF0PIY7sgwQw==
   dependencies:
     "@mdx-js/react" "3.1.1"
     "@react-hive/honey-utils" "3.4.0"
     csstype "3.2.3"
     stylis "4.3.6"
 
-"@react-hive/honey-utils@2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@react-hive/honey-utils/-/honey-utils-2.4.0.tgz#7fe55ba934d2d106504ec2576e46be834b639ded"
-  integrity sha512-KjmoYSkXO0CQI2D746okNGmbzcPc8ZhThfHzT0ced8uaM4LgRrL48H9zetREckbR/w/Rro0HE6s7ClI33b1CmA==
-
 "@react-hive/honey-utils@3.4.0":
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@react-hive/honey-utils/-/honey-utils-3.4.0.tgz#6145f51ec22bdf6aa4186910715d498a12e6da75"
   integrity sha512-CgUUKEOJgWXZV9r+xG4m/BK8rLMW4k0/iie0HqwCThQcEdN4Tz5dDF0evDRYSVPJ6PmAoULpLc7WRMIieipwmQ==
+
+"@react-hive/honey-utils@3.6.0":
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/@react-hive/honey-utils/-/honey-utils-3.6.0.tgz#2ef6f5e9ee17f112716977e1c1640233ab6bd7a9"
+  integrity sha512-nz5nlJqstm1AesL8oiQ9LkoFU3tBtw0iCNvBqR7CaGDC3kSnWw5aUCYCgY3ZE1QtAjPTtCiQ6ZlG2xNACrX7kQ==
 
 "@remix-run/router@1.23.0":
   version "1.23.0"
