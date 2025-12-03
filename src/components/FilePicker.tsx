@@ -23,13 +23,15 @@ const FilePickerStyled = styled(HoneyBox, {
 
 export interface FilePickerProps extends FilePickerStyledProps {
   accept?: AcceptFilesPattern | AcceptFilesPattern[];
-  inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'accept'>;
+  disabled?: boolean;
+  inputProps?: Omit<InputHTMLAttributes<HTMLInputElement>, 'accept' | 'disabled'>;
   onSelectFiles: (files: File[]) => void;
 }
 
 export const FilePicker = ({
   children,
   accept,
+  disabled,
   inputProps,
   onSelectFiles,
   ...props
@@ -56,6 +58,7 @@ export const FilePicker = ({
         ref={inputRef}
         id="file-picker-input"
         accept={Array.isArray(accept) ? accept.join(',') : accept}
+        disabled={disabled}
         type="file"
         title=""
         tabIndex={-1}

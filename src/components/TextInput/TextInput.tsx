@@ -1,16 +1,18 @@
 import React, { useId } from 'react';
-import type { InputHTMLAttributes, ReactNode } from 'react';
+import type { ChangeEventHandler, InputHTMLAttributes, ReactNode } from 'react';
 
 import { ErrorIcon } from '~/icons';
 import type { TextInputStyledProps } from './TextInputStyled';
 import { TextInputStyled } from './TextInputStyled';
 
+type SelectedInputProps = Pick<
+  InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>,
+  'value' | 'placeholder' | 'name' | 'type' | 'disabled' | 'onChange' | 'onBlur'
+>;
+
 interface TextInputProps
-  extends Omit<TextInputStyledProps, 'onChange'>,
-    Pick<
-      InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>,
-      'value' | 'placeholder' | 'name' | 'type' | 'onChange'
-    > {
+  extends Omit<TextInputStyledProps, 'onChange' | 'onBlur'>,
+    SelectedInputProps {
   label: string;
   error?: ReactNode;
   /**
@@ -19,7 +21,7 @@ interface TextInputProps
   multiline?: boolean;
   inputProps?: Omit<
     InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>,
-    'id' | 'value' | 'placeholder' | 'onChange'
+    keyof SelectedInputProps
   >;
 }
 
@@ -28,14 +30,24 @@ export const TextInput = ({
   label,
   name,
   type,
+  disabled,
   placeholder = 'Type here...',
   error,
   multiline = false,
   onChange,
+  onBlur,
   inputProps,
   ...props
 }: TextInputProps) => {
   const id = useId();
+
+  const handleOnChange: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement> = e => {
+    if (onChange) {
+      e.target.value = e.target.value.trimStart();
+
+      onChange(e);
+    }
+  };
 
   const Component = multiline ? 'textarea' : 'input';
 
@@ -48,9 +60,11 @@ export const TextInput = ({
         name={name}
         type={type}
         value={value}
+        disabled={disabled}
         placeholder={placeholder}
         rows={multiline ? 10 : undefined}
-        onChange={onChange}
+        onChange={handleOnChange}
+        onBlur={onBlur}
         // ARIA
         aria-invalid={Boolean(error)}
         {...inputProps}

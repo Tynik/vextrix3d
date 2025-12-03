@@ -1,9 +1,8 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { HoneyBox, HoneyFlexBox, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
 
 import { CONTACT_EMAIL } from '~/configs';
-import { Container, Text } from '~/components';
+import { Container, Text, Link } from '~/components';
 import { MailIcon, PlaceIcon } from '~/icons';
 
 export const Footer = () => (
@@ -11,9 +10,9 @@ export const Footer = () => (
     <Container $gap={3} $padding={3}>
       <HoneyGrid columns={3} spacing={3}>
         <HoneyGridColumn $gap={1.5} $minWidth="250px">
-          <Text as={Link} to="/" variant="h4" $color="neutral.white">
+          <Link to="/" variant="h4" $color="neutral.white">
             Vextrix3D
-          </Text>
+          </Link>
 
           <Text variant="body1" $color="neutral.white">
             Precision. Layer by Layer.
@@ -26,34 +25,29 @@ export const Footer = () => (
           </Text>
 
           <HoneyFlexBox $gap={1}>
-            <Text as={Link} to="/terms-of-service" variant="body1" $color="neutral.white">
+            <Link to="/terms-of-service" variant="body1" $color="neutral.white">
               Terms of Service
-            </Text>
+            </Link>
 
-            <Text as={Link} to="/model-submission-policy" variant="body1" $color="neutral.white">
+            <Link to="/model-submission-policy" variant="body1" $color="neutral.white">
               Model Submission Policy
-            </Text>
+            </Link>
 
-            <Text as={Link} to="/shipping-policy" variant="body1" $color="neutral.white">
+            <Link to="/shipping-policy" variant="body1" $color="neutral.white">
               Shipping Policy
-            </Text>
+            </Link>
 
-            <Text as={Link} to="/refund-policy" variant="body1" $color="neutral.white">
+            <Link to="/refund-policy" variant="body1" $color="neutral.white">
               Refund Policy
-            </Text>
+            </Link>
 
-            <Text as={Link} to="/material-safety-disclaimer" variant="body1" $color="neutral.white">
+            <Link to="/material-safety-disclaimer" variant="body1" $color="neutral.white">
               Material Safety Disclaimer
-            </Text>
+            </Link>
 
-            <Text
-              as={Link}
-              to="/intellectual-property-policy"
-              variant="body1"
-              $color="neutral.white"
-            >
+            <Link to="/intellectual-property-policy" variant="body1" $color="neutral.white">
               Intellectual Property Policy
-            </Text>
+            </Link>
           </HoneyFlexBox>
         </HoneyGridColumn>
 

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { preventDragAndDropEventsPropagation } from '~/helpers';
+import { preventDragAndDropEventsPropagation } from '~/utils';
 import type { BackdropStyledProps } from './BackdropStyled';
 import { BackdropStyled } from './BackdropStyled';
 

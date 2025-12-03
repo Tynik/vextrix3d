@@ -1,7 +1,7 @@
 import React from 'react';
 import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
 
-import { getReadableFileSize } from '~/helpers';
+import { getReadableFileSize } from '~/utils';
 import { DeleteIcon } from '~/icons';
 import { Text, IconButton } from '~/components';
 

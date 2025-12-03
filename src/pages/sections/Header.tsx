@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { HoneyBox } from '@react-hive/honey-layout';
 
-import { Container, Text } from '~/components';
+import { Container, Link } from '~/components';
 
 export const Header = () => {
   return (
@@ -18,8 +17,7 @@ export const Header = () => {
       $zIndex={1}
     >
       <Container $padding={3}>
-        <Text
-          as={Link}
+        <Link
           to="/"
           variant="h4"
           $display="flex"
@@ -34,7 +32,7 @@ export const Header = () => {
             $backgroundSize="cover"
           />
           Vextrix3D
-        </Text>
+        </Link>
       </Container>
     </HoneyBox>
   );

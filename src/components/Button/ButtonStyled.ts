@@ -63,7 +63,7 @@ export const ButtonStyled = styled<ButtonStyledProps>(
     $height,
   }),
 )<ButtonStyledProps>`
-  ${({ size = 'medium', color = 'primary' }) => {
+  ${({ disabled, size = 'medium', color = 'primary' }) => {
     const colorConfig = COLORS_CONFIG[color];
 
     return css`
@@ -88,24 +88,24 @@ export const ButtonStyled = styled<ButtonStyledProps>(
         transition-timing-function: ease;
       }
 
-      &:disabled {
-        opacity: 0.6;
-        box-shadow: none;
-        cursor: not-allowed;
-      }
+      ${disabled
+        ? css`
+            opacity: 0.6;
+            box-shadow: none;
+            cursor: not-allowed;
+          `
+        : css`
+            cursor: pointer;
 
-      &:not(:disabled) {
-        cursor: pointer;
+            &:active {
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
 
-        &:active {
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
-        &:hover {
-          background-color: ${resolveColor(colorConfig.hover)};
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
-        }
-      }
+            &:hover {
+              background-color: ${resolveColor(colorConfig.hover)};
+              box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
+            }
+          `}
     `;
   }}
 `;

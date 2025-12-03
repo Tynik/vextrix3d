@@ -33,7 +33,5 @@ export const Alert = styled<AlertProps>(HoneyFlexBox, ({ variant }) => ({
   $border: '1px solid',
   ...VARIANTS_CONFIG[variant],
 }))<AlertProps>`
-  ${() => css`
-    ${resolveFont('body2')}
-  `}
+  ${resolveFont('body2')}
 `;

@@ -50,13 +50,13 @@ export const QuoteRequestFilaments = () => {
       <Text variant="body1">{filament.shortDescription}</Text>
 
       <HoneyFlexBox $gap={1.5} $marginTop={1}>
-        {filament.price && (
+        {filament.priceKg && (
           <Scale
             label="Price"
             icon={<CurrencyPoundIcon />}
             min={filamentPriceRange.min}
             max={filamentPriceRange.max}
-            value={filament.price * (filament.difficulty ?? 1)}
+            value={filament.priceKg * (filament.difficulty ?? 1)}
           />
         )}
 

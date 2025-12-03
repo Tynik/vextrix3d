@@ -28,6 +28,7 @@ export const Button = <Element extends ElementType>({
           size: 'small',
         })
       )}
+
       {children}
     </ButtonStyled>
   );

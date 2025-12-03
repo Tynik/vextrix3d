@@ -28,7 +28,7 @@ type FilamentIcon =
 interface Filament {
   name: 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ASA' | 'ASA-CF' | 'PA' | 'TPU';
   image: string;
-  price?: number;
+  priceKg?: number;
   difficulty?: number;
   maxTemperature?: number;
   icons?: FilamentIcon[];
@@ -40,7 +40,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'PLA',
     image: 'filament-1.webp',
-    price: 18,
+    priceKg: 18,
     maxTemperature: 60,
     icons: ['eco', 'surfaceQuality'],
     description:
@@ -50,7 +50,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'PLA Tough+',
     image: 'filament-1.webp',
-    price: 19,
+    priceKg: 19,
     maxTemperature: 60,
     icons: ['eco', 'durability', 'surfaceQuality'],
     description:
@@ -60,7 +60,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'PETG',
     image: 'filament-1.webp',
-    price: 18,
+    priceKg: 18,
     difficulty: 1.2,
     maxTemperature: 80,
     icons: ['durability', 'strength', 'temperatureResistance'],
@@ -71,7 +71,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'PETG-CF',
     image: 'filament-1.webp',
-    price: 21,
+    priceKg: 21,
     difficulty: 1.2,
     maxTemperature: 80,
     icons: ['rigidity', 'strength', 'temperatureResistance', 'durability'],
@@ -82,7 +82,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'ABS',
     image: 'filament-1.webp',
-    price: 18,
+    priceKg: 18,
     difficulty: 1.1,
     maxTemperature: 100,
     icons: ['durability', 'temperatureResistance', 'strength'],
@@ -93,7 +93,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'ASA',
     image: 'filament-1.webp',
-    price: 21,
+    priceKg: 21,
     difficulty: 1.1,
     maxTemperature: 105,
     icons: ['uvResistance', 'temperatureResistance', 'strength', 'durability'],
@@ -104,7 +104,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'ASA-CF',
     image: 'filament-1.webp',
-    price: 22,
+    priceKg: 22,
     difficulty: 1.3,
     maxTemperature: 105,
     icons: ['rigidity', 'uvResistance', 'temperatureResistance', 'strength'],
@@ -115,7 +115,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'PA',
     image: 'filament-1.webp',
-    price: 20,
+    priceKg: 20,
     difficulty: 1.5,
     maxTemperature: 120,
     icons: ['wearResistance', 'durability', 'strength', 'flexibility', 'temperatureResistance'],
@@ -126,7 +126,7 @@ export const FILAMENTS: Filament[] = [
   {
     name: 'TPU',
     image: 'filament-1.webp',
-    price: 18,
+    priceKg: 18,
     difficulty: 1.2,
     maxTemperature: 90,
     icons: ['flexibility', 'durability', 'wearResistance'],

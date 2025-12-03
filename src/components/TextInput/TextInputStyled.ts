@@ -1,6 +1,6 @@
 import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox } from '@react-hive/honey-layout';
-import { css, resolveFont, styled } from '@react-hive/honey-style';
+import { css, pxToRem, resolveFont, styled } from '@react-hive/honey-style';
 
 export type TextInputStyledProps = HoneyBoxProps;
 
@@ -9,8 +9,7 @@ export const TextInputStyled = styled(HoneyBox)`
     @honey-stack (2px);
 
     label {
-      ${resolveFont('body2')};
-
+      font-size: ${pxToRem(14)};
       color: ${colors.secondary.carbonInk};
 
       &:has(~ input:focus) {
@@ -20,7 +19,8 @@ export const TextInputStyled = styled(HoneyBox)`
 
     input,
     textarea {
-      ${resolveFont('body1')};
+      font-size: ${pxToRem(16)};
+      font-family: Roboto, sans-serif;
 
       padding: 8px;
 
@@ -39,7 +39,7 @@ export const TextInputStyled = styled(HoneyBox)`
 
     input::placeholder,
     textarea::placeholder {
-      font-size: 14px;
+      font-size: ${pxToRem(14)};
       font-style: italic;
       color: ${colors.neutral.grayMedium};
       font-family: Roboto, sans-serif;
@@ -47,6 +47,7 @@ export const TextInputStyled = styled(HoneyBox)`
 
     textarea {
       min-height: 120px;
+      line-height: 1.3rem;
       resize: vertical;
     }
 

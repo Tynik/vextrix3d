@@ -4,7 +4,7 @@ import { FILAMENTS } from '~/configs';
 export const useFilaments = () => {
   const filamentPriceRange = useMemo(() => {
     const basePrices = FILAMENTS.map(
-      filament => (filament.price ?? 0) * (filament.difficulty ?? 1),
+      filament => (filament.priceKg ?? 0) * (filament.difficulty ?? 1),
     );
 
     return {

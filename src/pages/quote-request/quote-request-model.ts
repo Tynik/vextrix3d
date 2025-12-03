@@ -1,7 +1,7 @@
 import type { HoneyFormFieldsConfig } from '@react-hive/honey-form';
 
 export type QuoteRequestFormData = {
-  model: File | undefined;
+  file: File | undefined;
   firstName: string;
   lastName: string;
   email: string;
@@ -9,7 +9,7 @@ export type QuoteRequestFormData = {
 };
 
 export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<QuoteRequestFormData> = {
-  model: {
+  file: {
     type: 'file',
     required: true,
     validator: model =>
