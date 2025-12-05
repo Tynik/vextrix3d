@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { noop } from '@react-hive/honey-utils';
 import { HoneyBox, HoneyFlexBox, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
 import { useHoneyFormContext } from '@react-hive/honey-form';
 import { toast } from 'react-toastify';
+import debounce from 'lodash.debounce';
 
 import type { Nullable } from '~/types';
 import type { EstimatedQuote } from '~/utils';
@@ -33,18 +34,12 @@ export const QuoteRequestFormContent = ({
     formFields.file.setValue(undefined);
   };
 
-  const calculateQuote = async () => {
-    const copies = formFields.copies.cleanValue;
-
-    if (!formValues.file || !copies) {
-      return;
-    }
-
+  const calculateQuote = async (file: File, copies: number) => {
     try {
       setIsQuoteCalculating(true);
 
       const quote = await estimateQuote(
-        formValues.file,
+        file,
         {
           infill: 0.15,
           walls: 2,
@@ -58,7 +53,7 @@ export const QuoteRequestFormContent = ({
           materialDensityGcm3: 1.04,
           materialPriceKg: 24.99,
           basePrintTimeHrs: 0.15,
-          speedMm3PerSec: 21,
+          speedMm3PerSec: 12,
           machineCostPerHour: 0.7,
           min: 1.5,
           fixedFee: 0,
@@ -80,9 +75,21 @@ export const QuoteRequestFormContent = ({
     }
   };
 
-  useOnChange(formValues, () => {
-    calculateQuote().catch(noop);
-  });
+  const debouncedCalculateQuote = useMemo(() => debounce(calculateQuote, 350), []);
+
+  useOnChange(
+    useMemo(
+      () => [formValues.file, formFields.copies.cleanValue] as const,
+      [formValues.file, formFields.copies.cleanValue],
+    ),
+    ([file, copies]) => {
+      if (file && copies) {
+        debouncedCalculateQuote(file, copies)?.catch(noop);
+
+        return debouncedCalculateQuote.cancel;
+      }
+    },
+  );
 
   return (
     <HoneyFlexBox $gap={2}>
@@ -103,7 +110,11 @@ export const QuoteRequestFormContent = ({
 
           <HoneyFlexBox $gap={0.5}>
             {formValues.file ? (
-              <FileCard file={formValues.file} onRemove={handleRemoveFile} />
+              <FileCard
+                file={formValues.file}
+                removeDisabled={isQuoteCalculating}
+                onRemove={handleRemoveFile}
+              />
             ) : (
               <FilePicker
                 accept={['*/*']}
@@ -133,28 +144,28 @@ export const QuoteRequestFormContent = ({
 
           <TextInput
             label="* First Name"
-            disabled={isFormSubmitting}
+            disabled={isQuoteCalculating || isFormSubmitting}
             error={formFields.firstName.errors[0]?.message}
             {...formFields.firstName.props}
           />
 
           <TextInput
             label="* Last Name"
-            disabled={isFormSubmitting}
+            disabled={isQuoteCalculating || isFormSubmitting}
             error={formFields.lastName.errors[0]?.message}
             {...formFields.lastName.props}
           />
 
           <TextInput
             label="* Email"
-            disabled={isFormSubmitting}
+            disabled={isQuoteCalculating || isFormSubmitting}
             error={formFields.email.errors[0]?.message}
             {...formFields.email.props}
           />
 
           <TextInput
             label="* Description"
-            disabled={isFormSubmitting}
+            disabled={isQuoteCalculating || isFormSubmitting}
             error={formFields.description.errors[0]?.message}
             multiline={true}
             {...formFields.description.props}
@@ -162,7 +173,7 @@ export const QuoteRequestFormContent = ({
 
           <TextInput
             label="* Copies"
-            disabled={isFormSubmitting}
+            disabled={isQuoteCalculating || isFormSubmitting}
             error={formFields.copies.errors[0]?.message}
             $width={{ xs: '100%', sm: '180px' }}
             {...formFields.copies.props}
@@ -188,7 +199,7 @@ export const QuoteRequestFormContent = ({
 
           <Button
             loading={isFormSubmitting}
-            disabled={isFormSubmitting}
+            disabled={isQuoteCalculating || isFormSubmitting}
             type="submit"
             color="primary"
             icon={<SendIcon color="neutral.white" />}

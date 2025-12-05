@@ -8,15 +8,17 @@ export const IconButton = styled<HoneyBoxProps<'button'>>(HoneyBox, ({ $padding 
 }))`
   ${({ theme: { colors } }) => css`
     @honey-center {
-      cursor: pointer;
-
       border: none;
       border-radius: 4px;
       background-color: unset;
     }
 
-    &:hover {
-      background-color: ${colors.neutral.grayLight};
+    &:not(:disabled) {
+      cursor: pointer;
+
+      &:hover {
+        background-color: ${colors.neutral.grayLight};
+      }
     }
   `}
 `;

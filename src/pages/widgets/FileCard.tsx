@@ -7,10 +7,11 @@ import { Text, IconButton } from '~/components';
 
 interface FileCardProps {
   file: File;
+  removeDisabled?: boolean;
   onRemove: () => void;
 }
 
-export const FileCard = ({ file, onRemove }: FileCardProps) => {
+export const FileCard = ({ file, removeDisabled = false, onRemove }: FileCardProps) => {
   return (
     <>
       <HoneyBox
@@ -32,8 +33,11 @@ export const FileCard = ({ file, onRemove }: FileCardProps) => {
           </Text>
         </HoneyFlexBox>
 
-        <IconButton onClick={onRemove} $marginLeft="auto">
-          <DeleteIcon color="error.signalCoral" size="medium" />
+        <IconButton disabled={removeDisabled} onClick={onRemove} $marginLeft="auto">
+          <DeleteIcon
+            color={removeDisabled ? 'neutral.grayMedium' : 'error.signalCoral'}
+            size="medium"
+          />
         </IconButton>
       </HoneyBox>
     </>
