@@ -4,9 +4,11 @@ import { css, pxToRem, resolveFont, styled } from '@react-hive/honey-style';
 
 export type TextInputStyledProps = HoneyBoxProps;
 
-export const TextInputStyled = styled(HoneyBox)`
+export const TextInputStyled = styled(HoneyBox, ({ $width = '100%' }) => ({
+  $width,
+}))`
   ${({ theme: { colors } }) => css`
-    @honey-stack (2px);
+    @honey-stack (2px)
 
     label {
       font-size: ${pxToRem(14)};

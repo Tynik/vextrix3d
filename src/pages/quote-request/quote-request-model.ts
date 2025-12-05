@@ -6,6 +6,7 @@ export type QuoteRequestFormData = {
   lastName: string;
   email: string;
   description: string;
+  copies: number;
 };
 
 export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<QuoteRequestFormData> = {
@@ -38,5 +39,12 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<QuoteRequestFormDa
     type: 'string',
     required: true,
     max: 5000,
+  },
+  copies: {
+    type: 'number',
+    required: true,
+    min: 1,
+    max: 250,
+    defaultValue: 1,
   },
 };

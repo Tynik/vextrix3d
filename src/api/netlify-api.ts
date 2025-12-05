@@ -7,6 +7,10 @@ interface QuoteRequestPayload {
   lastName: string;
   email: string;
   description: string;
+  copies: number;
+  estimatedQuote: {
+    total: number;
+  };
 }
 
 export const quoteRequest = async (payload: QuoteRequestPayload) => {

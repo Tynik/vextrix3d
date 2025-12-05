@@ -7,7 +7,7 @@ import { TextInputStyled } from './TextInputStyled';
 
 type SelectedInputProps = Pick<
   InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>,
-  'value' | 'placeholder' | 'name' | 'type' | 'disabled' | 'onChange' | 'onBlur'
+  'value' | 'placeholder' | 'name' | 'type' | 'inputMode' | 'disabled' | 'onChange' | 'onBlur'
 >;
 
 interface TextInputProps
@@ -30,6 +30,7 @@ export const TextInput = ({
   label,
   name,
   type,
+  inputMode,
   disabled,
   placeholder = 'Type here...',
   error,
@@ -59,6 +60,7 @@ export const TextInput = ({
         id={id}
         name={name}
         type={type}
+        inputMode={inputMode}
         value={value}
         disabled={disabled}
         placeholder={placeholder}

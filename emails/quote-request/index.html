@@ -52,6 +52,22 @@
             margin-bottom: 28px;
         }
 
+        .copies {
+            font-size: 15px;
+            color: #374151;
+            margin-bottom: 18px;
+        }
+
+        .quote-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 28px;
+            font-size: 15px;
+            color: #374151;
+        }
+
         .button {
             display: inline-block;
             padding: 12px 18px;
@@ -83,6 +99,14 @@
 
     <div class="description">
         {{description}}
+    </div>
+
+    <div class="copies">
+        Copies: {{copies}}
+    </div>
+
+    <div class="quote-box">
+        <span class="label">Estimated Quote:</span> £{{estimatedQuoteTotal}}
     </div>
 
     <a class="button" href="{{downloadModelUrl}}" target="_blank">

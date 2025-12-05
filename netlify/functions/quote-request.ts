@@ -15,6 +15,10 @@ interface QuoteRequestPayload {
   lastName: string;
   email: string;
   description: string;
+  copies: number;
+  estimatedQuote: {
+    total: number;
+  };
 }
 
 export const handler = createHandler<QuoteRequestPayload>(
@@ -62,6 +66,8 @@ export const handler = createHandler<QuoteRequestPayload>(
         lastName: payload.lastName,
         email: payload.email,
         description: payload.description,
+        copies: payload.copies.toString(),
+        estimatedQuoteTotal: payload.estimatedQuote.total.toString(),
       },
     });
 

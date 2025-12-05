@@ -1,6 +1,7 @@
 import { HoneyFlexBox } from '@react-hive/honey-layout';
 import type { HoneyBoxProps } from '@react-hive/honey-layout';
-import { css, resolveFont, styled } from '@react-hive/honey-style';
+import type { HoneyFontName } from '@react-hive/honey-style';
+import { resolveFont, styled } from '@react-hive/honey-style';
 
 type AlertVariant = 'error' | 'info' | 'success' | 'warning';
 
@@ -14,7 +15,7 @@ const VARIANTS_CONFIG: Record<AlertVariant, Omit<HoneyBoxProps, 'as'>> = {
     $backgroundColor: 'primary.mintGlow',
   },
   success: {
-    $borderColor: 'success.mintGreen',
+    $borderColor: 'success.emeraldGreen',
     $backgroundColor: 'success.mintGreen',
   },
   warning: {
@@ -25,6 +26,7 @@ const VARIANTS_CONFIG: Record<AlertVariant, Omit<HoneyBoxProps, 'as'>> = {
 
 interface AlertProps extends HoneyBoxProps {
   variant: AlertVariant;
+  font?: HoneyFontName;
 }
 
 export const Alert = styled<AlertProps>(HoneyFlexBox, ({ variant }) => ({
@@ -33,5 +35,5 @@ export const Alert = styled<AlertProps>(HoneyFlexBox, ({ variant }) => ({
   $border: '1px solid',
   ...VARIANTS_CONFIG[variant],
 }))<AlertProps>`
-  ${resolveFont('body2')}
+  ${({ font = 'body2' }) => resolveFont(font)}
 `;

@@ -1,166 +1,4 @@
-import { parseFileName } from '@react-hive/honey-utils';
-import { Mesh, Object3D, Vector3 } from 'three';
-import type { BufferGeometry } from 'three';
-import { STLLoader } from 'three/examples/jsm/loaders/STLLoader';
-import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
-import { ThreeMFLoader } from 'three/examples/jsm/loaders/3MFLoader';
-
-import type { Nullable, Supported3DModelExtension } from '~/types';
-
-const ensureGeometryAttributes = (geometry: BufferGeometry) => {
-  if (!geometry.attributes.position) {
-    throw new Error('Geometry has no position attribute');
-  }
-
-  if (!geometry.attributes.normal) {
-    geometry.computeVertexNormals();
-  }
-
-  geometry.computeBoundingBox();
-  geometry.computeBoundingSphere();
-};
-
-const findLargestMesh = (root: Object3D): Nullable<Mesh> => {
-  let best: Nullable<Mesh> = null;
-  let bestCount = 0;
-
-  root.traverse(child => {
-    if (
-      child instanceof Mesh &&
-      child.geometry &&
-      (child.geometry as BufferGeometry).attributes.position
-    ) {
-      const pos = (child.geometry as BufferGeometry).attributes.position;
-      if (pos && pos.count > bestCount) {
-        bestCount = pos.count;
-        best = child;
-      }
-    }
-  });
-
-  return best;
-};
-
-type ModelLoader = (buffer: ArrayBuffer) => BufferGeometry;
-
-const stlLoader: ModelLoader = buffer => {
-  let geo = new STLLoader().parse(buffer) as BufferGeometry;
-  if (geo.index) {
-    geo = geo.toNonIndexed();
-  }
-
-  ensureGeometryAttributes(geo);
-
-  return geo;
-};
-
-const objLoader: ModelLoader = buffer => {
-  const text = new TextDecoder().decode(buffer);
-  const obj = new OBJLoader().parse(text);
-  const mesh = findLargestMesh(obj);
-
-  if (!mesh || !mesh.geometry) {
-    throw new Error('OBJ: no mesh found');
-  }
-
-  let geo = mesh.geometry as BufferGeometry;
-  if (geo.index) {
-    geo = geo.toNonIndexed();
-  }
-
-  ensureGeometryAttributes(geo);
-
-  return geo;
-};
-
-const threeMfLoader: ModelLoader = buffer => {
-  const loader = new ThreeMFLoader();
-  const scene = loader.parse(buffer);
-  const mesh = findLargestMesh(scene);
-
-  if (!mesh || !mesh.geometry) {
-    throw new Error('3MF: no mesh found');
-  }
-
-  let geo = mesh.geometry as BufferGeometry;
-  if (geo.index) {
-    geo = geo.toNonIndexed();
-  }
-
-  ensureGeometryAttributes(geo);
-
-  return geo;
-};
-
-export class ModelLoaderError extends Error {
-  constructor(message: string) {
-    super(message);
-
-    this.name = 'ModelLoaderError';
-  }
-}
-
-const loadModel = async (file: File): Promise<BufferGeometry> => {
-  const buffer = await file.arrayBuffer();
-  const [, fileExt] = parseFileName(file.name);
-
-  const loaders: Record<Supported3DModelExtension, ModelLoader> = {
-    stl: stlLoader,
-    obj: objLoader,
-    '3mf': threeMfLoader,
-  };
-
-  if (fileExt && fileExt in loaders) {
-    return loaders[fileExt as Supported3DModelExtension](buffer);
-  }
-
-  throw new ModelLoaderError(`Unsupported file extension: ${fileExt}`);
-};
-
-const calculateSolidVolumeMm3 = (geometry: BufferGeometry): number => {
-  const position = geometry.attributes.position;
-
-  let volume = 0;
-
-  for (let i = 0; i < position.count; i += 3) {
-    const ax = position.getX(i),
-      ay = position.getY(i),
-      az = position.getZ(i);
-
-    const bx = position.getX(i + 1),
-      by = position.getY(i + 1),
-      bz = position.getZ(i + 1);
-
-    const cx = position.getX(i + 2),
-      cy = position.getY(i + 2),
-      cz = position.getZ(i + 2);
-
-    volume += ax * (by * cz - bz * cy) - ay * (bx * cz - bz * cx) + az * (bx * cy - by * cx);
-  }
-
-  return Math.abs(volume) / 6;
-};
-
-const calculateSurfaceAreaMm2 = (geometry: BufferGeometry): number => {
-  const position = geometry.attributes.position;
-
-  let area = 0;
-
-  for (let i = 0; i < position.count; i += 3) {
-    const ax = new Vector3(position.getX(i), position.getY(i), position.getZ(i));
-    const bx = new Vector3(position.getX(i + 1), position.getY(i + 1), position.getZ(i + 1));
-    const cx = new Vector3(position.getX(i + 2), position.getY(i + 2), position.getZ(i + 2));
-
-    const ab = bx.clone().sub(ax);
-    const ac = cx.clone().sub(ax);
-
-    const cross = new Vector3().crossVectors(ab, ac);
-
-    area += 0.5 * cross.length();
-  }
-
-  return area;
-};
+import { calculateSolidVolumeMm3, calculateSurfaceAreaMm2, load3dModel } from '~/utils';
 
 export interface SlicerSettings {
   infill: number; // 0..1
@@ -176,16 +14,18 @@ export interface SlicerSettings {
 }
 
 export interface PriceSettings {
-  materialDensity: number; // g/cm3
-  materialPriceKg: number; // currency/kg
-  basePrintTime: number; // hours
-  speedMm3PerSec: number; // mm3 per second (volumetric flow)
+  materialDensityGcm3: number;
+  materialPriceKg: number;
+  basePrintTimeHrs: number;
+  speedMm3PerSec: number;
   machineCostPerHour: number;
+  min: number;
   fixedFee: number;
   markup: number; // 0..1
+  copies: number;
 }
 
-export interface EstimatedPrintingQuote {
+export interface EstimatedQuote {
   solidVolumeMm3: number;
   surfaceAreaMm2: number;
   printedVolumeMm3: number;
@@ -210,21 +50,23 @@ const DEFAULT_SLICER_SETTINGS: SlicerSettings = {
 };
 
 const DEFAULT_PRICE_SETTINGS: PriceSettings = {
-  materialDensity: 1.24,
+  materialDensityGcm3: 1.24,
   materialPriceKg: 0,
-  basePrintTime: 0.15,
+  basePrintTimeHrs: 0.15,
   speedMm3PerSec: 12,
   machineCostPerHour: 0,
+  min: 0,
   fixedFee: 0,
   markup: 0,
+  copies: 1,
 };
 
-const calculateQuote = (
+const computeQuoteInternal = (
   solidVolumeMm3: number,
   surfaceAreaMm2: number,
   slicerSettings: Partial<SlicerSettings> = {},
   priceSettings: Partial<PriceSettings> = {},
-): EstimatedPrintingQuote => {
+): EstimatedQuote => {
   const finalSlicerSettings: SlicerSettings = {
     ...DEFAULT_SLICER_SETTINGS,
     ...slicerSettings,
@@ -256,15 +98,17 @@ const calculateQuote = (
   const printedVolumeMm3 = printedNoFlowMm3 * finalSlicerSettings.flowRate;
 
   const printedVolumeCm3 = printedVolumeMm3 / 1000;
-  const weightGr = printedVolumeCm3 * finalPriceSettings.materialDensity;
+  const weightGr = printedVolumeCm3 * finalPriceSettings.materialDensityGcm3;
 
   const printSeconds = printedVolumeMm3 / finalPriceSettings.speedMm3PerSec;
-  const printHours = finalPriceSettings.basePrintTime + printSeconds / 3600;
+  const printHours = finalPriceSettings.basePrintTimeHrs + printSeconds / 3600;
 
   const materialCost = (weightGr / 1000) * finalPriceSettings.materialPriceKg;
   const machineCost = printHours * finalPriceSettings.machineCostPerHour;
   const raw = materialCost + machineCost + finalPriceSettings.fixedFee;
-  const total = raw * (1 + finalPriceSettings.markup);
+  const total =
+    Math.max(finalPriceSettings.min, raw * (1 + finalPriceSettings.markup)) *
+    finalPriceSettings.copies;
 
   return {
     solidVolumeMm3: Math.round(solidVolumeMm3),
@@ -278,15 +122,15 @@ const calculateQuote = (
   };
 };
 
-export const estimatePrintingQuote = async (
+export const estimateQuote = async (
   file: File,
   slicerSettings: Partial<SlicerSettings> = {},
   priceSettings: Partial<PriceSettings> = {},
-): Promise<EstimatedPrintingQuote> => {
-  const geometry = await loadModel(file);
+): Promise<EstimatedQuote> => {
+  const geometry = await load3dModel(file);
 
   const solidVolumeMm3 = calculateSolidVolumeMm3(geometry);
   const surfaceAreaMm2 = calculateSurfaceAreaMm2(geometry);
 
-  return calculateQuote(solidVolumeMm3, surfaceAreaMm2, slicerSettings, priceSettings);
+  return computeQuoteInternal(solidVolumeMm3, surfaceAreaMm2, slicerSettings, priceSettings);
 };
