@@ -2,17 +2,25 @@ import React, { cloneElement } from 'react';
 import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
 import sortBy from 'lodash.sortby';
 
-import { FILAMENT_ICONS_CONFIG, FILAMENT_ICONS_TOOLTIP_CONTENT, FILAMENTS } from '~/configs';
+import type { Material } from '~/configs';
+import { FILAMENT_ICONS_CONFIG, FILAMENT_ICONS_TOOLTIP_CONTENT } from '~/configs';
 import { CurrencyPoundIcon, ThermostatIcon } from '~/icons';
-import { useFilaments } from '~/hooks';
+import type { FilamentsRange } from '~/hooks';
 import { Scale, Text, Tooltip } from '~/components';
 
-export const QuoteRequestFilaments = () => {
-  const { filamentPriceRange, filamentTemperatureRange } = useFilaments();
+interface QuoteRequestFilamentProps {
+  filament: Material;
+  priceRange: FilamentsRange;
+  temperatureRange: FilamentsRange;
+}
 
-  return FILAMENTS.map(filament => (
+export const QuoteRequestFilament = ({
+  filament,
+  priceRange,
+  temperatureRange,
+}: QuoteRequestFilamentProps) => {
+  return (
     <HoneyFlexBox
-      key={filament.name}
       $gap={1}
       $minHeight="150px"
       $padding={2}
@@ -54,8 +62,8 @@ export const QuoteRequestFilaments = () => {
           <Scale
             label="Price"
             icon={<CurrencyPoundIcon />}
-            min={filamentPriceRange.min}
-            max={filamentPriceRange.max}
+            min={priceRange.min}
+            max={priceRange.max}
             value={filament.priceKg * (filament.difficulty ?? 1)}
           />
         )}
@@ -64,12 +72,12 @@ export const QuoteRequestFilaments = () => {
           <Scale
             label="Temp. Resistance"
             icon={<ThermostatIcon />}
-            min={filamentTemperatureRange.min}
-            max={filamentTemperatureRange.max}
+            min={temperatureRange.min}
+            max={temperatureRange.max}
             value={filament.maxTemperature}
           />
         )}
       </HoneyFlexBox>
     </HoneyFlexBox>
-  ));
+  );
 };

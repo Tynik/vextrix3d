@@ -1,8 +1,14 @@
 import { useMemo } from 'react';
+
 import { FILAMENTS } from '~/configs';
 
+export interface FilamentsRange {
+  min: number;
+  max: number;
+}
+
 export const useFilaments = () => {
-  const filamentPriceRange = useMemo(() => {
+  const filamentPriceRange = useMemo<FilamentsRange>(() => {
     const basePrices = FILAMENTS.map(
       filament => (filament.priceKg ?? 0) * (filament.difficulty ?? 1),
     );
@@ -13,7 +19,7 @@ export const useFilaments = () => {
     };
   }, []);
 
-  const filamentTemperatureRange = useMemo(() => {
+  const filamentTemperatureRange = useMemo<FilamentsRange>(() => {
     const temperature = FILAMENTS.map(filament => filament.maxTemperature ?? 0);
 
     return {

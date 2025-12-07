@@ -25,8 +25,17 @@ type FilamentIcon =
   | 'wearResistance'
   | 'flexibility';
 
-interface Filament {
-  name: 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ASA' | 'ASA-CF' | 'PA' | 'TPU';
+type MaterialType = 'filament' | 'resin';
+
+type MaterialName<Type extends MaterialType> = Type extends 'filament'
+  ? 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ASA' | 'ASA-CF' | 'PA' | 'TPU'
+  : Type extends 'resin'
+    ? 'ABS-Like Pro 2'
+    : never;
+
+export interface Material<Type extends MaterialType = MaterialType> {
+  type: Type;
+  name: MaterialName<Type>;
   image: string;
   priceKg?: number;
   difficulty?: number;
@@ -36,8 +45,9 @@ interface Filament {
   shortDescription: string;
 }
 
-export const FILAMENTS: Filament[] = [
+export const MATERIALS: Material[] = [
   {
+    type: 'filament',
     name: 'PLA',
     image: 'filament-1.webp',
     priceKg: 18,
@@ -48,6 +58,7 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'Stable, great for prototypes and decorative parts.',
   },
   {
+    type: 'filament',
     name: 'PLA Tough+',
     image: 'filament-1.webp',
     priceKg: 19,
@@ -58,6 +69,7 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'Stronger, less brittle PLA suitable for light functional prints.',
   },
   {
+    type: 'filament',
     name: 'PETG',
     image: 'filament-1.webp',
     priceKg: 18,
@@ -69,6 +81,7 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'Durable and versatile filament for functional parts.',
   },
   {
+    type: 'filament',
     name: 'PETG-CF',
     image: 'filament-1.webp',
     priceKg: 21,
@@ -80,6 +93,7 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'Ultra-stiff carbon-fiber PETG ideal for structural parts.',
   },
   {
+    type: 'filament',
     name: 'ABS',
     image: 'filament-1.webp',
     priceKg: 18,
@@ -91,6 +105,7 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'Strong, impact-resistant material for technical parts.',
   },
   {
+    type: 'filament',
     name: 'ASA',
     image: 'filament-1.webp',
     priceKg: 21,
@@ -102,6 +117,7 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'UV-resistant filament ideal for outdoor use.',
   },
   {
+    type: 'filament',
     name: 'ASA-CF',
     image: 'filament-1.webp',
     priceKg: 22,
@@ -113,6 +129,7 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'Rigid, UV-resistant carbon-fiber ASA for outdoor mechanics.',
   },
   {
+    type: 'filament',
     name: 'PA',
     image: 'filament-1.webp',
     priceKg: 20,
@@ -124,6 +141,7 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'Extremely tough nylon for gears and engineering parts.',
   },
   {
+    type: 'filament',
     name: 'TPU',
     image: 'filament-1.webp',
     priceKg: 18,
@@ -135,6 +153,10 @@ export const FILAMENTS: Filament[] = [
     shortDescription: 'Flexible and durable filament for elastic functional parts.',
   },
 ];
+
+export const FILAMENTS: Material[] = MATERIALS.filter(material => material.type === 'filament');
+
+export const RESINS: Material[] = MATERIALS.filter(material => material.type === 'resin');
 
 export const FILAMENT_ICONS_CONFIG: Record<FilamentIcon, ReactElement<IconProps>> = {
   eco: <RecyclingIcon />,

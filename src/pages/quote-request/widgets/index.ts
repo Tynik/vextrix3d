@@ -1,1 +1,1 @@
-export * from './quote-request-filaments';
+export * from './QuoteRequestFilaments';

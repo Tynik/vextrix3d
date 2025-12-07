@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { useHoneyStyle } from '@react-hive/honey-style';
 import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
 
-import type { Nullable } from '~/types';
-import { FILAMENTS } from '~/configs';
-import { Button, Container, Text } from '~/components';
+import { MATERIALS } from '~/configs';
+import { Container, Text } from '~/components';
 import { QuoteRequestButton } from './widgets';
 
 interface ShowcaseItem {
@@ -39,49 +38,61 @@ interface Feature {
 const FEATURES: Feature[] = [
   {
     icon: '🧱',
-    description: 'Wide Range of Filaments - PLA, PETG, ABS, ASA, and more',
+    description: 'Wide range of materials - PLA, PETG, ABS, ASA, and more',
   },
   {
     icon: '⚙️',
-    description: 'Functional Prototypes - Durable, accurate, and ready for testing',
+    description: 'Functional prototypes - Durable, accurate, and ready for real testing',
   },
   {
     icon: '🎨',
-    description: 'Clean Print Quality - Smooth layers with precise detailing',
+    description:
+      'Clean print quality - Smooth layers and precise detailing for professional results',
   },
   {
     icon: '🚀',
-    description: 'Fast Turnaround - From upload to print in record time',
+    description: 'Fast turnaround - From upload to finished print in record time',
   },
   {
     icon: '📏',
-    description: 'Dimensional Accuracy - Consistent tolerances across all prints',
+    description: 'Dimensional accuracy - Consistent tolerances across all technologies',
   },
   {
     icon: '🔩',
-    description: 'Strong Mechanical Parts - Optimized for strength and durability',
+    description: 'Strong mechanical parts - Optimized for strength and long-term durability',
   },
   {
     icon: '🌿',
-    description: 'Eco-Friendly Materials - Sustainable and low-waste printing process',
+    description: 'Eco-friendly options - Sustainable materials and low-waste processes',
   },
   {
     icon: '💡',
-    description: 'Design Assistance - Guidance on printability and material choice',
+    description: 'Design assistance - Guidance on printability and the best material choice',
+  },
+  {
+    icon: '🔬',
+    description:
+      'Ultra-high detail - Resin prints with ~16.8 × 24.8 µm X/Y resolution for sharp fine features',
+  },
+  {
+    icon: '💎',
+    description:
+      'Premium surface finish - Virtually invisible layers for smooth, high-quality parts',
+  },
+  {
+    icon: '🌌',
+    description:
+      'Large resin build volume - Up to 223(L) × 126(W) × 230(H) mm for bigger detailed models',
+  },
+  {
+    icon: '🧷',
+    description:
+      'Tiny and intricate components - Perfect for miniatures, jewelry, and micro-mechanical parts',
   },
 ];
 
 export const LandingPage = () => {
   const { resolveColor } = useHoneyStyle();
-
-  const videoRef = useRef<Nullable<HTMLVideoElement>>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (video) {
-      video.play().catch(e => console.error('Error playing video:', e));
-    }
-  }, []);
 
   return (
     <>
@@ -109,21 +120,15 @@ export const LandingPage = () => {
           </Text>
 
           <Text variant="h2" $color="neutral.white" shadow="medium" $marginTop={3}>
-            Precision FDM 3D Printing
+            Precision FDM/SLA 3D Printing
           </Text>
 
           <Text variant="subtitle1" $color="neutral.white" shadow="strong">
-            High-quality FDM printing for your prototypes, parts and creative designs - made with
-            professional grade materials and printers.
+            High-quality FDM/SLA printing for your prototypes, parts and creative designs - made
+            with professional grade materials and printers.
           </Text>
 
-          <HoneyBox $display="flex" $justifyContent="center" $gap={2} $marginTop={3}>
-            <QuoteRequestButton />
-
-            <Button color="secondary" size="large" $height="50px">
-              See Details
-            </Button>
-          </HoneyBox>
+          <QuoteRequestButton $marginTop={3} $margin={[0, 'auto']} />
         </HoneyFlexBox>
       </HoneyBox>
 
@@ -180,10 +185,10 @@ export const LandingPage = () => {
                 </Text>
 
                 <Text variant="body1">
-                  Using advanced FDM technology, we bring your designs to life layer by layer with
-                  exceptional precision. Each print is crafted using premium-quality filament to
-                  ensure outstanding detail, strength, and surface finish — so your model looks
-                  exactly as envisioned.
+                  Using advanced FDM and SLA technologies, we bring your designs to life with
+                  exceptional precision. Whether printed with premium filaments or high-resolution
+                  resins, every model is crafted for outstanding detail, strength, and a smooth
+                  professional finish.
                 </Text>
 
                 <HoneyBox $display="flex" $gap={2} $justifyContent="center" $flexWrap="wrap">
@@ -215,9 +220,9 @@ export const LandingPage = () => {
               </Text>
 
               <HoneyBox $display="flex" $flexWrap="wrap" $gap={3} $justifyContent="center">
-                {FILAMENTS.map(filament => (
+                {MATERIALS.map(material => (
                   <HoneyBox
-                    key={filament.name}
+                    key={material.name}
                     $display="flex"
                     $gap={2}
                     $width="100%"
@@ -232,18 +237,20 @@ export const LandingPage = () => {
                       $flexShrink={0}
                       $width="100px"
                       $height="100px"
-                      $backgroundImage={`url('/assets/images/${filament.image}')`}
+                      $backgroundImage={`url('/assets/images/${material.image}')`}
                       $backgroundSize="cover"
                     />
 
                     <HoneyFlexBox $gap={1}>
-                      <Text variant="subtitle1">{filament.name}</Text>
-                      <Text variant="body1">{filament.description}</Text>
+                      <Text variant="subtitle1">{material.name}</Text>
+                      <Text variant="body1">{material.description}</Text>
                     </HoneyFlexBox>
                   </HoneyBox>
                 ))}
               </HoneyBox>
             </HoneyFlexBox>
+
+            <QuoteRequestButton $margin={[0, 'auto']} />
           </Container>
         </HoneyBox>
       </main>

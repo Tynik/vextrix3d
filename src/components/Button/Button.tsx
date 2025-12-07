@@ -6,7 +6,7 @@ import { Progress } from '~/components';
 import type { ButtonStyledProps } from './ButtonStyled';
 import { ButtonStyled } from './ButtonStyled';
 
-type ButtonProps<Element extends ElementType = 'button'> = ButtonStyledProps<Element> & {
+export type ButtonProps<Element extends ElementType = 'button'> = ButtonStyledProps<Element> & {
   loading?: boolean;
   icon?: ReactElement<IconProps>;
 };

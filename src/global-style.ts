@@ -14,7 +14,10 @@ export const GlobalStyle = createGlobalStyle`
     html,
     body,
     #root {
-      height: 100%;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+
       min-height: 100%;
     }
 

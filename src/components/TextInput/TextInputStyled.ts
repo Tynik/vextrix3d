@@ -8,7 +8,7 @@ export const TextInputStyled = styled(HoneyBox, ({ $width = '100%' }) => ({
   $width,
 }))`
   ${({ theme: { colors } }) => css`
-    @honey-stack (2px)
+    @honey-stack (2px);
 
     label {
       font-size: ${pxToRem(14)};
