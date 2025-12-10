@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "main": "dist/main.js",
   "scripts": {
-    "build:email-templates": "NODE_ENV=production webpack -c webpack-email-templates.config.mjs",
     "build:app": "NODE_ENV=production webpack -c webpack.config.mjs",
-    "deploy": "yarn run build:email-templates && yarn run build:app",
+    "deploy": "yarn run build:app",
     "start:netlify": "NODE_ENV=development netlify functions:serve",
     "start:app": "LOCAL_ENV=true NETLIFY_SERVER=http://localhost:9999 NODE_ENV=development webpack serve",
     "start": "yarn run start:netlify & yarn run start:app"
