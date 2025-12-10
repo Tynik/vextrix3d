@@ -135,7 +135,7 @@ export const MATERIALS: Material[] = [
     priceKg: 20,
     difficulty: 1.5,
     maxTemperature: 120,
-    icons: ['wearResistance', 'durability', 'strength', 'flexibility', 'temperatureResistance'],
+    icons: ['wearResistance', 'durability', 'strength', 'temperatureResistance'],
     description:
       'High-performance nylon filament offering exceptional toughness, impact resistance, and wear resistance. Ideal for gears, mechanical parts, hinges, and engineering components that require flexibility and long-term durability. Heat resistance up to ~120°C.',
     shortDescription: 'Extremely tough nylon for gears and engineering parts.',
