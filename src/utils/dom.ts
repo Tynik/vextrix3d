@@ -18,3 +18,12 @@ export const preventDragAndDropEventsPropagation = () => {
     onTouchEnd: handleEventPropagation,
   };
 };
+
+export const scrollIntoView = (element: HTMLElement, offset = 0) => {
+  const top = element.getBoundingClientRect().top + window.scrollY - offset;
+
+  window.scrollTo({
+    top,
+    behavior: 'smooth',
+  });
+};

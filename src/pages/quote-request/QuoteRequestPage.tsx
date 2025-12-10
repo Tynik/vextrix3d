@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { HoneyFormOnSubmit } from '@react-hive/honey-form';
+import type { HoneyFormOnAfterValidate, HoneyFormOnSubmit } from '@react-hive/honey-form';
 import { assert } from '@react-hive/honey-utils';
 import { toast } from 'react-toastify';
 
 import type { Nullable } from '~/types';
 import type { EstimatedQuote } from '~/utils';
+import { scrollIntoView } from '~/utils';
+import { HEADER_HEIGHT_PX } from '~/configs';
 import { handleApiError, quoteRequest } from '~/api';
 import { Form } from '~/components';
 import { Page } from '~/pages';
@@ -17,6 +19,23 @@ export const QuoteRequestPage = () => {
   const navigate = useNavigate();
 
   const [estimatedQuote, setEstimatedQuote] = useState<Nullable<EstimatedQuote>>(null);
+
+  const handleOnAfterValidateForm: HoneyFormOnAfterValidate<QuoteRequestFormData> = async ({
+    formFields,
+    formErrors,
+  }) => {
+    Object.keys(formErrors).some(fieldName => {
+      const field = formFields[fieldName as keyof QuoteRequestFormData];
+      const fieldRef = field.props?.ref ?? field.passiveProps?.ref;
+
+      if (fieldRef?.current) {
+        scrollIntoView(fieldRef.current, HEADER_HEIGHT_PX + 10);
+        return true;
+      }
+
+      return false;
+    });
+  };
 
   const submitQuoteRequest: HoneyFormOnSubmit<QuoteRequestFormData> = async data => {
     assert(data.file, 'File is required');
@@ -57,7 +76,11 @@ export const QuoteRequestPage = () => {
 
   return (
     <Page title="Quote Request">
-      <Form fields={QUOTE_REQUEST_FORM_FIELDS} onSubmit={submitQuoteRequest}>
+      <Form
+        fields={QUOTE_REQUEST_FORM_FIELDS}
+        onAfterValidate={handleOnAfterValidateForm}
+        onSubmit={submitQuoteRequest}
+      >
         <QuoteRequestFormContent
           estimatedQuote={estimatedQuote}
           onEstimatedQuoteChange={setEstimatedQuote}

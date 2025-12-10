@@ -118,12 +118,13 @@ export const QuoteRequestFormContent = ({
               />
             ) : (
               <FilePicker
-                accept={['*/*']}
+                ref={formFields.file.passiveProps?.ref}
                 disabled={isFormSubmitting}
+                onSelectFiles={files => formFields.file.setValue(files[0])}
                 inputProps={{
                   multiple: false,
                 }}
-                onSelectFiles={files => formFields.file.setValue(files[0])}
+                accept={['*/*']}
               >
                 <Button disabled={isFormSubmitting} as="div" color="accent" size="large">
                   <AttachFileIcon size="small" color="neutral.white" />
@@ -185,6 +186,7 @@ export const QuoteRequestFormContent = ({
               $display="flex"
               $gap={1}
               $alignItems="center"
+              $flexWrap="wrap"
               $padding={1}
               $borderRadius="4px"
               $border="1px solid"

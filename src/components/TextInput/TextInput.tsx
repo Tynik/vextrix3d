@@ -11,8 +11,7 @@ type SelectedInputProps = Pick<
 >;
 
 interface TextInputProps
-  extends Omit<TextInputStyledProps, 'onChange' | 'onBlur'>,
-    SelectedInputProps {
+  extends Omit<TextInputStyledProps, 'onChange' | 'onBlur'>, SelectedInputProps {
   label: string;
   error?: ReactNode;
   /**

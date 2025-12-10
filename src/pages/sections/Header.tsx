@@ -1,6 +1,7 @@
 import React from 'react';
 import { HoneyBox } from '@react-hive/honey-layout';
 
+import { HEADER_HEIGHT_PX } from '~/configs';
 import { Container, Link } from '~/components';
 
 export const Header = () => {
@@ -12,7 +13,7 @@ export const Header = () => {
       $display="flex"
       $alignItems="center"
       $flexShrink={0}
-      $height="50px"
+      $height={`${HEADER_HEIGHT_PX}px`}
       $backgroundColor="neutral.grayDark"
       $zIndex={1}
     >
