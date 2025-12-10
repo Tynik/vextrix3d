@@ -28,7 +28,7 @@ type FilamentIcon =
 type MaterialType = 'filament' | 'resin';
 
 type MaterialName<Type extends MaterialType> = Type extends 'filament'
-  ? 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ASA' | 'ASA-CF' | 'PA' | 'TPU'
+  ? 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ABS-GF' | 'ASA' | 'ASA-CF' | 'PA' | 'TPU'
   : Type extends 'resin'
     ? 'ABS-Like Pro 2'
     : never;
@@ -72,7 +72,7 @@ export const MATERIALS: Material[] = [
     type: 'filament',
     name: 'PETG',
     image: 'filament-1.webp',
-    priceKg: 18,
+    priceKg: 20,
     difficulty: 1.2,
     maxTemperature: 80,
     icons: ['durability', 'strength', 'temperatureResistance'],
@@ -84,7 +84,7 @@ export const MATERIALS: Material[] = [
     type: 'filament',
     name: 'PETG-CF',
     image: 'filament-1.webp',
-    priceKg: 21,
+    priceKg: 22,
     difficulty: 1.2,
     maxTemperature: 80,
     icons: ['rigidity', 'strength', 'temperatureResistance', 'durability'],
@@ -106,9 +106,21 @@ export const MATERIALS: Material[] = [
   },
   {
     type: 'filament',
+    name: 'ABS-GF',
+    image: 'filament-1.webp',
+    priceKg: 22.5,
+    difficulty: 1.3,
+    maxTemperature: 105,
+    icons: ['rigidity', 'strength', 'temperatureResistance', 'durability'],
+    description:
+      "Glass-fiber-reinforced ABS offering enhanced rigidity, dimensional stability, and reduced warping compared to standard ABS. Provides increased strength and stiffness while maintaining ABS's impact resistance and heat tolerance up to ~105°C. Ideal for mechanical parts, brackets, enclosures, and components that must hold shape under load.",
+    shortDescription: 'Rigid, reinforced ABS with improved stability and strength.',
+  },
+  {
+    type: 'filament',
     name: 'ASA',
     image: 'filament-1.webp',
-    priceKg: 21,
+    priceKg: 22,
     difficulty: 1.1,
     maxTemperature: 105,
     icons: ['uvResistance', 'temperatureResistance', 'strength', 'durability'],
@@ -120,7 +132,7 @@ export const MATERIALS: Material[] = [
     type: 'filament',
     name: 'ASA-CF',
     image: 'filament-1.webp',
-    priceKg: 22,
+    priceKg: 26,
     difficulty: 1.3,
     maxTemperature: 105,
     icons: ['rigidity', 'uvResistance', 'temperatureResistance', 'strength'],
@@ -132,7 +144,7 @@ export const MATERIALS: Material[] = [
     type: 'filament',
     name: 'PA',
     image: 'filament-1.webp',
-    priceKg: 20,
+    priceKg: 22,
     difficulty: 1.5,
     maxTemperature: 120,
     icons: ['wearResistance', 'durability', 'strength', 'temperatureResistance'],
@@ -144,7 +156,7 @@ export const MATERIALS: Material[] = [
     type: 'filament',
     name: 'TPU',
     image: 'filament-1.webp',
-    priceKg: 18,
+    priceKg: 25,
     difficulty: 1.2,
     maxTemperature: 90,
     icons: ['flexibility', 'durability', 'wearResistance'],

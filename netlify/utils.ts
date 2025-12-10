@@ -1,7 +1,7 @@
 import type { Handler, HandlerResponse, HandlerEvent, HandlerContext } from '@netlify/functions';
 import { assert } from '@react-hive/honey-utils';
 
-import type { Nullable } from './types';
+import type { Email, EmailTemplateName, Nullable } from './types';
 import { NETLIFY_EMAILS_SECRET, URL, SITE_DOMAIN } from './constants';
 
 type HTTPMethod = 'POST' | 'GET' | 'OPTIONS' | 'PUT' | 'PATCH' | 'DELETE';
@@ -114,7 +114,7 @@ interface SendEmailAttachment {
 }
 
 interface SendEmailOptions {
-  from: string;
+  from: string | `${string} <${Email}>`;
   to: string;
   cc?: string;
   subject: string;
@@ -123,7 +123,7 @@ interface SendEmailOptions {
 }
 
 export const sendEmail = (
-  emailTemplate: 'quote-request',
+  emailTemplate: EmailTemplateName,
   { from, to, subject, parameters, attachments }: SendEmailOptions,
 ) => {
   assert(URL, 'The `URL` must be set as environment variable');

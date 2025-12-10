@@ -2,7 +2,13 @@ import { assert, parseFileName } from '@react-hive/honey-utils';
 import { getStorage } from 'firebase-admin/storage';
 import { v4 as uuidv4 } from 'uuid';
 
-import { COMPANY_EMAIL, FIREBASE_STORAGE_BUCKET } from '../constants';
+import {
+  COMPANY_EMAIL,
+  FIREBASE_STORAGE_BUCKET,
+  FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY,
+  ONE_MINUTE_MS,
+  ONE_WEEK_MS,
+} from '../constants';
 import { createHandler, sendEmail } from '../utils';
 import { initFirebaseApp } from '../firebase';
 
@@ -41,18 +47,20 @@ export const handler = createHandler<QuoteRequestPayload>(
     const fileId = uuidv4();
     const [, fileExt] = parseFileName(payload.fileName);
 
-    const modelPath = `quote-request-models/${fileId}.${fileExt}`;
+    const modelPath = `${FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY}/${fileId}.${fileExt}`;
+
+    const currentTimestamp = Date.now();
 
     const [downloadModelUrl] = await bucket.file(modelPath).getSignedUrl({
       version: 'v4',
       action: 'read',
-      expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+      expires: currentTimestamp + ONE_WEEK_MS,
     });
 
     const [uploadModelUrl] = await bucket.file(modelPath).getSignedUrl({
       version: 'v4',
       action: 'write',
-      expires: Date.now() + 5 * 60 * 1000, // 5 mins
+      expires: currentTimestamp + 5 * ONE_MINUTE_MS, // 5 mins
       contentType: payload.contentType,
     });
 
