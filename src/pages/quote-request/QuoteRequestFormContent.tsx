@@ -113,7 +113,7 @@ export const QuoteRequestFormContent = ({
             {formValues.file ? (
               <FileCard
                 file={formValues.file}
-                removeDisabled={isQuoteCalculating}
+                removeDisabled={isQuoteCalculating || isFormSubmitting}
                 onRemove={handleRemoveFile}
               />
             ) : (

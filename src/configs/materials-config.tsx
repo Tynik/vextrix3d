@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ReactElement } from 'react';
+import type { HoneyHEXColor } from '@react-hive/honey-style';
 
 import type { IconProps } from '~/components';
 import {
@@ -28,10 +29,28 @@ type FilamentIcon =
 type MaterialType = 'filament' | 'resin';
 
 type MaterialName<Type extends MaterialType> = Type extends 'filament'
-  ? 'PLA' | 'PLA Tough+' | 'PETG' | 'PETG-CF' | 'ABS' | 'ABS-GF' | 'ASA' | 'ASA-CF' | 'PA' | 'TPU'
+  ?
+      | 'PLA'
+      | 'PLA Matte'
+      | 'PLA Silk'
+      | 'PLA Tough+'
+      | 'PETG'
+      | 'PETG-CF'
+      | 'ABS'
+      | 'ABS-GF'
+      | 'ASA'
+      | 'ASA-CF'
+      | 'PA'
+      | 'TPU'
   : Type extends 'resin'
     ? 'ABS-Like Pro 2'
     : never;
+
+interface MaterialColor {
+  name: string;
+  hex: HoneyHEXColor;
+  inStock?: boolean;
+}
 
 export interface Material<Type extends MaterialType = MaterialType> {
   type: Type;
@@ -43,6 +62,7 @@ export interface Material<Type extends MaterialType = MaterialType> {
   icons?: FilamentIcon[];
   description: string;
   shortDescription: string;
+  availableColors?: MaterialColor[];
 }
 
 export const MATERIALS: Material[] = [
@@ -56,6 +76,110 @@ export const MATERIALS: Material[] = [
     description:
       'Dimensionally stable, and perfect for prototypes, decorative models, and general-purpose parts. Offers good surface finish with minimal warping. Heat resistance up to ~60°C.',
     shortDescription: 'Stable, great for prototypes and decorative parts.',
+    availableColors: [
+      {
+        name: 'Black',
+        hex: '#000000',
+      },
+      {
+        name: 'Jade White',
+        hex: '#fff6f6',
+      },
+      {
+        name: 'Red',
+        hex: '#B62D22',
+      },
+      {
+        name: 'Bambu Green',
+        hex: '#28BA4A',
+      },
+      {
+        name: 'Pumpkin Orange',
+        hex: '#FB852E',
+      },
+      {
+        name: 'Gray',
+        hex: '#83857E',
+      },
+      {
+        name: 'Hot Pink',
+        hex: '#F04E71',
+      },
+      {
+        name: 'Yellow',
+        hex: '#F2EB48',
+      },
+      {
+        name: 'Sunflower Yellow',
+        hex: '#FCBF34',
+      },
+      {
+        name: 'Gold',
+        hex: '#DFB567',
+      },
+      {
+        name: 'Cyan',
+        hex: '#147ACB',
+      },
+      {
+        name: 'Cocoa Brown',
+        hex: '#634730',
+      },
+    ],
+  },
+  {
+    type: 'filament',
+    name: 'PLA Matte',
+    image: 'filament-1.webp',
+    priceKg: 18,
+    maxTemperature: 60,
+    icons: ['eco', 'surfaceQuality'],
+    description:
+      'Matte-finish PLA designed to reduce shine and significantly hide layer lines. Produces smooth, elegant surfaces ideal for aesthetic models, figurines, and display pieces. Heat resistance up to ~60°C.',
+    shortDescription: 'Smooth matte PLA that hides layer lines and improves surface finish.',
+    availableColors: [
+      {
+        name: 'Ivory White',
+        hex: '#fff6f6',
+      },
+      {
+        name: 'Charcoal',
+        hex: '#000000',
+      },
+      {
+        name: 'Ash Gray',
+        hex: '#909395',
+      },
+      {
+        name: 'Mandarin Orange',
+        hex: '#F5905F',
+      },
+      {
+        name: 'Scarlet Red',
+        hex: '#D63F3E',
+      },
+    ],
+  },
+  {
+    type: 'filament',
+    name: 'PLA Silk',
+    image: 'filament-1.webp',
+    priceKg: 18,
+    maxTemperature: 60,
+    icons: ['eco', 'surfaceQuality'],
+    description:
+      'High-gloss PLA formulated for an ultra-smooth, reflective finish that hides layer lines and enhances visual appeal. Perfect for decorative prints, figurines, vases, and display pieces where shine and smoothness matter more than mechanical strength. Heat resistance up to ~60°C.',
+    shortDescription: 'Glossy, reflective PLA ideal for decorative and display models.',
+    availableColors: [
+      {
+        name: 'Silver',
+        hex: '#959DA4',
+      },
+      {
+        name: 'Bronze',
+        hex: '#A8984C',
+      },
+    ],
   },
   {
     type: 'filament',
@@ -67,6 +191,20 @@ export const MATERIALS: Material[] = [
     description:
       'Enhanced PLA formulated for higher impact strength and improved durability. Ideal for functional parts, prototypes, and assemblies requiring better toughness than standard PLA. Heat resistance up to ~60°C with excellent dimensional accuracy.',
     shortDescription: 'Stronger, less brittle PLA suitable for light functional prints.',
+    availableColors: [
+      {
+        name: 'White',
+        hex: '#fff6f6',
+      },
+      {
+        name: 'Black',
+        hex: '#000000',
+      },
+      {
+        name: 'Gray',
+        hex: '#A5A8A5',
+      },
+    ],
   },
   {
     type: 'filament',
@@ -79,6 +217,12 @@ export const MATERIALS: Material[] = [
     description:
       'Combines strength, flexibility, and high temperature resistance (up to ~80°C). Ideal for functional parts, mechanical prototypes, and enclosures requiring durability and moisture resistance.',
     shortDescription: 'Durable and versatile filament for functional parts.',
+    availableColors: [
+      {
+        name: 'Translucent',
+        hex: '#F9F9F9',
+      },
+    ],
   },
   {
     type: 'filament',
@@ -91,6 +235,16 @@ export const MATERIALS: Material[] = [
     description:
       "Reinforced with carbon fiber for increased stiffness, strength, and dimensional accuracy while retaining PETG's durability. Excellent for structural parts, brackets, drone components, and high-load applications. Heat resistance up to ~80°C with reduced warping and superior rigidity.",
     shortDescription: 'Ultra-stiff carbon-fiber PETG ideal for structural parts.',
+    availableColors: [
+      {
+        name: 'Black',
+        hex: '#000000',
+      },
+      {
+        name: 'Dark Gray',
+        hex: '#4D5055',
+      },
+    ],
   },
   {
     type: 'filament',
@@ -103,6 +257,20 @@ export const MATERIALS: Material[] = [
     description:
       'Provides excellent impact resistance and strength for technical components. Heat resistance up to ~100°C. Works best in an enclosed chamber to reduce warping and improve layer adhesion.',
     shortDescription: 'Strong, impact-resistant material for technical parts.',
+    availableColors: [
+      {
+        name: 'Black',
+        hex: '#000000',
+      },
+      {
+        name: 'White',
+        hex: '#fff6f6',
+      },
+      {
+        name: 'Orange',
+        hex: '#FB6227',
+      },
+    ],
   },
   {
     type: 'filament',
@@ -115,19 +283,25 @@ export const MATERIALS: Material[] = [
     description:
       "Glass-fiber-reinforced ABS offering enhanced rigidity, dimensional stability, and reduced warping compared to standard ABS. Provides increased strength and stiffness while maintaining ABS's impact resistance and heat tolerance up to ~105°C. Ideal for mechanical parts, brackets, enclosures, and components that must hold shape under load.",
     shortDescription: 'Rigid, reinforced ABS with improved stability and strength.',
+    availableColors: [
+      {
+        name: 'Black',
+        hex: '#000000',
+      },
+    ],
   },
-  {
-    type: 'filament',
-    name: 'ASA',
-    image: 'filament-1.webp',
-    priceKg: 22,
-    difficulty: 1.1,
-    maxTemperature: 105,
-    icons: ['uvResistance', 'temperatureResistance', 'strength', 'durability'],
-    description:
-      'Offers outstanding UV and weather resistance with heat resistance up to ~105°C. Perfect for outdoor applications, automotive parts, and mechanical components requiring long-term durability.',
-    shortDescription: 'UV-resistant filament ideal for outdoor use.',
-  },
+  // {
+  //   type: 'filament',
+  //   name: 'ASA',
+  //   image: 'filament-1.webp',
+  //   priceKg: 22,
+  //   difficulty: 1.1,
+  //   maxTemperature: 105,
+  //   icons: ['uvResistance', 'temperatureResistance', 'strength', 'durability'],
+  //   description:
+  //     'Offers outstanding UV and weather resistance with heat resistance up to ~105°C. Perfect for outdoor applications, automotive parts, and mechanical components requiring long-term durability.',
+  //   shortDescription: 'UV-resistant filament ideal for outdoor use.',
+  // },
   {
     type: 'filament',
     name: 'ASA-CF',
@@ -139,6 +313,12 @@ export const MATERIALS: Material[] = [
     description:
       'Carbon-fiber-reinforced ASA offering superior stiffness, UV stability, and heat resistance up to ~105°C. Ideal for outdoor mechanical parts, automotive components, and applications requiring high rigidity with excellent weather durability.',
     shortDescription: 'Rigid, UV-resistant carbon-fiber ASA for outdoor mechanics.',
+    availableColors: [
+      {
+        name: 'Dark Gray',
+        hex: '#454545',
+      },
+    ],
   },
   {
     type: 'filament',
@@ -151,6 +331,12 @@ export const MATERIALS: Material[] = [
     description:
       'High-performance nylon filament offering exceptional toughness, impact resistance, and wear resistance. Ideal for gears, mechanical parts, hinges, and engineering components that require flexibility and long-term durability. Heat resistance up to ~120°C.',
     shortDescription: 'Extremely tough nylon for gears and engineering parts.',
+    availableColors: [
+      {
+        name: 'White',
+        hex: '#fff6f6',
+      },
+    ],
   },
   {
     type: 'filament',
@@ -163,6 +349,12 @@ export const MATERIALS: Material[] = [
     description:
       'Flexible, impact-resistant material ideal for parts requiring elasticity and vibration damping. Perfect for phone cases, gaskets, seals, RC tires, and functional components that must withstand repeated bending. Offers excellent layer adhesion and abrasion resistance with heat resistance up to ~90°C.',
     shortDescription: 'Flexible and durable filament for elastic functional parts.',
+    availableColors: [
+      {
+        name: 'Black',
+        hex: '#000000',
+      },
+    ],
   },
 ];
 

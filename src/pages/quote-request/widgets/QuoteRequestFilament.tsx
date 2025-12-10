@@ -7,6 +7,7 @@ import { FILAMENT_ICONS_CONFIG, FILAMENT_ICONS_TOOLTIP_CONTENT } from '~/configs
 import { CurrencyPoundIcon, ThermostatIcon } from '~/icons';
 import type { FilamentsRange } from '~/hooks';
 import { Scale, Text, Tooltip } from '~/components';
+import { ColorInfo } from '~/pages';
 
 interface QuoteRequestFilamentProps {
   filament: Material;
@@ -55,9 +56,20 @@ export const QuoteRequestFilament = ({
         )}
       </HoneyBox>
 
+      <HoneyBox $display="flex" $gap={0.5} $flexWrap="wrap">
+        {filament.availableColors?.map(color => (
+          <Tooltip
+            key={color.name}
+            content={`${color.name}${color.inStock === false ? ' (out of stock)' : ''}`}
+          >
+            <ColorInfo hex={color.hex} aria-disabled={color.inStock === false} />
+          </Tooltip>
+        ))}
+      </HoneyBox>
+
       <Text variant="body1">{filament.shortDescription}</Text>
 
-      <HoneyFlexBox $gap={1.5} $marginTop={1}>
+      <HoneyFlexBox $gap={1.5} $marginTop="auto" $paddingTop={1}>
         {filament.priceKg && (
           <Scale
             label="Price"
