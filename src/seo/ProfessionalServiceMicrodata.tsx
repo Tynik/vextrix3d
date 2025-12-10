@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SEO_SCHEMA_BASE_URL } from '~/configs';
+import { CONTACT_EMAIL, CONTACT_PHONE, SEO_SCHEMA_BASE_URL, SITE_URL } from '~/configs';
 
 export const ProfessionalServiceMicrodata = () => {
   return (
@@ -10,18 +10,18 @@ export const ProfessionalServiceMicrodata = () => {
       style={{ display: 'none' }}
     >
       <meta itemProp="name" content="Vextrix3D" />
-      <meta itemProp="url" content="https://vextrix3d.co.uk" />
+      <meta itemProp="url" content={SITE_URL} />
       <meta
         itemProp="description"
         content="UK-based professional FDM and SLA 3D printing service offering prototypes, engineering parts, miniatures, and custom high-resolution prints."
       />
-      <meta itemProp="email" content="vextrix3d@gmail.com" />
-      <div itemProp="telephone">+447918993712</div>
-      <meta itemProp="image" content="https://vextrix3d.co.uk/assets/images/IMG_1700.webp" />
+      <meta itemProp="email" content={CONTACT_EMAIL} />
+      <div itemProp="telephone">{CONTACT_PHONE}</div>
+      <meta itemProp="image" content={`${SITE_URL}/assets/images/IMG_1700.webp`} />
 
       <div itemProp="brand" itemScope itemType="https://schema.org/Brand">
         <meta itemProp="name" content="Vextrix3D" />
-        {/*<meta itemProp="logo" content="https://vextrix3d.co.uk/assets/images/logo.webp" />*/}
+        {/*<meta itemProp="logo" content={`${SITE_URL}/assets/images/logo.webp`} />*/}
       </div>
 
       <div itemProp="founder" itemScope itemType="https://schema.org/Person">

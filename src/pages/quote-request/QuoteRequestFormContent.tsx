@@ -7,6 +7,7 @@ import debounce from 'lodash.debounce';
 
 import type { Nullable } from '~/types';
 import type { EstimatedQuote } from '~/utils';
+import { IS_LOCAL_ENV } from '~/configs';
 import { estimateQuote, ModelLoaderError } from '~/utils';
 import { useOnChange } from '~/hooks';
 import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
@@ -179,23 +180,25 @@ export const QuoteRequestFormContent = ({
             {...formFields.copies.props}
           />
 
-          {/*<HoneyBox*/}
-          {/*  $display="flex"*/}
-          {/*  $gap={1}*/}
-          {/*  $alignItems="center"*/}
-          {/*  $padding={1}*/}
-          {/*  $borderRadius="4px"*/}
-          {/*  $border="1px solid"*/}
-          {/*  $borderColor="neutral.grayLight"*/}
-          {/*>*/}
-          {/*  <Text variant="body1">Estimated Printing Quote:</Text>*/}
+          {IS_LOCAL_ENV && (
+            <HoneyBox
+              $display="flex"
+              $gap={1}
+              $alignItems="center"
+              $padding={1}
+              $borderRadius="4px"
+              $border="1px solid"
+              $borderColor="neutral.grayLight"
+            >
+              <Text variant="body1">Estimated Printing Quote:</Text>
 
-          {/*  {isQuoteCalculating ? (*/}
-          {/*    <Progress size="16px" lineWidth="2px" />*/}
-          {/*  ) : (*/}
-          {/*    <Text variant="body1">£{estimatedQuote?.total ?? 0} + Shipping Fee</Text>*/}
-          {/*  )}*/}
-          {/*</HoneyBox>*/}
+              {isQuoteCalculating ? (
+                <Progress size="16px" lineWidth="2px" />
+              ) : (
+                <Text variant="body1">£{estimatedQuote?.total ?? 0} + (Shipping Fee)</Text>
+              )}
+            </HoneyBox>
+          )}
 
           <Button
             loading={isFormSubmitting}
