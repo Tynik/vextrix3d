@@ -9,12 +9,14 @@ import { ButtonStyled } from './ButtonStyled';
 export type ButtonProps<Element extends ElementType = 'button'> = ButtonStyledProps<Element> & {
   loading?: boolean;
   icon?: ReactElement<IconProps>;
+  iconProps?: IconProps;
 };
 
 export const Button = <Element extends ElementType>({
   children,
   loading,
   icon,
+  iconProps,
   ...props
 }: ButtonProps<Element>) => {
   return (
@@ -25,7 +27,8 @@ export const Button = <Element extends ElementType>({
       ) : (
         icon &&
         cloneElement(icon, {
-          size: 'small',
+          size: 'medium',
+          ...iconProps,
         })
       )}
 

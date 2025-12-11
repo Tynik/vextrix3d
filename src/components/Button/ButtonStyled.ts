@@ -57,7 +57,7 @@ export type ButtonStyledProps<Element extends ElementType = 'button'> = HoneyBox
 
 export const ButtonStyled = styled<ButtonStyledProps>(
   HoneyBox,
-  ({ as = 'button', type = 'button', $height = { xs: '42px', md: '34px' } }) => ({
+  ({ as = 'button', type = 'button', $height = { xs: '42px', md: '36px' } }) => ({
     as,
     type,
     $height,

@@ -1,16 +1,25 @@
 import type { HTTPRequestMethod, Nullable } from '~/types';
 
-export type NetlifyFunction = 'quote-request' | 'upload-quote-request-model';
+export type NetlifyFunction =
+  | 'sign-up'
+  | 'sign-in'
+  | 'verify-id-token'
+  | 'quote-request'
+  | 'upload-quote-request-model';
 
 export interface NetlifyRequestResponse<Response = unknown> {
   status: string;
   data: Response;
 }
 
-export interface NetlifyRequestErrorResponse {
-  status: string;
+export interface NetlifyRequestError<Name extends string = string, Code extends string = string> {
+  status: 'error';
   data: {
-    error: string;
+    error: {
+      name?: Name;
+      code?: Code;
+      message?: string;
+    };
   };
 }
 
@@ -60,7 +69,7 @@ export const netlifyRequest = async <Response, Payload = unknown>(
   );
 
   if (!response.ok) {
-    return Promise.reject((await response.json()) as NetlifyRequestErrorResponse);
+    return Promise.reject((await response.json()) as NetlifyRequestError);
   }
 
   return (await response.json()) as NetlifyRequestResponse<Response>;

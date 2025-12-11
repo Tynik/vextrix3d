@@ -1,4 +1,4 @@
-import type { HoneyBoxProps } from '@react-hive/honey-layout';
+import { bpMedia, HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox } from '@react-hive/honey-layout';
 import { css, pxToRem, resolveFont, styled } from '@react-hive/honey-style';
 
@@ -12,19 +12,23 @@ export const TextInputStyled = styled(HoneyBox, ({ $width = '100%' }) => ({
 
     label {
       font-size: ${pxToRem(14)};
-      color: ${colors.secondary.carbonInk};
+      color: ${colors.secondary.slateAlloy};
 
       &:has(~ input:focus) {
         //
       }
     }
 
+    input {
+      height: 36px;
+    }
+
     input,
     textarea {
+      padding: 8px;
+
       font-size: ${pxToRem(16)};
       font-family: Roboto, sans-serif;
-
-      padding: 8px;
 
       border: 1px solid ${colors.neutral.grayLight};
       border-radius: 4px;
@@ -59,6 +63,12 @@ export const TextInputStyled = styled(HoneyBox, ({ $width = '100%' }) => ({
 
         gap: ${0.5};
         color: ${colors.error.crimsonRed};
+      }
+    }
+
+    ${bpMedia('sm').down} {
+      input {
+        height: 42px;
       }
     }
   `}

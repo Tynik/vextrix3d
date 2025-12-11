@@ -4,17 +4,80 @@ import { assert } from '@react-hive/honey-utils';
 import type { Email, EmailTemplateName, Nullable } from './types';
 import { NETLIFY_EMAILS_SECRET, URL, SITE_DOMAIN } from './constants';
 
-type HTTPMethod = 'POST' | 'GET' | 'OPTIONS' | 'PUT' | 'PATCH' | 'DELETE';
+type HttpRequestMethod = 'POST' | 'GET' | 'OPTIONS' | 'PUT' | 'PATCH' | 'DELETE';
+
+interface CookieOptions {
+  name: string;
+  value: string;
+  domain?: string;
+  path?: string;
+  expires?: Date;
+  maxAge?: number;
+  secure?: boolean;
+  partitioned?: boolean;
+  httpOnly?: boolean;
+  sameSite?: 'Strict' | 'Lax' | 'None';
+}
+
+const formatCookie = ({
+  name,
+  domain,
+  value,
+  path = '/',
+  expires,
+  maxAge,
+  secure,
+  partitioned,
+  httpOnly = false,
+  sameSite,
+}: CookieOptions) => {
+  let cookie = `${encodeURIComponent(name)}=${encodeURIComponent(value)}`;
+
+  if (path) {
+    cookie += `; Path=${path}`;
+  }
+
+  if (domain) {
+    cookie += `; Domain=${domain}`;
+  }
+
+  if (expires) {
+    cookie += `; Expires=${expires.toUTCString()}`;
+  }
+
+  if (maxAge !== undefined) {
+    cookie += `; Max-Age=${maxAge}`;
+  }
+
+  if (partitioned) {
+    cookie += '; Partitioned';
+  }
+
+  if (httpOnly) {
+    cookie += '; HttpOnly';
+  }
+
+  if (sameSite) {
+    cookie += `; SameSite=${sameSite}`;
+  }
+
+  if (secure || sameSite === 'None') {
+    cookie += '; Secure';
+  }
+
+  return cookie;
+};
 
 interface CreateResponseOptions {
   statusCode?: number;
-  allowMethods?: HTTPMethod[] | null;
+  allowedMethods?: HttpRequestMethod[] | null;
   headers?: Record<string, string>;
+  cookie?: CookieOptions;
 }
 
 const createResponse = <Data>(
   data: Data,
-  { statusCode = 200, allowMethods = null, headers = {} }: CreateResponseOptions = {},
+  { statusCode = 200, allowedMethods = null, headers = {}, cookie }: CreateResponseOptions = {},
 ): HandlerResponse => ({
   statusCode,
   body: JSON.stringify(data),
@@ -22,9 +85,12 @@ const createResponse = <Data>(
     'Access-Control-Allow-Origin': SITE_DOMAIN ?? '',
     'Access-Control-Allow-Credentials': 'true',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': allowMethods?.join(', ') ?? '*',
+    'Access-Control-Allow-Methods': allowedMethods?.join(', ') ?? '*',
     'Content-Type': 'application/json',
     ...headers,
+    ...(cookie && {
+      'Set-Cookie': formatCookie(cookie),
+    }),
   },
 });
 
@@ -35,9 +101,9 @@ export interface CreateHandlerFunctionOptions<Payload = unknown> {
   payload: Payload | null;
 }
 
-type CreateHandlerOptions = {
-  allowMethods?: HTTPMethod[];
-} | null;
+interface CreateHandlerOptions {
+  allowedMethods?: HttpRequestMethod[];
+}
 
 export type CreateHandlerFunction<Payload, Response = unknown> = (
   options: CreateHandlerFunctionOptions<Payload>,
@@ -47,6 +113,7 @@ export type CreateHandlerFunction<Payload, Response = unknown> = (
     status: 'ok' | 'error';
     statusCode?: number;
     headers?: Record<string, string>;
+    cookie?: CookieOptions;
   }>
 >;
 
@@ -57,15 +124,22 @@ export const createHandler = <Payload = unknown>(
   return async (event, context) => {
     if (event.httpMethod === 'OPTIONS') {
       return createResponse(
-        { message: 'Successful preflight call.' },
-        { allowMethods: options?.allowMethods },
+        {
+          message: 'Successful preflight call.',
+        },
+        {
+          allowedMethods: options?.allowedMethods,
+        },
       );
     }
 
-    if (options?.allowMethods && !options.allowMethods.includes(event.httpMethod as HTTPMethod)) {
+    if (
+      options?.allowedMethods &&
+      !options.allowedMethods.includes(event.httpMethod as HttpRequestMethod)
+    ) {
       return createResponse(`You cannot use HTTP method "${event.httpMethod}" for this endpoint`, {
         statusCode: 400,
-        allowMethods: options.allowMethods,
+        allowedMethods: options.allowedMethods,
       });
     }
 
@@ -84,22 +158,25 @@ export const createHandler = <Payload = unknown>(
       const payload =
         event.body && !event.isBase64Encoded ? (JSON.parse(event.body) as Payload) : null;
 
-      const { statusCode, headers, ...result } =
+      const { statusCode, headers, cookie, ...result } =
         (await fn({ event, context, cookies, payload })) || {};
 
       return createResponse(result, {
         statusCode,
         headers,
-        allowMethods: options?.allowMethods,
+        cookie,
+        allowedMethods: options?.allowedMethods,
       });
     } catch (e) {
       console.error(e);
 
       return createResponse(
-        { status: 'error' },
+        {
+          status: 'error',
+        },
         {
           statusCode: 500,
-          allowMethods: options?.allowMethods,
+          allowedMethods: options?.allowedMethods,
         },
       );
     }

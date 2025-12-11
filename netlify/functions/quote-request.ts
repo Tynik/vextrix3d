@@ -10,9 +10,9 @@ import {
   ONE_WEEK_MS,
 } from '../constants';
 import { createHandler, sendEmail } from '../utils';
-import { initFirebaseApp } from '../firebase';
+import { initFirebaseAdminApp } from '../firebase-admin';
 
-initFirebaseApp();
+initFirebaseAdminApp();
 
 interface QuoteRequestPayload {
   fileName: string;
@@ -28,7 +28,9 @@ interface QuoteRequestPayload {
 }
 
 export const handler = createHandler<QuoteRequestPayload>(
-  { allowMethods: ['POST'] },
+  {
+    allowedMethods: ['POST'],
+  },
   async ({ payload }) => {
     assert(COMPANY_EMAIL, 'The `COMPANY_EMAIL` must be set as environment variable');
 
@@ -78,10 +80,6 @@ export const handler = createHandler<QuoteRequestPayload>(
         estimatedQuoteTotal: payload.estimatedQuote.total.toString(),
       },
     });
-
-    if (!response.ok) {
-      console.error(await response.json());
-    }
 
     return {
       status: response.ok ? 'ok' : 'error',

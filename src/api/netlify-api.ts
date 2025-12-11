@@ -1,4 +1,5 @@
-import { netlifyRequest } from '~/api/netlify-request';
+import type { NetlifyRequestError } from './netlify-request';
+import { netlifyRequest } from './netlify-request';
 
 interface QuoteRequestPayload {
   fileName: string;
@@ -23,3 +24,42 @@ export const quoteRequest = async (payload: QuoteRequestPayload) => {
 
   return uploadModelUrl;
 };
+
+interface SignUpRequestPayload {
+  email: string;
+  password: string;
+}
+
+export type SignUpRequestErrorCode =
+  | 'auth/email-already-in-use'
+  | 'auth/invalid-email'
+  | 'auth/weak-password';
+
+export type SignUpRequestError = NetlifyRequestError<'FirebaseError', SignUpRequestErrorCode>;
+
+export const signUpRequest = (payload: SignUpRequestPayload) =>
+  netlifyRequest('sign-up', {
+    method: 'POST',
+    payload,
+  });
+
+interface SignInRequestPayload {
+  email: string;
+  password: string;
+}
+
+export type SignInRequestErrorCode = 'auth/invalid-credential';
+
+export type SignInRequestError = NetlifyRequestError<'FirebaseError', SignInRequestErrorCode>;
+
+export const signInRequest = (payload: SignInRequestPayload) =>
+  netlifyRequest('sign-in', {
+    method: 'POST',
+    payload,
+  });
+
+export type VerifyIdTokenRequestErrorCode = 'auth/argument-error';
+
+export type VerifyIdTokenRequestError = NetlifyRequestError<'Error', VerifyIdTokenRequestErrorCode>;
+
+export const verifyIdToken = () => netlifyRequest('verify-id-token');

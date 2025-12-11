@@ -18,10 +18,7 @@ interface TextInputProps
    * @default false
    */
   multiline?: boolean;
-  inputProps?: Omit<
-    InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>,
-    keyof SelectedInputProps
-  >;
+  inputProps?: InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement>;
 }
 
 export const TextInput = ({

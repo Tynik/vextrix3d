@@ -1,10 +1,12 @@
 import { toast } from 'react-toastify';
 
-import { NetlifyRequestErrorResponse } from './netlify-request';
+import { NetlifyRequestError } from './netlify-request';
 
 export const handleApiError = (e: any) => {
   if ('data' in e) {
-    return toast((e as NetlifyRequestErrorResponse).data.error, {
+    const error = e as NetlifyRequestError;
+
+    return toast(error.data.error.message, {
       type: 'error',
     });
   }

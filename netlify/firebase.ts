@@ -1,19 +1,18 @@
-import type { ServiceAccount } from 'firebase-admin/app';
-import { initializeApp, cert } from 'firebase-admin/app';
+import type { FirebaseOptions } from '@firebase/app';
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 import { assert } from '@react-hive/honey-utils';
 
-import { FIREBASE_SERVICE_ACCOUNT } from './constants';
+import { FIREBASE_CONFIG } from './constants';
 
-export const initFirebaseApp = () => {
-  assert(
-    FIREBASE_SERVICE_ACCOUNT,
-    'The `FIREBASE_SERVICE_ACCOUNT` must be set as environment variable',
-  );
+const initFirebaseApp = () => {
+  assert(FIREBASE_CONFIG, 'The `FIREBASE_CONFIG` must be set as environment variable');
 
-  const serviceAccountJson = Buffer.from(FIREBASE_SERVICE_ACCOUNT, 'base64').toString('utf8');
-  const serviceAccount = JSON.parse(serviceAccountJson) as ServiceAccount;
+  const config = JSON.parse(atob(FIREBASE_CONFIG)) as FirebaseOptions;
 
-  return initializeApp({
-    credential: cert(serviceAccount),
-  });
+  return initializeApp(config);
 };
+
+const firebaseApp = initFirebaseApp();
+
+export const firebaseAuth = getAuth(firebaseApp);
