@@ -1,12 +1,16 @@
 import React from 'react';
-import type { ComponentProps } from 'react';
+import type { ReactElement, ComponentProps } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { styled } from '@react-hive/honey-style';
 
-import type { TextProps } from '~/components';
+import type { IconProps, TextProps } from '~/components';
 import { Text } from '~/components';
+import { HoneyBox } from '@react-hive/honey-layout';
 
-export type LinkProps = ComponentProps<typeof RouterLink> & TextProps;
+export type LinkProps = ComponentProps<typeof RouterLink> &
+  TextProps & {
+    icon?: ReactElement<IconProps>;
+  };
 
 const LinkStyled = styled(
   RouterLink,
@@ -16,4 +20,17 @@ const LinkStyled = styled(
   },
 )<LinkProps>``;
 
-export const Link = (props: LinkProps) => <Text as={LinkStyled} {...props} />;
+export const Link = ({ icon, ...props }: LinkProps) => {
+  const component = <Text as={LinkStyled} {...props} />;
+
+  if (icon) {
+    return (
+      <HoneyBox $display="flex" $gap={0.5} $alignItems="center">
+        {icon}
+        {component}
+      </HoneyBox>
+    );
+  }
+
+  return component;
+};

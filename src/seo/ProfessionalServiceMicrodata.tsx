@@ -19,29 +19,29 @@ export const ProfessionalServiceMicrodata = () => {
       <div itemProp="telephone">{CONTACT_PHONE}</div>
       <meta itemProp="image" content={`${SITE_URL}/assets/images/IMG_1700.webp`} />
 
-      <div itemProp="brand" itemScope itemType="https://schema.org/Brand">
+      <div itemProp="brand" itemType="https://schema.org/Brand" itemScope>
         <meta itemProp="name" content="Vextrix3D" />
         {/*<meta itemProp="logo" content={`${SITE_URL}/assets/images/logo.webp`} />*/}
       </div>
 
-      <div itemProp="founder" itemScope itemType="https://schema.org/Person">
+      <div itemProp="founder" itemType="https://schema.org/Person" itemScope>
         <meta itemProp="name" content="Mike Aliinyk" />
         <meta itemProp="jobTitle" content="Founder" />
         <meta itemProp="address" content="Chelmsford, UK" />
       </div>
 
-      <div itemProp="address" itemScope itemType="https://schema.org/PostalAddress">
+      <div itemProp="address" itemType="https://schema.org/PostalAddress" itemScope>
         <meta itemProp="addressCountry" content="UK" />
         <meta itemProp="addressLocality" content="Chelmsford" />
         <meta itemProp="addressRegion" content="Essex" />
       </div>
 
-      <div itemProp="geo" itemScope itemType="https://schema.org/GeoCoordinates">
+      <div itemProp="geo" itemType="https://schema.org/GeoCoordinates" itemScope>
         <meta itemProp="latitude" content="51.7361" />
         <meta itemProp="longitude" content="0.4798" />
       </div>
 
-      <div itemProp="areaServed" itemScope itemType="https://schema.org/Country">
+      <div itemProp="areaServed" itemType="https://schema.org/Country" itemScope>
         <meta itemProp="name" content="United Kingdom" />
       </div>
 
@@ -50,14 +50,36 @@ export const ProfessionalServiceMicrodata = () => {
       <meta itemProp="priceRange" content="££" />
       <meta itemProp="currenciesAccepted" content="GBP" />
 
+      <link itemProp="sameAs" href="https://uk.trustpilot.com/review/vextrix3d.co.uk" />
       <link itemProp="sameAs" href="https://www.instagram.com/vextrix3d" />
 
-      <div itemProp="makesOffer" itemScope itemType="https://schema.org/Offer">
+      <div itemProp="makesOffer" itemType="https://schema.org/Offer" itemScope>
         <div itemProp="itemOffered" itemScope itemType="https://schema.org/Service">
           <meta itemProp="name" content="3D Printing Service" />
           <meta itemProp="serviceType" content="FDM and SLA 3D Printing" />
         </div>
       </div>
+
+      {/*<div itemProp="aggregateRating" itemType="https://schema.org/AggregateRating" itemScope>*/}
+      {/*  <meta itemProp="ratingValue" content="5.0" />*/}
+      {/*  <meta itemProp="bestRating" content="5" />*/}
+      {/*  <meta itemProp="worstRating" content="1" />*/}
+      {/*  <meta itemProp="reviewCount" content="3" />*/}
+      {/*</div>*/}
+
+      {/*<div itemProp="review" itemType="https://schema.org/Review" itemScope>*/}
+      {/*  <meta itemProp="reviewBody" content="Excellent print quality and fast service." />*/}
+      {/*  <meta itemProp="datePublished" content="2025-01-05" />*/}
+
+      {/*  <div itemProp="reviewRating" itemScope itemType="https://schema.org/Rating">*/}
+      {/*    <meta itemProp="ratingValue" content="5" />*/}
+      {/*    <meta itemProp="bestRating" content="5" />*/}
+      {/*  </div>*/}
+
+      {/*  <span itemProp="author" itemScope itemType="https://schema.org/Person">*/}
+      {/*    <meta itemProp="name" content="Trustpilot Reviewer" />*/}
+      {/*  </span>*/}
+      {/*</div>*/}
     </div>
   );
 };

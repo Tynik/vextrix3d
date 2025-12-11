@@ -2,8 +2,8 @@ import React from 'react';
 import { HoneyBox, HoneyFlexBox, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
 
 import { CONTACT_EMAIL } from '~/configs';
+import { MailIcon, PlaceIcon, ReviewsIcon } from '~/icons';
 import { Container, Text, Link } from '~/components';
-import { MailIcon, PlaceIcon } from '~/icons';
 
 export const Footer = () => (
   <HoneyBox as="footer" $backgroundColor="neutral.grayDark">
@@ -17,6 +17,19 @@ export const Footer = () => (
           <Text variant="body1" $color="neutral.white">
             Precision. Layer by Layer.
           </Text>
+
+          <HoneyFlexBox $gap={1}>
+            <Link
+              to="https://uk.trustpilot.com/review/vextrix3d.co.uk"
+              variant="body1"
+              target="_blank"
+              rel="noopener noreferrer"
+              icon={<ReviewsIcon size="small" color="neutral.white" />}
+              $color="neutral.white"
+            >
+              Trustpilot Reviews
+            </Link>
+          </HoneyFlexBox>
         </HoneyGridColumn>
 
         <HoneyGridColumn $gap={1.5} $minWidth="250px">

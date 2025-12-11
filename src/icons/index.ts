@@ -15,3 +15,4 @@ export * from './WavesIcon';
 export * from './WbSunnyIcon';
 export * from './GavelIcon';
 export * from './FitnessCenterIcon';
+export * from './ReviewsIcon';
