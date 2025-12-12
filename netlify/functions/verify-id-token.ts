@@ -4,8 +4,6 @@ import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase-admin';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 
-initFirebaseAdminApp();
-
 export const handler = createHandler(
   {
     allowedMethods: ['GET'],
@@ -20,6 +18,8 @@ export const handler = createHandler(
         },
       };
     }
+
+    await initFirebaseAdminApp();
 
     try {
       const token = await admin.auth().verifyIdToken(cookies.idToken);

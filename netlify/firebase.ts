@@ -1,18 +1,17 @@
 import type { FirebaseOptions } from '@firebase/app';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
-import { assert } from '@react-hive/honey-utils';
+import { once } from '@react-hive/honey-utils';
 
-import { FIREBASE_CONFIG } from './constants';
+import { getSecretsStore } from './blobs';
 
-const initFirebaseApp = () => {
-  assert(FIREBASE_CONFIG, 'The `FIREBASE_CONFIG` must be set as environment variable');
+const _initFirebaseApp = async () => {
+  const store = getSecretsStore();
 
-  const config = JSON.parse(atob(FIREBASE_CONFIG)) as FirebaseOptions;
+  const firebaseConfig = (await store.get('firebase-config.json', {
+    type: 'json',
+  })) as FirebaseOptions;
 
-  return initializeApp(config);
+  return initializeApp(firebaseConfig);
 };
 
-const firebaseApp = initFirebaseApp();
-
-export const firebaseAuth = getAuth(firebaseApp);
+export const initFirebaseApp = once(_initFirebaseApp);

@@ -1,8 +1,8 @@
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
 import firebase from 'firebase/compat/app';
 
 import { createHandler } from '../utils';
-import { firebaseAuth } from '../firebase';
+import { initFirebaseApp } from '../firebase';
 
 import FirebaseError = firebase.FirebaseError;
 
@@ -37,6 +37,9 @@ export const handler = createHandler<SignupPayload>(
     }
 
     try {
+      const firebaseApp = await initFirebaseApp();
+      const firebaseAuth = getAuth(firebaseApp);
+
       await createUserWithEmailAndPassword(firebaseAuth, payload.email, payload.password);
 
       return {

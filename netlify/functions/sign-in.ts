@@ -1,9 +1,9 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import firebase from 'firebase/compat/app';
 
 import { IS_LOCAL_ENV } from '../constants';
 import { createHandler } from '../utils';
-import { firebaseAuth } from '../firebase';
+import { initFirebaseApp } from '../firebase';
 
 import FirebaseError = firebase.FirebaseError;
 
@@ -38,6 +38,9 @@ export const handler = createHandler<SignInPayload>(
     }
 
     try {
+      const firebaseApp = await initFirebaseApp();
+      const firebaseAuth = getAuth(firebaseApp);
+
       const userCredential = await signInWithEmailAndPassword(
         firebaseAuth,
         payload.email,

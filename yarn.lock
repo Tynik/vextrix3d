@@ -2051,6 +2051,15 @@
     "@netlify/dev-utils" "4.3.0"
     "@netlify/runtime-utils" "2.2.0"
 
+"@netlify/blobs@10.4.3":
+  version "10.4.3"
+  resolved "https://registry.yarnpkg.com/@netlify/blobs/-/blobs-10.4.3.tgz#4420546641795a65d6af2d1c61916f711d6788ab"
+  integrity sha512-a5Wh4Mc6OwR4vUPnp4DAySDugvrrUmA16NEW0atUnP9R2kOr7vAmV986MXzQGpb57w3B8aq3XXuG/jquTvciiQ==
+  dependencies:
+    "@netlify/dev-utils" "4.3.3"
+    "@netlify/otel" "^5.1.0"
+    "@netlify/runtime-utils" "2.2.1"
+
 "@netlify/blobs@^10.4.1":
   version "10.4.1"
   resolved "https://registry.yarnpkg.com/@netlify/blobs/-/blobs-10.4.1.tgz#48ebab700af3ea697dde00595878b54c2e478479"
@@ -2201,6 +2210,27 @@
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/@netlify/dev-utils/-/dev-utils-4.3.2.tgz#a7b2280630add8e0464beeaf43567c3bd21f7d6b"
   integrity sha512-Nl6c5UVLbpOwvzVaT6fJycdkc3EswqFoI9c2hZ3WUUX+kQ2ojdrkFMuKcPERaGXYxrhy/uGk1CURAflG8YC2RA==
+  dependencies:
+    "@whatwg-node/server" "^0.10.0"
+    ansis "^4.1.0"
+    chokidar "^4.0.1"
+    decache "^4.6.2"
+    dettle "^1.0.5"
+    dot-prop "9.0.0"
+    empathic "^2.0.0"
+    env-paths "^3.0.0"
+    image-size "^2.0.2"
+    js-image-generator "^1.0.4"
+    parse-gitignore "^2.0.0"
+    semver "^7.7.2"
+    tmp-promise "^3.0.3"
+    uuid "^13.0.0"
+    write-file-atomic "^5.0.1"
+
+"@netlify/dev-utils@4.3.3":
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/@netlify/dev-utils/-/dev-utils-4.3.3.tgz#b73994fd98942f2c8b66ef8fbe02b61f800b2b3b"
+  integrity sha512-qziF8R9kf7mRNgSpmUH96O0aV1ZiwK4c9ZecFQbDSQuYhgy9GY1WTjiQF0oQnohjTjWNtXhrU39LAeXWNLaBJg==
   dependencies:
     "@whatwg-node/server" "^0.10.0"
     ansis "^4.1.0"
@@ -2387,6 +2417,17 @@
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/@netlify/otel/-/otel-5.0.0.tgz#c2ad0e6c462689ea8f1e48eeda766752c1a82835"
   integrity sha512-7EWbS+puDub800IQ9MUVcLrWwCNPyK/u1Rs08f0Y+O4dBGVkuTm/RyaLoU58PPLuNCfPHXebfIYFZxN+/CtZeA==
+  dependencies:
+    "@opentelemetry/api" "1.9.0"
+    "@opentelemetry/core" "1.30.1"
+    "@opentelemetry/instrumentation" "^0.203.0"
+    "@opentelemetry/resources" "1.30.1"
+    "@opentelemetry/sdk-trace-node" "1.30.1"
+
+"@netlify/otel@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@netlify/otel/-/otel-5.1.0.tgz#8db3c9107b3399abeb24bf1921096a01a47dc5fa"
+  integrity sha512-bXZuWXXq3IZQ8i3/b5YD7ud5fQq/fiiCR51ClUx3WPcDbH/Rck0F6gc08yyrB5+8Dn8IYmvj+xlWL23B39YDHA==
   dependencies:
     "@opentelemetry/api" "1.9.0"
     "@opentelemetry/core" "1.30.1"
@@ -6345,7 +6386,7 @@ firebase-admin@13.6.0:
     "@google-cloud/firestore" "^7.11.0"
     "@google-cloud/storage" "^7.14.0"
 
-firebase@^12.6.0:
+firebase@12.6.0:
   version "12.6.0"
   resolved "https://registry.yarnpkg.com/firebase/-/firebase-12.6.0.tgz#a14cb4bc349246b12fb14f8daf093194177d063e"
   integrity sha512-8ZD1Gcv916Qp8/nsFH2+QMIrfX/76ti6cJwxQUENLXXnKlOX/IJZaU2Y3bdYf5r1mbownrQKfnWtrt+MVgdwLA==

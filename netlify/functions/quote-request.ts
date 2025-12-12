@@ -12,8 +12,6 @@ import {
 import { createHandler, sendEmail } from '../utils';
 import { initFirebaseAdminApp } from '../firebase-admin';
 
-initFirebaseAdminApp();
-
 interface QuoteRequestPayload {
   fileName: string;
   contentType: string;
@@ -43,6 +41,8 @@ export const handler = createHandler<QuoteRequestPayload>(
         },
       };
     }
+
+    await initFirebaseAdminApp();
 
     const bucket = getStorage().bucket(FIREBASE_STORAGE_BUCKET);
     //
