@@ -1,13 +1,19 @@
 import type { ServiceAccount } from 'firebase-admin/app';
 import { initializeApp, cert } from 'firebase-admin/app';
+import { assert, once } from '@react-hive/honey-utils';
 
 import { getSecretsStore } from './blobs';
-import { once } from '@react-hive/honey-utils';
+import { FIREBASE_SERVICE_ACCOUNT_FILENAME } from './constants';
 
 const _initFirebaseAdminApp = async () => {
+  assert(
+    FIREBASE_SERVICE_ACCOUNT_FILENAME,
+    'The `FIREBASE_SERVICE_ACCOUNT_FILENAME` must be set as environment variable',
+  );
+
   const store = getSecretsStore();
 
-  const serviceAccount = (await store.get('vextrix3d-a164a-aa795721a03b.json', {
+  const serviceAccount = (await store.get(FIREBASE_SERVICE_ACCOUNT_FILENAME, {
     type: 'json',
   })) as ServiceAccount;
 

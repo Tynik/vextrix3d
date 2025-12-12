@@ -3,7 +3,7 @@ import type { HTTPRequestMethod, Nullable } from '~/types';
 export type NetlifyFunction =
   | 'sign-up'
   | 'sign-in'
-  | 'verify-id-token'
+  | 'verify-session'
   | 'quote-request'
   | 'upload-quote-request-model';
 

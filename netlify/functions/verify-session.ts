@@ -1,34 +1,34 @@
-import admin from 'firebase-admin';
+import { getAuth } from 'firebase-admin/auth';
+import { FirebaseAuthError } from 'firebase-admin/auth';
 
 import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase-admin';
-import { FirebaseAuthError } from 'firebase-admin/auth';
 
 export const handler = createHandler(
   {
     allowedMethods: ['GET'],
   },
   async ({ cookies }) => {
-    if (!cookies.idToken) {
+    if (!cookies.session) {
       return {
         status: 'error',
         statusCode: 400,
         data: {
-          error: 'The ID token is not provided',
+          error: 'The session is not provided',
         },
       };
     }
 
-    await initFirebaseAdminApp();
-
     try {
-      const token = await admin.auth().verifyIdToken(cookies.idToken);
+      const firebaseAdminApp = await initFirebaseAdminApp();
+
+      const token = await getAuth(firebaseAdminApp).verifySessionCookie(cookies.session, true);
 
       return {
         status: 'ok',
         data: {
           email: token.email,
-          expiredAt: token.exp,
+          expiresAt: token.exp,
           isEmailVerified: token.email_verified,
         },
       };

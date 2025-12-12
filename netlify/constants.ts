@@ -6,11 +6,15 @@ export const FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY = 'quote-request-models';
 
 export const ONE_MINUTE_MS = 1000;
 
+export const ONE_MINUTE_SECS = 60;
+
 export const ONE_HOUR_MINUTES = 60;
 
 export const ONE_DAY_HOURS = 24;
 
 export const ONE_DAY_MINUTES = ONE_DAY_HOURS * ONE_HOUR_MINUTES;
+
+export const ONE_DAY_SECS = ONE_DAY_MINUTES * ONE_MINUTE_SECS;
 
 export const ONE_WEEK_DAYS = 7;
 
@@ -25,5 +29,6 @@ export const {
   COMPANY_EMAIL,
   STRIPE_API_KEY,
   NETLIFY_EMAILS_SECRET,
+  FIREBASE_SERVICE_ACCOUNT_FILENAME,
   FIREBASE_STORAGE_BUCKET,
 } = process.env;

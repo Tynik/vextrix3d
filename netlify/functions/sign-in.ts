@@ -1,8 +1,10 @@
+import { getAuth as getAdminAuth } from 'firebase-admin/auth';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import firebase from 'firebase/compat/app';
 
-import { IS_LOCAL_ENV } from '../constants';
+import { IS_LOCAL_ENV, ONE_DAY_SECS } from '../constants';
 import { createHandler } from '../utils';
+import { initFirebaseAdminApp } from '../firebase-admin';
 import { initFirebaseApp } from '../firebase';
 
 import FirebaseError = firebase.FirebaseError;
@@ -38,6 +40,7 @@ export const handler = createHandler<SignInPayload>(
     }
 
     try {
+      const firebaseAdminApp = await initFirebaseAdminApp();
       const firebaseApp = await initFirebaseApp();
       const firebaseAuth = getAuth(firebaseApp);
 
@@ -47,24 +50,29 @@ export const handler = createHandler<SignInPayload>(
         payload.password,
       );
 
-      const idTokenResult = await userCredential.user.getIdTokenResult(true);
+      const idToken = await userCredential.user.getIdToken(true);
 
-      const expiresAt = new Date(idTokenResult.expirationTime).getTime();
-      const maxAge = Math.floor((expiresAt - Date.now()) / 1000);
+      const expiresIn = ONE_DAY_SECS;
+
+      const sessionCookie = await getAdminAuth(firebaseAdminApp).createSessionCookie(idToken, {
+        expiresIn: expiresIn * 1000,
+      });
 
       return {
         status: 'ok',
         data: {},
         cookie: {
-          maxAge,
-          name: 'idToken',
-          value: idTokenResult.token,
+          name: 'session',
+          value: sessionCookie,
+          maxAge: expiresIn,
           sameSite: IS_LOCAL_ENV ? 'None' : 'Strict',
           secure: true,
         },
       };
     } catch (e) {
       const error = e as FirebaseError;
+
+      console.log(error);
 
       return {
         status: 'error',

@@ -58,8 +58,8 @@ export const signInRequest = (payload: SignInRequestPayload) =>
     payload,
   });
 
-export type VerifyIdTokenRequestErrorCode = 'auth/argument-error';
+export type VerifySessionRequestErrorCode = 'auth/argument-error' | 'auth/user-disabled';
 
-export type VerifyIdTokenRequestError = NetlifyRequestError<'Error', VerifyIdTokenRequestErrorCode>;
+export type VerifySessionRequestError = NetlifyRequestError<'Error', VerifySessionRequestErrorCode>;
 
-export const verifyIdToken = () => netlifyRequest('verify-id-token');
+export const verifySessionRequest = () => netlifyRequest('verify-session');

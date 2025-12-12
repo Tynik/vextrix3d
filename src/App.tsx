@@ -6,8 +6,8 @@ import { useQuery } from '@tanstack/react-query';
 import { SIGN_IN_ROUTE_PATH, SIGN_UP_ROUTE_PATH } from '~/configs';
 import { getCookieValue } from '~/utils';
 import { ProfessionalServiceMicrodata } from '~/seo';
-import type { VerifyIdTokenRequestError } from '~/api';
-import { verifyIdToken } from '~/api';
+import type { VerifySessionRequestError } from '~/api';
+import { verifySessionRequest } from '~/api';
 import {
   LandingPage,
   MaterialSafetyDisclaimerPage,
@@ -26,15 +26,15 @@ export const App = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const idToken = getCookieValue('idToken');
+  const session = getCookieValue('session');
 
   useQuery({
-    queryKey: ['verify-id-token', idToken],
+    queryKey: ['verify-session', session],
     queryFn: async () => {
       try {
-        return await verifyIdToken();
+        return await verifySessionRequest();
       } catch (e) {
-        const error = e as VerifyIdTokenRequestError;
+        const error = e as VerifySessionRequestError;
 
         if (error.data.error.name === 'Error') {
           const redirectPath = encodeURIComponent(location.pathname + location.search);
@@ -47,7 +47,7 @@ export const App = () => {
     },
     refetchInterval: 900000, // 15 minutes
     refetchIntervalInBackground: true,
-    enabled: Boolean(idToken),
+    enabled: Boolean(session),
   });
 
   useEffect(() => {
