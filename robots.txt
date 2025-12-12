@@ -1,0 +1,6 @@
+User-agent: *
+Disallow: /sign-in
+Disallow: /sign-up
+Disallow: /quote-request
+
+Sitemap: https://vextrix3d.co.uk/sitemap.xml

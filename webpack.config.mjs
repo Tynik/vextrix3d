@@ -57,6 +57,8 @@ export default {
       patterns: [
         'CNAME',
         'favicon.png',
+        'robots.txt',
+        'sitemap.xml',
         {
           from: 'src/assets',
           to: 'assets',
