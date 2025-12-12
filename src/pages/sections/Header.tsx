@@ -1,8 +1,9 @@
 import React from 'react';
-import { HoneyBox } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyFlex } from '@react-hive/honey-layout';
 
-import { HEADER_HEIGHT_PX } from '~/configs';
-import { Container, Link } from '~/components';
+import { HEADER_HEIGHT_PX, ROUTE_PATHS } from '~/configs';
+import { PersonIcon } from '~/icons';
+import { Container, IconButton, Link } from '~/components';
 
 export const Header = () => {
   return (
@@ -18,22 +19,30 @@ export const Header = () => {
       $zIndex={1}
     >
       <Container $padding={3}>
-        <Link
-          to="/"
-          variant="h4"
-          $display="flex"
-          $gap={1}
-          $alignItems="center"
-          $color="neutral.white"
-        >
-          <HoneyBox
-            $width="36px"
-            $height="36px"
-            $background="url('/assets/images/logo.png')"
-            $backgroundSize="cover"
-          />
-          Vextrix3D
-        </Link>
+        <HoneyFlex row center>
+          <Link
+            to="/"
+            variant="h4"
+            $display="flex"
+            $gap={1}
+            $alignItems="center"
+            $color="neutral.white"
+          >
+            <HoneyBox
+              $width="36px"
+              $height="36px"
+              $background="url('/assets/images/logo.png')"
+              $backgroundSize="cover"
+            />
+            Vextrix3D
+          </Link>
+
+          <Link to={ROUTE_PATHS.accountProfile} variant="body1" $marginLeft="auto">
+            <IconButton variant="dark">
+              <PersonIcon size="medium" color="neutral.white" />
+            </IconButton>
+          </Link>
+        </HoneyFlex>
       </Container>
     </HoneyBox>
   );

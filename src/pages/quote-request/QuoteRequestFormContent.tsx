@@ -9,7 +9,7 @@ import type { Nullable } from '~/types';
 import type { EstimatedQuote } from '~/utils';
 import { IS_LOCAL_ENV } from '~/configs';
 import { estimateQuote, ModelLoaderError } from '~/utils';
-import { useOnChange } from '~/hooks';
+import { useOnChange } from '~/models';
 import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
 import { Alert, Button, FilePicker, Progress, Text, TextInput } from '~/components';
 import { FileCard } from '~/pages';
@@ -204,7 +204,7 @@ export const QuoteRequestFormContent = ({
 
           <Button
             loading={isFormSubmitting}
-            disabled={isQuoteCalculating || isFormSubmitting}
+            disabled={isQuoteCalculating}
             type="submit"
             color="primary"
             icon={<SendIcon color="neutral.white" />}

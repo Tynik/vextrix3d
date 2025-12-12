@@ -4,6 +4,10 @@ export const ROUTES = {
     signIn: '/sign-in',
     signUp: '/sign-up',
   },
+  account: {
+    base: '/account',
+    profile: 'profile',
+  },
   legal: {
     terms: '/terms-of-service',
     shipping: '/shipping-policy',
@@ -13,4 +17,8 @@ export const ROUTES = {
     ip: '/intellectual-property-policy',
   },
   quote: '/quote-request',
+} as const;
+
+export const ROUTE_PATHS = {
+  accountProfile: `${ROUTES.account.base}/${ROUTES.account.profile}`,
 } as const;

@@ -3,10 +3,11 @@ import { FirebaseAuthError } from 'firebase-admin/auth';
 
 import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase-admin';
+import { IS_LOCAL_ENV } from '../constants';
 
 export const handler = createHandler(
   {
-    allowedMethods: ['GET'],
+    allowedMethods: ['POST'],
   },
   async ({ cookies }) => {
     if (!cookies.session) {
@@ -21,19 +22,20 @@ export const handler = createHandler(
 
     try {
       const firebaseAdminApp = await initFirebaseAdminApp();
+      const auth = getAuth(firebaseAdminApp);
 
-      const token = await getAuth(firebaseAdminApp).verifySessionCookie(cookies.session, true);
+      const token = await auth.verifySessionCookie(cookies.session, true);
+      await auth.revokeRefreshTokens(token.sub);
 
       return {
         status: 'ok',
-        data: {
-          expiresAt: token.exp,
-          user: {
-            email: token.email,
-            displayName: '',
-            phoneNumber: token.phone_number,
-            isEmailVerified: token.email_verified,
-          },
+        data: {},
+        cookie: {
+          name: 'session',
+          value: '',
+          maxAge: 0,
+          sameSite: IS_LOCAL_ENV ? 'None' : 'Strict',
+          secure: true,
         },
       };
     } catch (e) {

@@ -2,11 +2,15 @@ import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox } from '@react-hive/honey-layout';
 import { css, styled } from '@react-hive/honey-style';
 
-export const IconButton = styled<HoneyBoxProps<'button'>>(HoneyBox, ({ $padding = 0.5 }) => ({
+interface IconButtonProps extends HoneyBoxProps<'button'> {
+  variant?: 'light' | 'dark';
+}
+
+export const IconButton = styled<IconButtonProps>(HoneyBox, ({ $padding = 0.5 }) => ({
   $padding,
   as: 'button',
-}))`
-  ${({ theme: { colors } }) => css`
+}))<IconButtonProps>`
+  ${({ variant = 'light', theme: { colors } }) => css`
     @honey-center {
       border: none;
       border-radius: 4px;
@@ -17,7 +21,9 @@ export const IconButton = styled<HoneyBoxProps<'button'>>(HoneyBox, ({ $padding 
       cursor: pointer;
 
       &:hover {
-        background-color: ${colors.neutral.grayLight};
+        background-color: ${variant === 'light'
+          ? colors.neutral.grayLight
+          : colors.secondary.slateAlloy};
       }
     }
   `}

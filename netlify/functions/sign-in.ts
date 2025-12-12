@@ -50,17 +50,23 @@ export const handler = createHandler<SignInPayload>(
         payload.password,
       );
 
-      const idToken = await userCredential.user.getIdToken(true);
+      const { user } = userCredential;
+
+      const idToken = await user.getIdToken(true);
 
       const expiresIn = ONE_DAY_SECS;
-
       const sessionCookie = await getAdminAuth(firebaseAdminApp).createSessionCookie(idToken, {
         expiresIn: expiresIn * 1000,
       });
 
       return {
         status: 'ok',
-        data: {},
+        data: {
+          email: user.email,
+          displayName: user.displayName,
+          phoneNumber: user.phoneNumber,
+          isEmailVerified: user.emailVerified,
+        },
         cookie: {
           name: 'session',
           value: sessionCookie,

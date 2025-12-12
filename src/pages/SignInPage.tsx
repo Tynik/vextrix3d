@@ -7,6 +7,7 @@ import { toast } from 'react-toastify';
 import { ROUTES } from '~/configs';
 import type { SignInRequestError, SignInRequestErrorCode } from '~/api';
 import { handleApiError, signInRequest } from '~/api';
+import { useQueryParams } from '~/models';
 import { CheckIcon } from '~/icons';
 import { Button, Form, TextInput } from '~/components';
 import { Page } from '~/pages';
@@ -38,6 +39,7 @@ const SIGN_IN_FORM_FIELDS: HoneyFormFieldsConfig<SignInFormData> = {
 
 export const SignInPage = () => {
   const navigate = useNavigate();
+  const queryParams = useQueryParams();
 
   const signIn: HoneyFormOnSubmit<SignInFormData> = async data => {
     try {
@@ -46,7 +48,9 @@ export const SignInPage = () => {
         password: data.password,
       });
 
-      navigate(ROUTES.home, {
+      const redirectPath = queryParams.get('redirect') || ROUTES.home;
+
+      navigate(decodeURIComponent(redirectPath), {
         replace: true,
       });
     } catch (e) {
@@ -93,7 +97,6 @@ export const SignInPage = () => {
 
             <Button
               loading={isFormSubmitting}
-              disabled={isFormSubmitting}
               type="submit"
               color="primary"
               icon={<CheckIcon color="neutral.white" />}

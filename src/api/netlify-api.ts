@@ -1,3 +1,4 @@
+import type { Nullable } from '~/types';
 import type { NetlifyRequestError } from './netlify-request';
 import { netlifyRequest } from './netlify-request';
 
@@ -48,18 +49,40 @@ interface SignInRequestPayload {
   password: string;
 }
 
+export interface User {
+  email: string;
+  displayName: Nullable<string>;
+  phoneNumber: Nullable<string>;
+  isEmailVerified: boolean;
+}
+
 export type SignInRequestErrorCode = 'auth/invalid-credential';
 
 export type SignInRequestError = NetlifyRequestError<'FirebaseError', SignInRequestErrorCode>;
 
-export const signInRequest = (payload: SignInRequestPayload) =>
-  netlifyRequest('sign-in', {
-    method: 'POST',
-    payload,
-  });
+export const signInRequest = async (payload: SignInRequestPayload) =>
+  (
+    await netlifyRequest<User>('sign-in', {
+      method: 'POST',
+      payload,
+    })
+  ).data;
+
+export const signOutRequest = async () =>
+  (
+    await netlifyRequest<User>('sign-out', {
+      method: 'POST',
+    })
+  ).data;
+
+export interface Session {
+  expiresAt: number;
+  user: User;
+}
 
 export type VerifySessionRequestErrorCode = 'auth/argument-error' | 'auth/user-disabled';
 
 export type VerifySessionRequestError = NetlifyRequestError<'Error', VerifySessionRequestErrorCode>;
 
-export const verifySessionRequest = () => netlifyRequest('verify-session');
+export const verifySessionRequest = async () =>
+  (await netlifyRequest<Session>('verify-session')).data;

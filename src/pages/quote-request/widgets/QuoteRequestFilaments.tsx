@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { MATERIALS } from '~/configs';
-import { useFilaments } from '~/hooks';
+import { useFilaments } from '~/models';
 import { QuoteRequestFilament } from './QuoteRequestFilament';
 
 export const QuoteRequestFilaments = () => {

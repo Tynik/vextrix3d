@@ -113,7 +113,6 @@ export const SignUpPage = () => {
 
             <Button
               loading={isFormSubmitting}
-              disabled={isFormSubmitting}
               type="submit"
               color="primary"
               icon={<CheckIcon color="neutral.white" />}

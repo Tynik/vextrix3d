@@ -21,7 +21,7 @@ export const Button = <Element extends ElementType = 'button'>({
 }: ButtonProps<Element>) => {
   return (
     // @ts-expect-error
-    <ButtonStyled {...props}>
+    <ButtonStyled disabled={loading || props.disabled} {...props}>
       {loading ? (
         <Progress color="neutral.white" size="16px" lineWidth="2px" />
       ) : (

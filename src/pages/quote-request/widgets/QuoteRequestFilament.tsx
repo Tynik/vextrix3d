@@ -2,17 +2,17 @@ import React, { cloneElement } from 'react';
 import { HoneyBox, HoneyFlex } from '@react-hive/honey-layout';
 import sortBy from 'lodash.sortby';
 
+import type { NumericRange } from '~/types';
 import type { Material } from '~/configs';
 import { FILAMENT_ICONS_CONFIG, FILAMENT_ICONS_TOOLTIP_CONTENT } from '~/configs';
 import { CurrencyPoundIcon, ThermostatIcon } from '~/icons';
-import type { FilamentsRange } from '~/hooks';
 import { Scale, Text, Tooltip } from '~/components';
 import { ColorInfo } from '~/pages';
 
 interface QuoteRequestFilamentProps {
   filament: Material;
-  priceRange: FilamentsRange;
-  temperatureRange: FilamentsRange;
+  priceRange: NumericRange;
+  temperatureRange: NumericRange;
 }
 
 export const QuoteRequestFilament = ({

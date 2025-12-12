@@ -10,3 +10,4 @@ export * from './MaterialSafetyDisclaimerPage';
 export * from './IntellectualPropertyPolicyPage';
 export * from './SignUpPage';
 export * from './SignInPage';
+export * from './ProfilePage';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Page } from '~/pages/sections';
+
+import { Page } from '~/pages';
 import { Text } from '~/components';
 import { CONTACT_EMAIL } from '~/configs';
 
