@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHoneyStyle } from '@react-hive/honey-style';
-import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyFlex } from '@react-hive/honey-layout';
 
 import { MATERIALS } from '~/configs';
 import { Container, Text } from '~/components';
@@ -107,7 +107,7 @@ export const LandingPage = () => {
           $transform="scale(1.05)" // prevents blur edge cut
         />
 
-        <HoneyFlexBox
+        <HoneyFlex
           $position="absolute"
           $top="40%"
           $left="50%"
@@ -129,7 +129,7 @@ export const LandingPage = () => {
           </Text>
 
           <QuoteRequestButton $marginTop={3} $margin={[0, 'auto']} />
-        </HoneyFlexBox>
+        </HoneyFlex>
       </HoneyBox>
 
       <main>
@@ -147,7 +147,7 @@ export const LandingPage = () => {
 
             <HoneyBox $display="flex" $flexWrap="wrap" $gap={3} $justifyContent="center">
               {SHOWCASE_ITEMS.map(showcaseItem => (
-                <HoneyFlexBox key={showcaseItem.description} $gap={1}>
+                <HoneyFlex key={showcaseItem.description} $gap={1}>
                   <HoneyBox
                     $width="250px"
                     $height="250px"
@@ -160,7 +160,7 @@ export const LandingPage = () => {
                   <Text variant="subtitle2" $textAlign="center">
                     {showcaseItem.description}
                   </Text>
-                </HoneyFlexBox>
+                </HoneyFlex>
               ))}
             </HoneyBox>
           </Container>
@@ -179,7 +179,7 @@ export const LandingPage = () => {
                 $margin={[0, 'auto']}
               />
 
-              <HoneyFlexBox $width="100%" $gap={3}>
+              <HoneyFlex $width="100%" $gap={3}>
                 <Text variant="h3" $textAlign="center" $textTransform="uppercase">
                   Crafting with Precision
                 </Text>
@@ -211,10 +211,10 @@ export const LandingPage = () => {
                     </HoneyBox>
                   ))}
                 </HoneyBox>
-              </HoneyFlexBox>
+              </HoneyFlex>
             </HoneyBox>
 
-            <HoneyFlexBox $gap={3}>
+            <HoneyFlex $gap={3}>
               <Text variant="h3" $textAlign="center" $textTransform="uppercase">
                 Materials & Technology
               </Text>
@@ -241,14 +241,14 @@ export const LandingPage = () => {
                       $backgroundSize="cover"
                     />
 
-                    <HoneyFlexBox $gap={1}>
+                    <HoneyFlex $gap={1}>
                       <Text variant="subtitle1">{material.name}</Text>
                       <Text variant="body1">{material.description}</Text>
-                    </HoneyFlexBox>
+                    </HoneyFlex>
                   </HoneyBox>
                 ))}
               </HoneyBox>
-            </HoneyFlexBox>
+            </HoneyFlex>
 
             <QuoteRequestButton $margin={[0, 'auto']} />
           </Container>

@@ -3,8 +3,8 @@ import { invokeIfFunction } from '@react-hive/honey-utils';
 import { css } from '@react-hive/honey-style';
 import { HoneyForm } from '@react-hive/honey-form';
 import type { HoneyFormBaseForm, HoneyFormProps } from '@react-hive/honey-form';
-import type { HoneyFlexBoxProps, HoneyEffect } from '@react-hive/honey-layout';
-import { HoneyFlexBox } from '@react-hive/honey-layout';
+import type { HoneyFlexProps, HoneyEffect } from '@react-hive/honey-layout';
+import { HoneyFlex } from '@react-hive/honey-layout';
 
 const FormEffect: HoneyEffect = () => css`
   > form {
@@ -18,7 +18,7 @@ interface FormProps<Form extends HoneyFormBaseForm, FormContext = undefined> ext
   FormContext
 > {
   loading?: boolean;
-  containerProps?: HoneyFlexBoxProps;
+  containerProps?: HoneyFlexProps;
 }
 
 export const Form = <Form extends HoneyFormBaseForm, FormContext = undefined>({
@@ -27,8 +27,8 @@ export const Form = <Form extends HoneyFormBaseForm, FormContext = undefined>({
   ...props
 }: FormProps<Form, FormContext>) => {
   return (
-    <HoneyFlexBox effects={[FormEffect]} {...containerProps}>
+    <HoneyFlex effects={[FormEffect]} {...containerProps}>
       <HoneyForm {...props}>{honeyFormApi => invokeIfFunction(children, honeyFormApi)}</HoneyForm>
-    </HoneyFlexBox>
+    </HoneyFlex>
   );
 };

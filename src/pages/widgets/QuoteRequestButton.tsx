@@ -28,7 +28,7 @@ export const QuoteRequestButton = (props: ButtonProps) => {
 
       <ModelSubmissionPolicyDialog
         open={isShowModelSubmissionPolicy}
-        onContinue={() => navigate('/quote-request')}
+        onContinue={async () => navigate('/quote-request')}
         onClose={handleCloseSubmissionPolicyAcceptance}
       />
     </>

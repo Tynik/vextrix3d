@@ -13,7 +13,7 @@
     "@fontsource/roboto": "5.2.9",
     "@netlify/functions": "5.1.1",
     "@react-hive/honey-form": "7.7.1",
-    "@react-hive/honey-layout": "9.8.0",
+    "@react-hive/honey-layout": "9.11.0",
     "@react-hive/honey-style": "2.13.0",
     "@react-hive/honey-utils": "3.7.0",
     "@tanstack/react-query": "5.90.12",

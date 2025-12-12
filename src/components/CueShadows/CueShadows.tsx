@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import type { ReactNode, RefAttributes, RefObject } from 'react';
 import { invokeIfFunction } from '@react-hive/honey-utils';
 import type { HoneyBoxProps } from '@react-hive/honey-layout';
-import { HoneyFlexBox, mergeRefs } from '@react-hive/honey-layout';
+import { HoneyFlex, mergeRefs } from '@react-hive/honey-layout';
 
 import type { Nullable } from '~/types';
 import { applyCueShadows } from './CueShadowsUtils';
@@ -13,8 +13,7 @@ type CueShadowsChildren =
   | ((scrollableContentRef: RefObject<Nullable<HTMLDivElement>>) => ReactNode);
 
 export interface CueShadowsProps
-  extends RefAttributes<HTMLDivElement>,
-    Omit<HoneyBoxProps, 'children' | 'color'> {
+  extends RefAttributes<HTMLDivElement>, Omit<HoneyBoxProps, 'children' | 'color'> {
   children: CueShadowsChildren;
 }
 
@@ -50,8 +49,8 @@ export const CueShadows = ({ ref, children, ...props }: CueShadowsProps) => {
   const mergedRef = mergeRefs(contentRef, ref);
 
   return (
-    <HoneyFlexBox ref={mergedRef} $overflowY="auto" {...props}>
+    <HoneyFlex ref={mergedRef} $overflowY="auto" {...props}>
       {invokeIfFunction(children, contentRef)}
-    </HoneyFlexBox>
+    </HoneyFlex>
   );
 };

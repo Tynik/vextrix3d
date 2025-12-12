@@ -1,5 +1,5 @@
 import React from 'react';
-import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyFlex } from '@react-hive/honey-layout';
 
 import { getReadableFileSize } from '~/utils';
 import { DeleteIcon } from '~/icons';
@@ -23,7 +23,7 @@ export const FileCard = ({ file, removeDisabled = false, onRemove }: FileCardPro
         $border="1px solid"
         $borderColor="neutral.grayLight"
       >
-        <HoneyFlexBox $gap={0.5} $overflow="hidden">
+        <HoneyFlex $gap={0.5} $overflow="hidden">
           <Text variant="subtitle1" ellipsis>
             {file.name}
           </Text>
@@ -31,7 +31,7 @@ export const FileCard = ({ file, removeDisabled = false, onRemove }: FileCardPro
           <Text variant="body2" $color="secondary.slateAlloy">
             {getReadableFileSize(file.size)}
           </Text>
-        </HoneyFlexBox>
+        </HoneyFlex>
 
         <IconButton disabled={removeDisabled} onClick={onRemove} $marginLeft="auto">
           <DeleteIcon

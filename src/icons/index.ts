@@ -18,3 +18,4 @@ export * from './FitnessCenterIcon';
 export * from './ReviewsIcon';
 export * from './HowToRegIcon';
 export * from './CheckIcon';
+export * from './PersonIcon';

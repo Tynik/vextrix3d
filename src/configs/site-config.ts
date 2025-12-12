@@ -7,7 +7,3 @@ export const CONTACT_EMAIL = 'vextrix3d@gmail.com';
 export const CONTACT_PHONE = '+447918993712';
 
 export const HEADER_HEIGHT_PX = 50;
-
-export const SIGN_UP_ROUTE_PATH = '/sign-up';
-
-export const SIGN_IN_ROUTE_PATH = '/sign-in';

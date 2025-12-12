@@ -10,7 +10,7 @@ export const ShippingPolicyPage = () => {
       <Text variant="subtitle1">Processing time</Text>
 
       <Text variant="body1">
-        Typical processing time is 1–3 business days for small/standard prints. Larger or complex
+        Typical processing time is 1-3 business days for small/standard prints. Larger or complex
         jobs may require up to 7 business days. Expedited options may be available at checkout.
       </Text>
 

@@ -1,5 +1,5 @@
 import React, { cloneElement } from 'react';
-import { HoneyBox, HoneyFlexBox } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyFlex } from '@react-hive/honey-layout';
 import sortBy from 'lodash.sortby';
 
 import type { Material } from '~/configs';
@@ -21,7 +21,7 @@ export const QuoteRequestFilament = ({
   temperatureRange,
 }: QuoteRequestFilamentProps) => {
   return (
-    <HoneyFlexBox
+    <HoneyFlex
       $gap={1}
       $minHeight="150px"
       $padding={2}
@@ -69,7 +69,7 @@ export const QuoteRequestFilament = ({
 
       <Text variant="body1">{filament.shortDescription}</Text>
 
-      <HoneyFlexBox $gap={1.5} $marginTop="auto" $paddingTop={1}>
+      <HoneyFlex $gap={1.5} $marginTop="auto" $paddingTop={1}>
         {filament.priceKg && (
           <Scale
             label="Price"
@@ -89,7 +89,7 @@ export const QuoteRequestFilament = ({
             value={filament.maxTemperature}
           />
         )}
-      </HoneyFlexBox>
-    </HoneyFlexBox>
+      </HoneyFlex>
+    </HoneyFlex>
   );
 };

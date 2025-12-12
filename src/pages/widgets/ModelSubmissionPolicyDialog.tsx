@@ -16,11 +16,14 @@ const POLICY_ACCEPTANCE_FORM_FIELDS: HoneyFormFieldsConfig<PolicyAcceptanceFormD
     type: 'string',
     required: true,
     max: 10,
+    validator: decision =>
+      decision?.toLowerCase() === 'agree' ||
+      'To proceed, please type "agree" to confirm your acceptance',
   },
 };
 
 interface ModelSubmissionPolicyDialogProps extends Omit<DialogProps, 'children' | 'title'> {
-  onContinue: () => void;
+  onContinue: () => Promise<void>;
 }
 
 export const ModelSubmissionPolicyDialog = ({
@@ -32,8 +35,8 @@ export const ModelSubmissionPolicyDialog = ({
   return (
     <>
       <Dialog title="Model Submission Policy" {...props}>
-        <HoneyForm fields={POLICY_ACCEPTANCE_FORM_FIELDS}>
-          {({ formValues, formFields }) => (
+        <HoneyForm fields={POLICY_ACCEPTANCE_FORM_FIELDS} onSubmit={onContinue}>
+          {({ formFields, isFormErred, isFormSubmitting }) => (
             <>
               <CueShadows $margin={-2} $padding={2}>
                 <ModelSubmissionPolicyContent />
@@ -42,6 +45,8 @@ export const ModelSubmissionPolicyDialog = ({
               <TextInput
                 label="Policy Acceptance"
                 placeholder={'If you agree, type "agree" here'}
+                disabled={isFormSubmitting}
+                error={formFields.decision.errors[0]?.message}
                 {...formFields.decision.props}
               />
 
@@ -52,11 +57,7 @@ export const ModelSubmissionPolicyDialog = ({
                 $paddingTop={2}
                 $marginTop={3}
               >
-                <Button
-                  disabled={formValues.decision?.toLowerCase() !== 'agree'}
-                  color="accent"
-                  onClick={onContinue}
-                >
+                <Button disabled={isFormErred} type="submit" color="accent">
                   Continue
                 </Button>
 

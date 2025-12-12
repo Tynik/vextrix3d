@@ -3,7 +3,7 @@ import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { useQuery } from '@tanstack/react-query';
 
-import { SIGN_IN_ROUTE_PATH, SIGN_UP_ROUTE_PATH } from '~/configs';
+import { ROUTES } from '~/configs';
 import { getCookieValue } from '~/utils';
 import { ProfessionalServiceMicrodata } from '~/seo';
 import type { VerifySessionRequestError } from '~/api';
@@ -39,7 +39,7 @@ export const App = () => {
         if (error.data.error.name === 'Error') {
           const redirectPath = encodeURIComponent(location.pathname + location.search);
 
-          return navigate(`${SIGN_IN_ROUTE_PATH}?redirect=${redirectPath}`);
+          return navigate(`${ROUTES.auth.signIn}?redirect=${redirectPath}`);
         }
 
         return Promise.reject(error);
@@ -64,16 +64,17 @@ export const App = () => {
       <ProfessionalServiceMicrodata />
 
       <Routes>
-        <Route path="/terms-of-service" element={<TermsOfServicePage />} />
-        <Route path="/shipping-policy" element={<ShippingPolicyPage />} />
-        <Route path="/refund-policy" element={<RefundPolicyPage />} />
-        <Route path="/model-submission-policy" element={<ModelSubmissionPolicyPage />} />
-        <Route path="/material-safety-disclaimer" element={<MaterialSafetyDisclaimerPage />} />
-        <Route path="/intellectual-property-policy" element={<IntellectualPropertyPolicyPage />} />
-        <Route path="/quote-request" element={<QuoteRequestPage />} />
-        <Route path={SIGN_UP_ROUTE_PATH} element={<SignUpPage />} />
-        <Route path={SIGN_IN_ROUTE_PATH} element={<SignInPage />} />
-        <Route path="/" element={<LandingPage />} />
+        <Route path={ROUTES.legal.terms} element={<TermsOfServicePage />} />
+        <Route path={ROUTES.legal.shipping} element={<ShippingPolicyPage />} />
+        <Route path={ROUTES.legal.refund} element={<RefundPolicyPage />} />
+        <Route path={ROUTES.legal.modelSubmission} element={<ModelSubmissionPolicyPage />} />
+        <Route path={ROUTES.legal.safety} element={<MaterialSafetyDisclaimerPage />} />
+        <Route path={ROUTES.legal.ip} element={<IntellectualPropertyPolicyPage />} />
+
+        <Route path={ROUTES.quote} element={<QuoteRequestPage />} />
+        <Route path={ROUTES.auth.signUp} element={<SignUpPage />} />
+        <Route path={ROUTES.auth.signIn} element={<SignInPage />} />
+        <Route path={ROUTES.home} element={<LandingPage />} />
       </Routes>
 
       <Footer />

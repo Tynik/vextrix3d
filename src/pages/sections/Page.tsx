@@ -1,7 +1,7 @@
 import React, { cloneElement } from 'react';
 import type { PropsWithChildren, ReactElement } from 'react';
-import type { HoneyFlexBoxProps } from '@react-hive/honey-layout';
-import { HoneyFlexBox } from '@react-hive/honey-layout';
+import type { HoneyFlexProps } from '@react-hive/honey-layout';
+import { HoneyFlex } from '@react-hive/honey-layout';
 
 import type { IconProps } from '~/components';
 import { Container, Divider, Text } from '~/components';
@@ -10,7 +10,7 @@ import { Header } from '~/pages';
 interface PageProps {
   title: string;
   icon?: ReactElement<IconProps>;
-  contentProps?: HoneyFlexBoxProps;
+  contentProps?: HoneyFlexProps;
 }
 
 export const Page = ({ children, title, icon, contentProps }: PropsWithChildren<PageProps>) => {
@@ -31,9 +31,9 @@ export const Page = ({ children, title, icon, contentProps }: PropsWithChildren<
 
         <Divider />
 
-        <HoneyFlexBox $marginTop={2} data-testid="page-content" {...contentProps}>
+        <HoneyFlex $marginTop={2} data-testid="page-content" {...contentProps}>
           {children}
-        </HoneyFlexBox>
+        </HoneyFlex>
       </Container>
     </>
   );

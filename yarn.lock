@@ -2932,14 +2932,14 @@
   dependencies:
     "@react-hive/honey-utils" "3.6.0"
 
-"@react-hive/honey-layout@9.8.0":
-  version "9.8.0"
-  resolved "https://registry.yarnpkg.com/@react-hive/honey-layout/-/honey-layout-9.8.0.tgz#a4fe8603efd93092fb003278a962bb2af7bdb880"
-  integrity sha512-hTGs5dtEP70/3kfj4xHYA2Khxu557ojaKMsT0NynPT14O74catUTtlGf8M3dY1dFm5jx6wutEQc/dq9B+oquSg==
+"@react-hive/honey-layout@9.11.0":
+  version "9.11.0"
+  resolved "https://registry.yarnpkg.com/@react-hive/honey-layout/-/honey-layout-9.11.0.tgz#e4b45cdeb81f56a5e5e9799f1b53d8c81887d9ca"
+  integrity sha512-1EqnpVPVE7wMYxakPFe4l3GKwsX9pzDoDwP4A55GqsvZhhDXv/i/YD6Dgp8HujbmyhQ/9Ln1sa3ODO0EcFdeYw==
   dependencies:
     "@floating-ui/dom" "1.7.4"
     "@floating-ui/react" "0.27.16"
-    "@react-hive/honey-utils" "3.6.0"
+    "@react-hive/honey-utils" "3.7.0"
     csstype "3.2.3"
     highlight.js "11.11.1"
     lodash.merge "4.6.2"

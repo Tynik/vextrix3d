@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { noop } from '@react-hive/honey-utils';
-import { HoneyBox, HoneyFlexBox, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
+import { HoneyBox, HoneyFlex, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
 import { useHoneyFormContext } from '@react-hive/honey-form';
 import { toast } from 'react-toastify';
 import debounce from 'lodash.debounce';
@@ -93,7 +93,7 @@ export const QuoteRequestFormContent = ({
   );
 
   return (
-    <HoneyFlexBox $gap={2}>
+    <HoneyFlex $gap={2}>
       <HoneyGrid columns={2} spacing={3}>
         <HoneyGridColumn $gap={2}>
           <HoneyBox
@@ -109,7 +109,7 @@ export const QuoteRequestFormContent = ({
         <HoneyGridColumn $gap={2} $minWidth="300px">
           <Alert variant="info">We support *.3mf, *.obj and *.stl files</Alert>
 
-          <HoneyFlexBox $gap={0.5}>
+          <HoneyFlex $gap={0.5}>
             {formValues.file ? (
               <FileCard
                 file={formValues.file}
@@ -142,7 +142,7 @@ export const QuoteRequestFormContent = ({
                 </Text>
               </HoneyBox>
             )}
-          </HoneyFlexBox>
+          </HoneyFlex>
 
           <TextInput
             label="* First Name"
@@ -214,6 +214,6 @@ export const QuoteRequestFormContent = ({
           </Button>
         </HoneyGridColumn>
       </HoneyGrid>
-    </HoneyFlexBox>
+    </HoneyFlex>
   );
 };

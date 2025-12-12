@@ -1,12 +1,12 @@
 import React from 'react';
-import type { HoneyFlexBoxProps } from '@react-hive/honey-layout';
-import { HoneyFlexBox } from '@react-hive/honey-layout';
+import type { HoneyFlexProps } from '@react-hive/honey-layout';
+import { HoneyFlex } from '@react-hive/honey-layout';
 
 import { Text } from '~/components';
 
-export const ModelSubmissionPolicyContent = (props: HoneyFlexBoxProps) => {
+export const ModelSubmissionPolicyContent = (props: HoneyFlexProps) => {
   return (
-    <HoneyFlexBox $gap={1} {...props}>
+    <HoneyFlex $gap={1} {...props}>
       <Text variant="subtitle1">Accepted file types</Text>
 
       <Text variant="body1">
@@ -55,6 +55,6 @@ export const ModelSubmissionPolicyContent = (props: HoneyFlexBoxProps) => {
       >
         Last updated: 12/11/2025
       </Text>
-    </HoneyFlexBox>
+    </HoneyFlex>
   );
 };

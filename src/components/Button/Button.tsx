@@ -12,7 +12,7 @@ export type ButtonProps<Element extends ElementType = 'button'> = ButtonStyledPr
   iconProps?: IconProps;
 };
 
-export const Button = <Element extends ElementType>({
+export const Button = <Element extends ElementType = 'button'>({
   children,
   loading,
   icon,

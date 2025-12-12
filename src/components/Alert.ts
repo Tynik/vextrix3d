@@ -1,4 +1,4 @@
-import { HoneyFlexBox } from '@react-hive/honey-layout';
+import { HoneyFlex } from '@react-hive/honey-layout';
 import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import type { HoneyFontName } from '@react-hive/honey-style';
 import { resolveFont, styled } from '@react-hive/honey-style';
@@ -29,7 +29,7 @@ interface AlertProps extends HoneyBoxProps {
   font?: HoneyFontName;
 }
 
-export const Alert = styled<AlertProps>(HoneyFlexBox, ({ variant }) => ({
+export const Alert = styled<AlertProps>(HoneyFlex, ({ variant }) => ({
   $padding: 2,
   $borderRadius: '4px',
   $border: '1px solid',

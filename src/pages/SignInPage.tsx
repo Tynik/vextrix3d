@@ -1,14 +1,19 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
-import { HoneyFlexBox } from '@react-hive/honey-layout';
+import { HoneyFlex } from '@react-hive/honey-layout';
 import { toast } from 'react-toastify';
 
+import { ROUTES } from '~/configs';
 import type { SignInRequestError, SignInRequestErrorCode } from '~/api';
 import { handleApiError, signInRequest } from '~/api';
 import { CheckIcon } from '~/icons';
 import { Button, Form, TextInput } from '~/components';
 import { Page } from '~/pages';
+
+const ERRORS_CONFIG: Record<SignInRequestErrorCode, string> = {
+  'auth/invalid-credential': 'Invalid email or password',
+};
 
 type SignInFormData = {
   email: string;
@@ -41,7 +46,7 @@ export const SignInPage = () => {
         password: data.password,
       });
 
-      navigate('/', {
+      navigate(ROUTES.home, {
         replace: true,
       });
     } catch (e) {
@@ -49,11 +54,7 @@ export const SignInPage = () => {
       const errorCode = error.data.error.code;
 
       if (error.data.error.name === 'FirebaseError' && errorCode) {
-        const errorsMap: Record<SignInRequestErrorCode, string> = {
-          'auth/invalid-credential': 'Invalid email or password',
-        };
-
-        toast(errorsMap[errorCode] ?? 'Failed to sign in', {
+        toast(ERRORS_CONFIG[errorCode] ?? 'Failed to sign in', {
           type: 'error',
         });
       } else {
@@ -72,15 +73,17 @@ export const SignInPage = () => {
     >
       <Form fields={SIGN_IN_FORM_FIELDS} onSubmit={signIn}>
         {({ formFields, isFormSubmitting }) => (
-          <HoneyFlexBox $gap={2} $width="100%" $maxWidth="300px" $margin={[0, 'auto']}>
+          <HoneyFlex $gap={2} $width="100%" $maxWidth="300px" $margin={[0, 'auto']}>
             <TextInput
               label="* Email"
+              disabled={isFormSubmitting}
               error={formFields.email.errors[0]?.message}
               {...formFields.email.props}
             />
 
             <TextInput
               label="* Password"
+              disabled={isFormSubmitting}
               error={formFields.password.errors[0]?.message}
               {...formFields.password.props}
               inputProps={{
@@ -98,7 +101,7 @@ export const SignInPage = () => {
             >
               Sign In
             </Button>
-          </HoneyFlexBox>
+          </HoneyFlex>
         )}
       </Form>
     </Page>
