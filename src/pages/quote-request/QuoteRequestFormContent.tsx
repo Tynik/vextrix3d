@@ -126,7 +126,7 @@ export const QuoteRequestFormContent = ({
                 }}
                 accept={['*/*']}
               >
-                <Button disabled={isFormSubmitting} as="div" color="accent" size="large">
+                <Button disabled={isFormSubmitting} as="div" variant="accent" size="large">
                   <AttachFileIcon size="small" color="neutral.white" />
                   Select Model
                 </Button>
@@ -206,7 +206,7 @@ export const QuoteRequestFormContent = ({
             loading={isFormSubmitting}
             disabled={isQuoteCalculating}
             type="submit"
-            color="primary"
+            variant="primary"
             icon={<SendIcon color="neutral.white" />}
             $marginLeft="auto"
           >

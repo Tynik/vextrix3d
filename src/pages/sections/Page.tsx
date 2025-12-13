@@ -5,7 +5,6 @@ import { HoneyFlex } from '@react-hive/honey-layout';
 
 import type { IconProps } from '~/components';
 import { Container, Divider, Text } from '~/components';
-import { Header } from '~/pages';
 
 interface PageProps {
   title: string;
@@ -16,8 +15,6 @@ interface PageProps {
 export const Page = ({ children, title, icon, contentProps }: PropsWithChildren<PageProps>) => {
   return (
     <>
-      <Header />
-
       <Container as="main" $padding={3} $gap={1} $flexGrow={1}>
         <Text variant="h3" $display="flex" $gap={1} $alignItems="center" aria-label="Page title">
           {icon &&

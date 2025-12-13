@@ -17,9 +17,9 @@ export const QuoteRequestButton = (props: ButtonProps) => {
   return (
     <>
       <Button
-        color="accent"
-        size="large"
         onClick={() => setIsShowModelSubmissionPolicy(true)}
+        variant="accent"
+        size="large"
         $height="50px"
         {...props}
       >

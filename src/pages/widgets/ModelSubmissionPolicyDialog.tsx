@@ -57,11 +57,11 @@ export const ModelSubmissionPolicyDialog = ({
                 $paddingTop={2}
                 $marginTop={3}
               >
-                <Button disabled={isFormErred} type="submit" color="accent">
+                <Button disabled={isFormErred} type="submit" variant="accent">
                   Continue
                 </Button>
 
-                <Button color="secondary" onClick={onClose}>
+                <Button variant="secondary" onClick={onClose}>
                   Close
                 </Button>
               </HoneyBox>

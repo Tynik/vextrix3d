@@ -3,16 +3,16 @@ import { useLocation } from 'react-router-dom';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { ToastContainer } from 'react-toastify';
+import { assert } from '@react-hive/honey-utils';
 
+import type { Nullable } from '~/types';
 import { FIREBASE_CONFIG } from '~/configs';
 import type { User } from '~/api';
 import type { AppContextValue } from '~/models';
 import { AppContext } from '~/models';
 import { ProfessionalServiceMicrodata } from '~/seo';
-import { AppRoutes } from '~/routes';
-import { Footer } from '~/pages';
-import type { Nullable } from '~/types';
-import { assert } from '@react-hive/honey-utils';
+import { AppRoutes } from '~/AppRoutes';
+import { Footer, Header } from '~/pages';
 
 export const App = () => {
   const location = useLocation();
@@ -68,9 +68,11 @@ export const App = () => {
     <AppContext value={contextValue}>
       <ProfessionalServiceMicrodata />
 
+      <Header />
+
       <AppRoutes />
 
-      <Footer />
+      <Footer $marginTop="auto" />
 
       <ToastContainer position="top-center" />
     </AppContext>

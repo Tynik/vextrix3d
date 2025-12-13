@@ -6,20 +6,12 @@ import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
 
-import { ROUTES } from '~/configs';
+import { FIREBASE_AUTH_ERRORS, ROUTE_PATHS, ROUTES } from '~/configs';
 import { handleApiError, signInRequest } from '~/api';
 import { useAppContext, useQueryParams } from '~/models';
 import { CheckIcon } from '~/icons';
-import { Button, Form, TextInput } from '~/components';
+import { Button, Form, Link, TextInput } from '~/components';
 import { Page } from '~/pages';
-
-const FIREBASE_AUTH_ERRORS: Record<string, string> = {
-  'auth/invalid-credential': 'Invalid email or password',
-  'auth/user-not-found': 'Invalid email or password',
-  'auth/wrong-password': 'Invalid email or password',
-  'auth/too-many-requests': 'Too many attempts. Try again later.',
-  'auth/network-request-failed': 'Network error. Check your connection.',
-};
 
 type SignInFormData = {
   email: string;
@@ -62,7 +54,7 @@ export const SignInPage = () => {
         idToken,
       });
 
-      const redirectPath = queryParams.get('redirect') || ROUTES.home;
+      const redirectPath = queryParams.get('redirect') || ROUTE_PATHS.accountProfile;
 
       navigate(decodeURIComponent(redirectPath), {
         replace: true,
@@ -106,15 +98,29 @@ export const SignInPage = () => {
               }}
             />
 
-            <Button
-              loading={isFormSubmitting}
-              type="submit"
-              color="primary"
-              icon={<CheckIcon color="neutral.white" />}
-              $marginLeft="auto"
-            >
-              Sign In
-            </Button>
+            <HoneyFlex row center $gap={2} $width="100%">
+              <Link
+                to={ROUTES.auth.signUp}
+                variant="body2"
+                $display="flex"
+                $width="100%"
+                $color="secondary.slateAlloy"
+              >
+                <Button variant="secondary" size="full" icon={<CheckIcon color="neutral.white" />}>
+                  Sign Up
+                </Button>
+              </Link>
+
+              <Button
+                loading={isFormSubmitting}
+                type="submit"
+                variant="primary"
+                size="full"
+                icon={<CheckIcon color="neutral.white" />}
+              >
+                Sign In
+              </Button>
+            </HoneyFlex>
           </HoneyFlex>
         )}
       </Form>

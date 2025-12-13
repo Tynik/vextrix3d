@@ -40,7 +40,7 @@ export const ProfilePage = () => {
       <Button
         loading={signOutMutationRequest.isPending}
         onClick={() => signOutMutationRequest.mutateAsync()}
-        color="secondary"
+        variant="secondary"
       >
         Sign Out
       </Button>

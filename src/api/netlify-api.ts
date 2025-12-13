@@ -1,4 +1,5 @@
 import type { Nullable } from '~/types';
+import { FIREBASE_AUTH_ERRORS } from '~/configs';
 import type { NetlifyRequestError } from './netlify-request';
 import { netlifyRequest } from './netlify-request';
 
@@ -31,12 +32,10 @@ interface SignUpRequestPayload {
   password: string;
 }
 
-export type SignUpRequestErrorCode =
-  | 'auth/email-already-in-use'
-  | 'auth/invalid-email'
-  | 'auth/weak-password';
-
-export type SignUpRequestError = NetlifyRequestError<'FirebaseError', SignUpRequestErrorCode>;
+export type SignUpRequestError = NetlifyRequestError<
+  'FirebaseError',
+  keyof typeof FIREBASE_AUTH_ERRORS
+>;
 
 export const signUpRequest = (payload: SignUpRequestPayload) =>
   netlifyRequest('sign-up', {

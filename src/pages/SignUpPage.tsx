@@ -4,18 +4,12 @@ import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey
 import { HoneyFlex } from '@react-hive/honey-layout';
 import { toast } from 'react-toastify';
 
-import { ROUTES } from '~/configs';
-import type { SignUpRequestError, SignUpRequestErrorCode } from '~/api';
+import { FIREBASE_AUTH_ERRORS, ROUTES } from '~/configs';
+import type { SignUpRequestError } from '~/api';
 import { handleApiError, signUpRequest } from '~/api';
 import { CheckIcon } from '~/icons';
-import { Button, Form, TextInput } from '~/components';
+import { Button, Form, Link, TextInput } from '~/components';
 import { Page } from '~/pages';
-
-const ERRORS_CONFIG: Record<SignUpRequestErrorCode, string> = {
-  'auth/email-already-in-use': 'Email is already in use',
-  'auth/invalid-email': 'Invalid email',
-  'auth/weak-password': 'Password must be at least 6 characters',
-};
 
 type SignUpFormData = {
   email: string;
@@ -56,6 +50,8 @@ export const SignUpPage = () => {
         password: data.password,
       });
 
+      toast('Welcome! Your account has been created. Please sign in to continue.');
+
       navigate(ROUTES.auth.signIn, {
         replace: true,
       });
@@ -64,7 +60,7 @@ export const SignUpPage = () => {
       const errorCode = error.data.error.code;
 
       if (error.data.error.name === 'FirebaseError' && errorCode) {
-        toast(ERRORS_CONFIG[errorCode] ?? 'Failed to sign up', {
+        toast(FIREBASE_AUTH_ERRORS[errorCode] ?? 'Failed to sign up', {
           type: 'error',
         });
       } else {
@@ -111,15 +107,30 @@ export const SignUpPage = () => {
               }}
             />
 
-            <Button
-              loading={isFormSubmitting}
-              type="submit"
-              color="primary"
-              icon={<CheckIcon color="neutral.white" />}
-              $marginLeft="auto"
-            >
-              Sign Up
-            </Button>
+            <HoneyFlex row center $gap={2} $justifyContent="space-between">
+              <Link
+                to={ROUTES.auth.signIn}
+                variant="body2"
+                $display="flex"
+                $width="100%"
+                $color="secondary.slateAlloy"
+              >
+                <Button variant="secondary" size="full" icon={<CheckIcon color="neutral.white" />}>
+                  Sign In
+                </Button>
+              </Link>
+
+              <Button
+                loading={isFormSubmitting}
+                type="submit"
+                variant="primary"
+                size="full"
+                icon={<CheckIcon color="neutral.white" />}
+                $marginLeft="auto"
+              >
+                Sign Up
+              </Button>
+            </HoneyFlex>
           </HoneyFlex>
         )}
       </Form>

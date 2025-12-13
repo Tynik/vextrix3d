@@ -1,11 +1,10 @@
+import type { ElementType } from 'react';
 import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox } from '@react-hive/honey-layout';
-import { pxToRem, resolveColor } from '@react-hive/honey-style';
 import type { HoneyColor, HoneyCSSDimensionValue } from '@react-hive/honey-style';
-import { css, styled } from '@react-hive/honey-style';
-import type { ElementType } from 'react';
+import { css, styled, pxToRem, resolveColor } from '@react-hive/honey-style';
 
-type ButtonColor = 'primary' | 'secondary' | 'accent' | 'success';
+type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'success';
 
 type ButtonSize = 'small' | 'medium' | 'large' | 'full';
 
@@ -17,13 +16,13 @@ const SIZES_MAP: Record<ButtonSize, HoneyCSSDimensionValue> = {
 };
 
 interface ColorsConfig {
-  backgroundColor: HoneyColor;
+  backgroundColor?: HoneyColor;
   hover: HoneyColor;
   color: HoneyColor;
-  border: HoneyColor;
+  border?: HoneyColor;
 }
 
-const COLORS_CONFIG: Record<ButtonColor, ColorsConfig> = {
+const VARIANTS_CONFIG: Record<ButtonVariant, ColorsConfig> = {
   primary: {
     backgroundColor: 'primary.primaryIndigo',
     hover: '#4B5EDB',
@@ -52,7 +51,7 @@ const COLORS_CONFIG: Record<ButtonColor, ColorsConfig> = {
 
 export type ButtonStyledProps<Element extends ElementType = 'button'> = HoneyBoxProps<Element> & {
   size?: ButtonSize;
-  color?: ButtonColor;
+  variant?: ButtonVariant;
 };
 
 export const ButtonStyled = styled<ButtonStyledProps>(
@@ -63,25 +62,33 @@ export const ButtonStyled = styled<ButtonStyledProps>(
     $height,
   }),
 )<ButtonStyledProps>`
-  ${({ disabled, size = 'medium', color = 'primary' }) => {
-    const colorConfig = COLORS_CONFIG[color];
+  ${({ disabled, size = 'medium', variant = 'primary' }) => {
+    const config = VARIANTS_CONFIG[variant];
 
     return css`
       @honey-center {
         width: ${SIZES_MAP[size]};
 
         gap: ${0.5};
-        flex-shrink: 0;
+        flex-shrink: ${size !== 'full' && 0};
 
         border-radius: 4px;
-        border: 1px solid ${resolveColor(colorConfig.border)};
+
+        ${config.border
+          ? css`
+              border: 1px solid ${resolveColor(config.border)};
+              box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            `
+          : css`
+              border: none;
+            `}
 
         font-size: ${pxToRem(16)};
+        color: ${resolveColor(config.color)};
 
-        color: ${resolveColor(colorConfig.color)};
-        background-color: ${resolveColor(colorConfig.backgroundColor)};
-
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        background-color: ${config.backgroundColor
+          ? resolveColor(config.backgroundColor)
+          : 'transparent'};
 
         transition-property: background-color, box-shadow;
         transition-duration: 0.2s;
@@ -102,7 +109,7 @@ export const ButtonStyled = styled<ButtonStyledProps>(
             }
 
             &:hover {
-              background-color: ${resolveColor(colorConfig.hover)};
+              background-color: ${resolveColor(config.hover)};
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.25);
             }
           `}

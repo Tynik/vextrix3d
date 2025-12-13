@@ -1,12 +1,13 @@
 import React from 'react';
+import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox, HoneyFlex, HoneyGrid, HoneyGridColumn } from '@react-hive/honey-layout';
 
 import { CONTACT_EMAIL, ROUTES } from '~/configs';
 import { MailIcon, PlaceIcon, ReviewsIcon } from '~/icons';
 import { Container, Text, Link } from '~/components';
 
-export const Footer = () => (
-  <HoneyBox as="footer" $backgroundColor="neutral.grayDark">
+export const Footer = (props: HoneyBoxProps) => (
+  <HoneyBox as="footer" $backgroundColor="neutral.grayDark" {...props}>
     <Container $gap={3} $padding={3}>
       <HoneyGrid columns={3} spacing={3}>
         <HoneyGridColumn $gap={1.5} $minWidth="250px">

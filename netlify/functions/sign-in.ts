@@ -52,6 +52,8 @@ export const handler = createHandler<SignInPayload>(
     } catch (e) {
       const error = e as FirebaseAuthError;
 
+      console.error(error);
+
       return {
         status: 'error',
         statusCode: 401,
