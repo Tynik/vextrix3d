@@ -1,7 +1,7 @@
 import React from 'react';
 import { HoneyBox, HoneyFlex } from '@react-hive/honey-layout';
 
-import { HEADER_HEIGHT_PX, ROUTE_PATHS } from '~/configs';
+import { HEADER_HEIGHT_PX, ROUTE_PATHS, ROUTES } from '~/configs';
 import { PersonIcon } from '~/icons';
 import { Container, IconButton, Link } from '~/components';
 
@@ -21,7 +21,7 @@ export const Header = () => {
       <Container $padding={3}>
         <HoneyFlex row center>
           <Link
-            to="/"
+            to={ROUTES.home}
             variant="h4"
             $display="flex"
             $gap={1}

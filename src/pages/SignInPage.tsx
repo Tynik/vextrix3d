@@ -2,18 +2,23 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
 import { HoneyFlex } from '@react-hive/honey-layout';
+import { FirebaseError } from 'firebase/app';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
 
 import { ROUTES } from '~/configs';
-import type { SignInRequestError, SignInRequestErrorCode } from '~/api';
 import { handleApiError, signInRequest } from '~/api';
-import { useQueryParams } from '~/models';
+import { useAppContext, useQueryParams } from '~/models';
 import { CheckIcon } from '~/icons';
 import { Button, Form, TextInput } from '~/components';
 import { Page } from '~/pages';
 
-const ERRORS_CONFIG: Record<SignInRequestErrorCode, string> = {
+const FIREBASE_AUTH_ERRORS: Record<string, string> = {
   'auth/invalid-credential': 'Invalid email or password',
+  'auth/user-not-found': 'Invalid email or password',
+  'auth/wrong-password': 'Invalid email or password',
+  'auth/too-many-requests': 'Too many attempts. Try again later.',
+  'auth/network-request-failed': 'Network error. Check your connection.',
 };
 
 type SignInFormData = {
@@ -41,11 +46,20 @@ export const SignInPage = () => {
   const navigate = useNavigate();
   const queryParams = useQueryParams();
 
+  const { firebaseAuth } = useAppContext();
+
   const signIn: HoneyFormOnSubmit<SignInFormData> = async data => {
     try {
+      const userCredential = await signInWithEmailAndPassword(
+        firebaseAuth,
+        data.email,
+        data.password,
+      );
+
+      const idToken = await userCredential.user.getIdToken(true);
+
       await signInRequest({
-        email: data.email,
-        password: data.password,
+        idToken,
       });
 
       const redirectPath = queryParams.get('redirect') || ROUTES.home;
@@ -54,11 +68,8 @@ export const SignInPage = () => {
         replace: true,
       });
     } catch (e) {
-      const error = e as SignInRequestError;
-      const errorCode = error.data.error.code;
-
-      if (error.data.error.name === 'FirebaseError' && errorCode) {
-        toast(ERRORS_CONFIG[errorCode] ?? 'Failed to sign in', {
+      if (e instanceof FirebaseError) {
+        toast(FIREBASE_AUTH_ERRORS[e.code] ?? 'Failed to sign in', {
           type: 'error',
         });
       } else {

@@ -2,7 +2,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { FirebaseAuthError } from 'firebase-admin/auth';
 
 import { createHandler } from '../utils';
-import { initFirebaseAdminApp } from '../firebase-admin';
+import { initFirebaseAdminApp } from '../firebase';
 import { IS_LOCAL_ENV } from '../constants';
 
 export const handler = createHandler(
@@ -21,11 +21,13 @@ export const handler = createHandler(
     }
 
     try {
-      const firebaseAdminApp = await initFirebaseAdminApp();
-      const auth = getAuth(firebaseAdminApp);
+      await initFirebaseAdminApp();
 
-      const token = await auth.verifySessionCookie(cookies.session, true);
-      await auth.revokeRefreshTokens(token.sub);
+      const firebaseAuth = getAuth();
+
+      const decodedIdToken = await firebaseAuth.verifySessionCookie(cookies.session, true);
+
+      await firebaseAuth.revokeRefreshTokens(decodedIdToken.sub);
 
       return {
         status: 'ok',

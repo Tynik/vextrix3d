@@ -45,8 +45,7 @@ export const signUpRequest = (payload: SignUpRequestPayload) =>
   });
 
 interface SignInRequestPayload {
-  email: string;
-  password: string;
+  idToken: string;
 }
 
 export interface User {
@@ -55,10 +54,6 @@ export interface User {
   phoneNumber: Nullable<string>;
   isEmailVerified: boolean;
 }
-
-export type SignInRequestErrorCode = 'auth/invalid-credential';
-
-export type SignInRequestError = NetlifyRequestError<'FirebaseError', SignInRequestErrorCode>;
 
 export const signInRequest = async (payload: SignInRequestPayload) =>
   (
@@ -74,15 +69,3 @@ export const signOutRequest = async () =>
       method: 'POST',
     })
   ).data;
-
-export interface Session {
-  expiresAt: number;
-  user: User;
-}
-
-export type VerifySessionRequestErrorCode = 'auth/argument-error' | 'auth/user-disabled';
-
-export type VerifySessionRequestError = NetlifyRequestError<'Error', VerifySessionRequestErrorCode>;
-
-export const verifySessionRequest = async () =>
-  (await netlifyRequest<Session>('verify-session')).data;

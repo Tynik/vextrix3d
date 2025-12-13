@@ -1,17 +1,25 @@
-import type { FirebaseOptions } from '@firebase/app';
-import { initializeApp } from 'firebase/app';
-import { once } from '@react-hive/honey-utils';
+import type { ServiceAccount } from 'firebase-admin/app';
+import { initializeApp, cert } from 'firebase-admin/app';
+import { assert, once } from '@react-hive/honey-utils';
 
 import { getSecretsStore } from './blobs';
+import { FIREBASE_SERVICE_ACCOUNT_FILENAME } from './constants';
 
-const _initFirebaseApp = async () => {
+const _initFirebaseAdminApp = async () => {
+  assert(
+    FIREBASE_SERVICE_ACCOUNT_FILENAME,
+    'The `FIREBASE_SERVICE_ACCOUNT_FILENAME` must be set as environment variable',
+  );
+
   const store = getSecretsStore();
 
-  const firebaseConfig = (await store.get('firebase-config.json', {
+  const serviceAccount = (await store.get(FIREBASE_SERVICE_ACCOUNT_FILENAME, {
     type: 'json',
-  })) as FirebaseOptions;
+  })) as ServiceAccount;
 
-  return initializeApp(firebaseConfig);
+  return initializeApp({
+    credential: cert(serviceAccount),
+  });
 };
 
-export const initFirebaseApp = once(_initFirebaseApp);
+export const initFirebaseAdminApp = once(_initFirebaseAdminApp);

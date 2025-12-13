@@ -10,7 +10,7 @@ import {
   ONE_WEEK_MS,
 } from '../constants';
 import { createHandler, sendEmail } from '../utils';
-import { initFirebaseAdminApp } from '../firebase-admin';
+import { initFirebaseAdminApp } from '../firebase';
 
 interface QuoteRequestPayload {
   fileName: string;

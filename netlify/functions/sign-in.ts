@@ -1,88 +1,60 @@
-import { getAuth as getAdminAuth } from 'firebase-admin/auth';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import firebase from 'firebase/compat/app';
+import admin from 'firebase-admin';
+import { FirebaseAuthError } from 'firebase-admin/auth';
 
 import { IS_LOCAL_ENV, ONE_DAY_SECS } from '../constants';
 import { createHandler } from '../utils';
-import { initFirebaseAdminApp } from '../firebase-admin';
-import { initFirebaseApp } from '../firebase';
-
-import FirebaseError = firebase.FirebaseError;
+import { initFirebaseAdminApp } from '../firebase';
 
 interface SignInPayload {
-  email: string;
-  password: string;
+  idToken: string;
 }
 
 export const handler = createHandler<SignInPayload>(
-  {
-    allowedMethods: ['POST'],
-  },
+  { allowedMethods: ['POST'] },
   async ({ payload }) => {
-    if (!payload) {
+    if (!payload?.idToken) {
       return {
         status: 'error',
         statusCode: 400,
         data: {
-          error: 'Payload is empty',
-        },
-      };
-    }
-
-    if (!payload.email || !payload.password) {
-      return {
-        status: 'error',
-        statusCode: 400,
-        data: {
-          error: 'Invalid data',
+          error: 'ID token is required',
         },
       };
     }
 
     try {
-      const firebaseAdminApp = await initFirebaseAdminApp();
-      const firebaseApp = await initFirebaseApp();
-      const firebaseAuth = getAuth(firebaseApp);
+      await initFirebaseAdminApp();
 
-      const userCredential = await signInWithEmailAndPassword(
-        firebaseAuth,
-        payload.email,
-        payload.password,
-      );
+      const firebaseAuth = admin.auth();
 
-      const { user } = userCredential;
+      const decodedIdToken = await firebaseAuth.verifyIdToken(payload.idToken, true);
 
-      const idToken = await user.getIdToken(true);
-
-      const expiresIn = ONE_DAY_SECS;
-      const sessionCookie = await getAdminAuth(firebaseAdminApp).createSessionCookie(idToken, {
-        expiresIn: expiresIn * 1000,
+      const expiresInMs = ONE_DAY_SECS;
+      const sessionCookie = await firebaseAuth.createSessionCookie(payload.idToken, {
+        expiresIn: expiresInMs * 1000,
       });
 
       return {
         status: 'ok',
         data: {
-          email: user.email,
-          displayName: user.displayName,
-          phoneNumber: user.phoneNumber,
-          isEmailVerified: user.emailVerified,
+          uid: decodedIdToken.uid,
+          email: decodedIdToken.email,
+          isEmailVerified: decodedIdToken.email_verified,
         },
         cookie: {
           name: 'session',
           value: sessionCookie,
-          maxAge: expiresIn,
+          maxAge: expiresInMs,
           sameSite: IS_LOCAL_ENV ? 'None' : 'Strict',
           secure: true,
         },
       };
     } catch (e) {
-      const error = e as FirebaseError;
-
-      console.log(error);
+      const error = e as FirebaseAuthError;
 
       return {
         status: 'error',
-        statusCode: 400,
+        statusCode: 401,
         data: {
           error: {
             name: error.name,

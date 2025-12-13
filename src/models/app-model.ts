@@ -1,13 +1,14 @@
 import { createContext, useContext } from 'react';
 import { assert } from '@react-hive/honey-utils';
+import type { Auth } from 'firebase/auth';
 
 import type { User } from '~/api';
 import type { Nullable } from '~/types';
 
 export interface AppContextValue {
-  hasSession: boolean;
-  isAuthenticating: boolean;
+  firebaseAuth: Auth;
   user: Nullable<User>;
+  isUserLoading: boolean;
   setUser: (user: User) => void;
 }
 

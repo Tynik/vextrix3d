@@ -4,7 +4,6 @@ export type NetlifyFunction =
   | 'sign-up'
   | 'sign-in'
   | 'sign-out'
-  | 'verify-session'
   | 'quote-request'
   | 'upload-quote-request-model';
 

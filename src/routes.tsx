@@ -22,20 +22,20 @@ import {
 const AccountRoutes = () => {
   const location = useLocation();
 
-  const { hasSession, isAuthenticating } = useAppContext();
+  const { isUserLoading, user } = useAppContext();
 
-  if (!hasSession) {
-    const redirectPath = encodeURIComponent(location.pathname + location.search);
-
-    return <Navigate to={`${ROUTES.auth.signIn}?redirect=${redirectPath}`} replace />;
-  }
-
-  if (isAuthenticating) {
+  if (isUserLoading) {
     return (
       <Page title="Loading...">
         <Progress $margin={[0, 'auto']} />
       </Page>
     );
+  }
+
+  if (!user) {
+    const redirectPath = encodeURIComponent(location.pathname + location.search);
+
+    return <Navigate to={`${ROUTES.auth.signIn}?redirect=${redirectPath}`} replace />;
   }
 
   return (
