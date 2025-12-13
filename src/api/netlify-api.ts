@@ -48,6 +48,7 @@ interface SignInRequestPayload {
 }
 
 export interface User {
+  id: string;
   email: string;
   displayName: Nullable<string>;
   phoneNumber: Nullable<string>;

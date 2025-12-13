@@ -19,3 +19,7 @@ export * from './ReviewsIcon';
 export * from './HowToRegIcon';
 export * from './CheckIcon';
 export * from './PersonIcon';
+export * from './ExitToAppIcon';
+export * from './VerifiedIcon';
+export * from './ReportProblemIcon';
+export * from './MarkEmailReadIcon';

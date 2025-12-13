@@ -27,7 +27,7 @@ export const handler = createHandler<SignInPayload>(
 
       const firebaseAuth = admin.auth();
 
-      const decodedIdToken = await firebaseAuth.verifyIdToken(payload.idToken, true);
+      await firebaseAuth.verifyIdToken(payload.idToken, true);
 
       const expiresInMs = ONE_DAY_SECS;
       const sessionCookie = await firebaseAuth.createSessionCookie(payload.idToken, {
@@ -36,11 +36,7 @@ export const handler = createHandler<SignInPayload>(
 
       return {
         status: 'ok',
-        data: {
-          uid: decodedIdToken.uid,
-          email: decodedIdToken.email,
-          isEmailVerified: decodedIdToken.email_verified,
-        },
+        data: {},
         cookie: {
           name: 'session',
           value: sessionCookie,

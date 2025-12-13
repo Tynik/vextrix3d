@@ -27,7 +27,7 @@ export const Button = <Element extends ElementType = 'button'>({
       ) : (
         icon &&
         cloneElement(icon, {
-          size: 'medium',
+          size: 'small',
           ...iconProps,
         })
       )}

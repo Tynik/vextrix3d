@@ -15,3 +15,4 @@ export * from './Divider';
 export * from './Form';
 export * from './Tooltip';
 export * from './Link';
+export * from './InfoTable';

@@ -2932,10 +2932,10 @@
   dependencies:
     "@react-hive/honey-utils" "3.6.0"
 
-"@react-hive/honey-layout@9.11.0":
-  version "9.11.0"
-  resolved "https://registry.yarnpkg.com/@react-hive/honey-layout/-/honey-layout-9.11.0.tgz#e4b45cdeb81f56a5e5e9799f1b53d8c81887d9ca"
-  integrity sha512-1EqnpVPVE7wMYxakPFe4l3GKwsX9pzDoDwP4A55GqsvZhhDXv/i/YD6Dgp8HujbmyhQ/9Ln1sa3ODO0EcFdeYw==
+"@react-hive/honey-layout@9.12.0":
+  version "9.12.0"
+  resolved "https://registry.yarnpkg.com/@react-hive/honey-layout/-/honey-layout-9.12.0.tgz#4e9fd13a06868850da987b4fd149bf3bc4f5d21f"
+  integrity sha512-YU2z8+PN+gp4fFcl9SpzzzSr4dGII9mtP9Vme9vNp6lOLmhJPL8ukp/V96mutggsSNugYY+ZKu8EqnmYqcSJCg==
   dependencies:
     "@floating-ui/dom" "1.7.4"
     "@floating-ui/react" "0.27.16"

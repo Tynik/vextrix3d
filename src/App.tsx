@@ -40,6 +40,7 @@ export const App = () => {
           assert(fbUser.email, 'Email must be provided by Firebase Auth.');
 
           setUser({
+            id: fbUser.uid,
             email: fbUser.email,
             displayName: fbUser.displayName,
             phoneNumber: fbUser.phoneNumber,

@@ -13,18 +13,21 @@ const SHADOWS_CONFIG: Record<TextShadow, string> = {
   strong: '3px 3px 6px rgba(0, 0, 0, 0.5)',
 };
 
-export type TextProps<Element extends ElementType = 'p'> = HoneyBoxProps<Element> & {
-  variant: keyof HoneyFonts;
+export type TextProps<Element extends ElementType = 'div'> = HoneyBoxProps<Element> & {
+  variant: keyof HoneyFonts | 'inherit';
   shadow?: TextShadow;
   ellipsis?: boolean;
 };
 
-export const Text = styled<TextProps>(HoneyBox, ({ as = 'p', $color = 'secondary.carbonInk' }) => ({
-  as,
-  $color,
-}))<TextProps>`
+export const Text = styled<TextProps>(
+  HoneyBox,
+  ({ as = 'div', $color = 'secondary.carbonInk' }) => ({
+    as,
+    $color,
+  }),
+)<TextProps>`
   ${({ variant, ellipsis = false, shadow = 'none' }) => css`
-    ${resolveFont(variant)};
+    ${variant !== 'inherit' && resolveFont(variant)};
 
     text-shadow: ${SHADOWS_CONFIG[shadow]};
 

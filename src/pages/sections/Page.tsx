@@ -1,5 +1,5 @@
 import React, { cloneElement } from 'react';
-import type { PropsWithChildren, ReactElement } from 'react';
+import type { PropsWithChildren, ReactElement, ReactNode } from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
@@ -7,7 +7,7 @@ import type { IconProps } from '~/components';
 import { Container, Divider, Text } from '~/components';
 
 interface PageProps {
-  title: string;
+  title: ReactNode;
   icon?: ReactElement<IconProps>;
   contentProps?: HoneyFlexProps;
 }
