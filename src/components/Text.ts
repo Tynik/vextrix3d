@@ -27,7 +27,12 @@ export const Text = styled<TextProps>(
   }),
 )<TextProps>`
   ${({ variant, ellipsis = false, shadow = 'none' }) => css`
-    ${variant !== 'inherit' && resolveFont(variant)};
+    ${variant === 'inherit'
+      ? css`
+          font-size: inherit;
+          font-weight: inherit;
+        `
+      : resolveFont(variant)};
 
     text-shadow: ${SHADOWS_CONFIG[shadow]};
 

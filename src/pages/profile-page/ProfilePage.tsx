@@ -1,18 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
 import { getLocalStorageCapabilities } from '@react-hive/honey-utils';
 import { HoneyFlex } from '@react-hive/honey-layout';
 import { sendEmailVerification } from '@firebase/auth';
 import { toast } from 'react-toastify';
 
-import { ROUTES } from '~/configs';
-import { signOutRequest } from '~/api';
 import { useAppContext } from '~/models';
-import { ExitToAppIcon, VerifiedIcon } from '~/icons';
+import { VerifiedIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
-import { IconButton, Button, InfoTable, Tooltip, Text } from '~/components';
+import { Button, InfoTable, Tooltip, Text } from '~/components';
 import { Page } from '~/pages';
+import { ProfilePageTitle } from './ProfilePageTitle';
 
 const VERIFY_EMAIL_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -47,16 +44,6 @@ export const ProfilePage = () => {
   );
 
   const [isSendingEmailVerification, setIsSendingEmailVerification] = useState(false);
-
-  const signOutMutationRequest = useMutation({
-    mutationFn: async () => {
-      try {
-        await signOutRequest();
-      } finally {
-        await firebaseAuth.signOut();
-      }
-    },
-  });
 
   const handleSendEmailVerification = useCallback(async () => {
     if (!firebaseAuth.currentUser) {
@@ -140,29 +127,13 @@ export const ProfilePage = () => {
     [user, isSendingEmailVerification, emailVerificationCooldownMs, handleSendEmailVerification],
   );
 
-  if (signOutMutationRequest.isSuccess) {
-    return <Navigate to={ROUTES.home} replace />;
-  }
-
   if (!user) {
     return null;
   }
 
   return (
     <Page
-      title={
-        <HoneyFlex row center $width="100%">
-          <Text variant="inherit">Profile</Text>
-
-          <IconButton
-            disabled={signOutMutationRequest.isPending}
-            onClick={() => signOutMutationRequest.mutateAsync()}
-            $marginLeft="auto"
-          >
-            <ExitToAppIcon color="secondary.carbonInk" />
-          </IconButton>
-        </HoneyFlex>
-      }
+      title={<ProfilePageTitle />}
       contentProps={{
         $gap: 2,
       }}

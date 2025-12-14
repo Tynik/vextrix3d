@@ -1,5 +1,6 @@
 import React, { cloneElement } from 'react';
 import type { PropsWithChildren, ReactElement, ReactNode } from 'react';
+import { isString } from '@react-hive/honey-utils';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
@@ -16,7 +17,14 @@ export const Page = ({ children, title, icon, contentProps }: PropsWithChildren<
   return (
     <>
       <Container as="main" $padding={3} $gap={1} $flexGrow={1}>
-        <Text variant="h3" $display="flex" $gap={1} $alignItems="center" aria-label="Page title">
+        <Text
+          as={isString(title) ? 'h1' : undefined}
+          variant="h3"
+          $display="flex"
+          $gap={1}
+          $alignItems="center"
+          aria-label="Page title"
+        >
           {icon &&
             cloneElement(icon, {
               size: 'large',

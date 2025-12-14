@@ -33,12 +33,12 @@ export const FileCard = ({ file, removeDisabled = false, onRemove }: FileCardPro
           </Text>
         </HoneyFlex>
 
-        <IconButton disabled={removeDisabled} onClick={onRemove} $marginLeft="auto">
-          <DeleteIcon
-            size="medium"
-            color={removeDisabled ? 'neutral.grayMedium' : 'error.signalCoral'}
-          />
-        </IconButton>
+        <IconButton
+          disabled={removeDisabled}
+          onClick={onRemove}
+          icon={<DeleteIcon color={removeDisabled ? 'neutral.grayMedium' : 'error.signalCoral'} />}
+          $marginLeft="auto"
+        />
       </HoneyBox>
     </>
   );

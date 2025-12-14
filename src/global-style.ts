@@ -47,6 +47,10 @@ export const GlobalStyle = createGlobalStyle`
       flex-direction: column;
     }
 
+    h1 {
+      margin: 0;
+    }
+
     p {
       margin: 0;
     }
