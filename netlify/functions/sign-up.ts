@@ -1,10 +1,13 @@
-import admin, { FirebaseError } from 'firebase-admin';
+import admin from 'firebase-admin';
+import type { FirebaseError } from 'firebase-admin';
+import type { UserRecord } from 'firebase-admin/auth';
+import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
+import type { Nullable } from '../types';
 import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
-import { Nullable } from '../types';
-import { UserRecord } from 'firebase-admin/auth';
+import { getUserDocument } from '../firestore';
 
 interface SignupPayload {
   email: string;
@@ -44,20 +47,19 @@ export const handler = createHandler<SignupPayload>(
 
       assert(userRecord.email, 'The email must be set');
 
-      const serverTimestamp = admin.firestore.FieldValue.serverTimestamp();
+      const userDocument = getUserDocument(userRecord.uid);
+      const timestamp = Timestamp.now();
 
-      await admin
-        .firestore()
-        .doc(`users/${userRecord.uid}`)
-        .set({
-          id: userRecord.uid,
-          role: 'user',
-          email: userRecord.email,
-          displayName: userRecord.displayName ?? null,
-          phoneNumber: userRecord.phoneNumber ?? null,
-          createdAt: serverTimestamp,
-          updatedAt: serverTimestamp,
-        });
+      await userDocument.set({
+        id: userRecord.uid,
+        stripeCustomerId: null,
+        role: 'user',
+        email: userRecord.email,
+        displayName: userRecord.displayName ?? null,
+        phoneNumber: userRecord.phoneNumber ?? null,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      });
 
       return {
         status: 'ok',
