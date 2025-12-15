@@ -17,11 +17,12 @@ export const Button = <Element extends ElementType = 'button'>({
   loading,
   icon,
   iconProps,
+  disabled,
   ...props
 }: ButtonProps<Element>) => {
   return (
     // @ts-expect-error
-    <ButtonStyled disabled={loading || props.disabled} {...props}>
+    <ButtonStyled disabled={loading || disabled} {...props}>
       {loading ? (
         <Progress color="neutral.white" size="16px" lineWidth="2px" />
       ) : (

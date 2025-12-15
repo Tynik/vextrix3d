@@ -9,7 +9,7 @@ import type { Nullable } from '~/types';
 import type { EstimatedQuote } from '~/utils';
 import { IS_LOCAL_ENV } from '~/configs';
 import { estimateQuote, ModelLoaderError } from '~/utils';
-import { useOnChange } from '~/models';
+import { useAppContext, useOnChange } from '~/models';
 import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
 import { Alert, Button, FilePicker, Progress, Text, TextInput } from '~/components';
 import { FileCard } from '~/pages';
@@ -25,6 +25,7 @@ export const QuoteRequestFormContent = ({
   estimatedQuote,
   onEstimatedQuoteChange,
 }: QuoteRequestFormContentProps) => {
+  const { user } = useAppContext();
   const { formFields, formValues, isFormSubmitting } = useHoneyFormContext<QuoteRequestFormData>();
 
   const [isQuoteCalculating, setIsQuoteCalculating] = useState(false);
@@ -35,7 +36,7 @@ export const QuoteRequestFormContent = ({
     formFields.file.setValue(undefined);
   };
 
-  const calculateQuote = async (file: File, copies: number) => {
+  const calculateQuote = async (file: File, quantity: number) => {
     try {
       setIsQuoteCalculating(true);
 
@@ -50,7 +51,7 @@ export const QuoteRequestFormContent = ({
           nozzleDiameterMm: 0.4,
         },
         {
-          copies,
+          quantity,
           materialDensityGcm3: 1.04,
           materialPriceKg: 24.99,
           basePrintTimeHrs: 0.15,
@@ -80,12 +81,12 @@ export const QuoteRequestFormContent = ({
 
   useOnChange(
     useMemo(
-      () => [formValues.file, formFields.copies.cleanValue] as const,
-      [formValues.file, formFields.copies.cleanValue],
+      () => [formValues.file, formFields.quantity.cleanValue] as const,
+      [formValues.file, formFields.quantity.cleanValue],
     ),
-    ([file, copies]) => {
-      if (file && copies) {
-        debouncedCalculateQuote(file, copies)?.catch(noop);
+    ([file, quantity]) => {
+      if (file && quantity) {
+        debouncedCalculateQuote(file, quantity)?.catch(noop);
 
         return debouncedCalculateQuote.cancel;
       }
@@ -160,7 +161,7 @@ export const QuoteRequestFormContent = ({
 
           <TextInput
             label="* Email"
-            disabled={isQuoteCalculating || isFormSubmitting}
+            disabled={Boolean(user) || isQuoteCalculating || isFormSubmitting}
             error={formFields.email.errors[0]?.message}
             {...formFields.email.props}
           />
@@ -174,11 +175,11 @@ export const QuoteRequestFormContent = ({
           />
 
           <TextInput
-            label="* Copies"
+            label="* Quantity"
             disabled={isQuoteCalculating || isFormSubmitting}
-            error={formFields.copies.errors[0]?.message}
+            error={formFields.quantity.errors[0]?.message}
             $width={{ xs: '100%', sm: '180px' }}
-            {...formFields.copies.props}
+            {...formFields.quantity.props}
           />
 
           {IS_LOCAL_ENV && (

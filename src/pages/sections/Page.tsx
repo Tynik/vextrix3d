@@ -5,15 +5,22 @@ import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
 import type { IconProps } from '~/components';
-import { Container, Divider, Text } from '~/components';
+import { Container, Divider, Text, Progress } from '~/components';
 
 interface PageProps {
   title: ReactNode;
+  loading?: boolean;
   icon?: ReactElement<IconProps>;
   contentProps?: HoneyFlexProps;
 }
 
-export const Page = ({ children, title, icon, contentProps }: PropsWithChildren<PageProps>) => {
+export const Page = ({
+  children,
+  title,
+  loading = false,
+  icon,
+  contentProps,
+}: PropsWithChildren<PageProps>) => {
   return (
     <>
       <Container as="main" $padding={3} $gap={1} $flexGrow={1}>
@@ -37,7 +44,7 @@ export const Page = ({ children, title, icon, contentProps }: PropsWithChildren<
         <Divider />
 
         <HoneyFlex $marginTop={2} data-testid="page-content" {...contentProps}>
-          {children}
+          {loading ? <Progress $margin={[0, 'auto']} /> : children}
         </HoneyFlex>
       </Container>
     </>

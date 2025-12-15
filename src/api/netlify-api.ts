@@ -3,30 +3,6 @@ import { FIREBASE_AUTH_ERRORS } from '~/configs';
 import type { NetlifyRequestError } from './netlify-request';
 import { netlifyRequest } from './netlify-request';
 
-interface QuoteRequestPayload {
-  fileName: string;
-  contentType: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  description: string;
-  copies: number;
-  estimatedQuote: {
-    total: number;
-  };
-}
-
-export const quoteRequest = async (payload: QuoteRequestPayload) => {
-  const { uploadModelUrl } = (
-    await netlifyRequest<{ uploadModelUrl: string }>('quote-request', {
-      method: 'POST',
-      payload,
-    })
-  ).data;
-
-  return uploadModelUrl;
-};
-
 interface SignUpRequestPayload {
   email: string;
   password: string;
@@ -69,3 +45,27 @@ export const signOutRequest = async () =>
       method: 'POST',
     })
   ).data;
+
+interface QuoteRequestPayload {
+  fileName: string;
+  contentType: string;
+  firstName: string;
+  lastName: string;
+  email: Nullable<string>;
+  description: string;
+  quantity: number;
+  pricing: {
+    estimated: number;
+  };
+}
+
+export const quoteRequest = async (payload: QuoteRequestPayload) => {
+  const { uploadModelUrl } = (
+    await netlifyRequest<{ uploadModelUrl: string }>('quote-request', {
+      method: 'POST',
+      payload,
+    })
+  ).data;
+
+  return uploadModelUrl;
+};

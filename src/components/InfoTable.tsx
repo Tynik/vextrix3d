@@ -27,7 +27,7 @@ export const InfoTable = ({ rows, rowProps }: InfoTableProps) => {
 
           {isNilOrEmptyString(row.value) ? (
             <Text variant="body1" $color="neutral.grayMedium" $fontStyle="italic">
-              Not set
+              Empty
             </Text>
           ) : (
             <Text variant="body1" $display="flex" $gap={1} $alignItems="center" ellipsis>

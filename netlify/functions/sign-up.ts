@@ -7,7 +7,7 @@ import { assert } from '@react-hive/honey-utils';
 import type { Nullable } from '../types';
 import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
-import { getUserDocument } from '../firestore';
+import { getUserDocumentRef } from '../firestore';
 
 interface SignupPayload {
   email: string;
@@ -47,8 +47,8 @@ export const handler = createHandler<SignupPayload>(
 
       assert(userRecord.email, 'The email must be set');
 
-      const userDocument = getUserDocument(userRecord.uid);
-      const timestamp = Timestamp.now();
+      const userDocument = getUserDocumentRef(userRecord.uid);
+      const now = Timestamp.now();
 
       await userDocument.set({
         id: userRecord.uid,
@@ -57,8 +57,8 @@ export const handler = createHandler<SignupPayload>(
         email: userRecord.email,
         displayName: userRecord.displayName ?? null,
         phoneNumber: userRecord.phoneNumber ?? null,
-        createdAt: timestamp,
-        updatedAt: timestamp,
+        createdAt: now,
+        updatedAt: now,
       });
 
       return {

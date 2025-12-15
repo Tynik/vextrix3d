@@ -29,7 +29,7 @@ export const App = () => {
     });
   }, [location.pathname]);
 
-  const firebaseApp = useMemo(() => initializeApp(FIREBASE_CONFIG), []);
+  const firebaseApp = useMemo(() => initializeApp(FIREBASE_CONFIG, 'Vextrix3D'), []);
 
   const firebaseAuth = useMemo(() => getAuth(firebaseApp), [firebaseApp]);
 

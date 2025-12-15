@@ -22,7 +22,7 @@ export interface PriceSettings {
   min: number;
   fixedFee: number;
   markup: number; // 0..1
-  copies: number;
+  quantity: number;
 }
 
 export interface EstimatedQuote {
@@ -58,7 +58,7 @@ const DEFAULT_PRICE_SETTINGS: PriceSettings = {
   min: 0,
   fixedFee: 0,
   markup: 0,
-  copies: 1,
+  quantity: 1,
 };
 
 const computeQuoteInternal = (
@@ -108,7 +108,7 @@ const computeQuoteInternal = (
   const raw = materialCost + machineCost + finalPriceSettings.fixedFee;
   const total =
     Math.max(finalPriceSettings.min, raw * (1 + finalPriceSettings.markup)) *
-    finalPriceSettings.copies;
+    finalPriceSettings.quantity;
 
   return {
     solidVolumeMm3: Math.round(solidVolumeMm3),

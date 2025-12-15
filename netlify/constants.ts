@@ -4,9 +4,11 @@ export const SITE_DOMAIN = IS_LOCAL_ENV ? 'http://localhost:8097' : process.env.
 
 export const FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY = 'quote-request-models';
 
-export const ONE_MINUTE_MS = 1000;
+export const ONE_SECOND_MS = 1000;
 
 export const ONE_MINUTE_SECS = 60;
+
+export const ONE_MINUTE_MS = ONE_MINUTE_SECS * ONE_SECOND_MS;
 
 export const ONE_HOUR_MINUTES = 60;
 
@@ -16,11 +18,19 @@ export const ONE_DAY_MINUTES = ONE_DAY_HOURS * ONE_HOUR_MINUTES;
 
 export const ONE_DAY_SECS = ONE_DAY_MINUTES * ONE_MINUTE_SECS;
 
+export const ONE_DAY_MS = ONE_DAY_SECS * ONE_SECOND_MS;
+
 export const ONE_WEEK_DAYS = 7;
 
 export const ONE_WEEK_MINUTES = ONE_WEEK_DAYS * ONE_DAY_MINUTES;
 
-export const ONE_WEEK_MS = ONE_WEEK_MINUTES * ONE_MINUTE_MS;
+export const ONE_WEEK_SECS = ONE_WEEK_MINUTES * ONE_MINUTE_SECS;
+
+export const ONE_WEEK_MS = ONE_WEEK_SECS * ONE_SECOND_MS;
+
+export const ONE_MONTH_DAYS = 31;
+
+export const ONE_MONTH_MS = ONE_MONTH_DAYS * ONE_DAY_MS;
 
 export const {
   SITE_ID,

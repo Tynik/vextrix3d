@@ -98,7 +98,7 @@ export const MATERIALS: Material[] = [
         hex: '#FB852E',
       },
       {
-        name: 'Gray',
+        name: 'Grey',
         hex: '#83857E',
       },
       {
@@ -147,7 +147,7 @@ export const MATERIALS: Material[] = [
         hex: '#000000',
       },
       {
-        name: 'Ash Gray',
+        name: 'Ash Grey',
         hex: '#909395',
       },
       {
@@ -201,7 +201,7 @@ export const MATERIALS: Material[] = [
         hex: '#000000',
       },
       {
-        name: 'Gray',
+        name: 'Grey',
         hex: '#A5A8A5',
       },
     ],
@@ -241,7 +241,7 @@ export const MATERIALS: Material[] = [
         hex: '#000000',
       },
       {
-        name: 'Dark Gray',
+        name: 'Dark Grey',
         hex: '#4D5055',
       },
     ],
@@ -315,7 +315,7 @@ export const MATERIALS: Material[] = [
     shortDescription: 'Rigid, UV-resistant carbon-fiber ASA for outdoor mechanics.',
     availableColors: [
       {
-        name: 'Dark Gray',
+        name: 'Dark Grey',
         hex: '#454545',
       },
     ],

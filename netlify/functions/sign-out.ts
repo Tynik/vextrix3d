@@ -24,7 +24,6 @@ export const handler = createHandler(
       await initFirebaseAdminApp();
 
       const firebaseAuth = getAuth();
-
       const decodedIdToken = await firebaseAuth.verifySessionCookie(cookies.session, true);
 
       await firebaseAuth.revokeRefreshTokens(decodedIdToken.sub);

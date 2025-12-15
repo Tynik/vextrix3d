@@ -6,11 +6,11 @@ import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
 
-import { FIREBASE_AUTH_ERRORS, ROUTE_PATHS, ROUTES } from '~/configs';
+import { FIREBASE_AUTH_ERRORS, ROUTE_PATHS } from '~/configs';
 import { handleApiError, signInRequest } from '~/api';
 import { useAppContext, useQueryParams } from '~/models';
 import { CheckIcon } from '~/icons';
-import { Button, Form, Link, TextInput } from '~/components';
+import { Button, Form, TextInput } from '~/components';
 import { Page } from '~/pages';
 
 type SignInFormData = {
@@ -99,17 +99,17 @@ export const SignInPage = () => {
             />
 
             <HoneyFlex row center $gap={2} $width="100%">
-              <Link
-                to={ROUTES.auth.signUp}
-                variant="body2"
-                $display="flex"
-                $width="100%"
-                $color="secondary.slateAlloy"
-              >
-                <Button variant="secondary" size="full" icon={<CheckIcon color="neutral.white" />}>
-                  Sign Up
-                </Button>
-              </Link>
+              {/*<Link*/}
+              {/*  to={ROUTES.auth.signUp}*/}
+              {/*  variant="body2"*/}
+              {/*  $display="flex"*/}
+              {/*  $width="100%"*/}
+              {/*  $color="secondary.slateAlloy"*/}
+              {/*>*/}
+              {/*  <Button variant="secondary" size="full" icon={<CheckIcon color="neutral.white" />}>*/}
+              {/*    Sign Up*/}
+              {/*  </Button>*/}
+              {/*</Link>*/}
 
               <Button
                 loading={isFormSubmitting}

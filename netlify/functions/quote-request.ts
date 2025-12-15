@@ -1,4 +1,5 @@
 import { assert, parseFileName } from '@react-hive/honey-utils';
+import { getAuth } from 'firebase-admin/auth';
 import { getStorage } from 'firebase-admin/storage';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,17 +12,20 @@ import {
 } from '../constants';
 import { createHandler, sendEmail } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
+import type { Nullable } from '../types';
+import type { QuoteHistoryActor, QuoteRequester, UserDocument } from '../firestore';
+import { buildQuoteHistoryActor, getExistingUserDocument, createQuote } from '../firestore';
 
 interface QuoteRequestPayload {
   fileName: string;
   contentType: string;
   firstName: string;
   lastName: string;
-  email: string;
+  email: Nullable<string>;
   description: string;
-  copies: number;
-  estimatedQuote: {
-    total: number;
+  quantity: number;
+  pricing: {
+    estimated: number;
   };
 }
 
@@ -29,7 +33,7 @@ export const handler = createHandler<QuoteRequestPayload>(
   {
     allowedMethods: ['POST'],
   },
-  async ({ payload }) => {
+  async ({ payload, cookies }) => {
     assert(COMPANY_EMAIL, 'The `COMPANY_EMAIL` must be set as environment variable');
 
     if (!payload) {
@@ -51,20 +55,84 @@ export const handler = createHandler<QuoteRequestPayload>(
       const [, fileExt] = parseFileName(payload.fileName);
 
       const modelPath = `${FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY}/${fileId}.${fileExt}`;
+      const bucketFile = bucket.file(modelPath);
 
-      const currentTimestamp = Date.now();
+      const timestamp = Date.now();
 
-      const [downloadModelUrl] = await bucket.file(modelPath).getSignedUrl({
+      const [downloadModelUrl] = await bucketFile.getSignedUrl({
         version: 'v4',
         action: 'read',
-        expires: currentTimestamp + ONE_WEEK_MS,
+        expires: timestamp + ONE_WEEK_MS,
       });
 
-      const [uploadModelUrl] = await bucket.file(modelPath).getSignedUrl({
+      const [uploadModelUrl] = await bucketFile.getSignedUrl({
         version: 'v4',
         action: 'write',
-        expires: currentTimestamp + 5 * ONE_MINUTE_MS, // 5 mins
+        expires: timestamp + 5 * ONE_MINUTE_MS, // 5 mins
         contentType: payload.contentType,
+      });
+
+      let requester: QuoteRequester;
+      let historyActor: QuoteHistoryActor;
+      let userDocument: Nullable<UserDocument> = null;
+
+      if (cookies.session) {
+        const firebaseAuth = getAuth();
+        const decodedIdToken = await firebaseAuth.verifySessionCookie(cookies.session, true);
+
+        requester = {
+          type: 'registered',
+          userId: decodedIdToken.uid,
+          guest: null,
+        };
+
+        userDocument = await getExistingUserDocument(decodedIdToken.uid);
+
+        historyActor = buildQuoteHistoryActor(userDocument);
+      } else {
+        assert(payload.email, 'The email must be set');
+
+        requester = {
+          type: 'guest',
+          userId: null,
+          guest: {
+            name: `${payload.firstName} ${payload.lastName}`,
+            email: payload.email,
+            phone: null,
+          },
+        };
+
+        historyActor = buildQuoteHistoryActor(null);
+      }
+
+      const email = userDocument?.email ?? payload.email;
+      assert(email, 'The email must be set');
+
+      await createQuote({
+        requester,
+        by: historyActor,
+        job: {
+          technology: 'FDM',
+          material: 'PLA',
+          color: 'black',
+          quantity: payload.quantity,
+          notes: payload.description,
+        },
+        model: {
+          fileName: payload.fileName,
+          fileUrl: downloadModelUrl,
+          volumeCm3: 0,
+        },
+        pricing: {
+          type: 'estimated',
+          currency: 'GBP',
+          amount: payload.pricing.estimated,
+          breakdown: {
+            material: 0,
+            machineTime: 0,
+            labor: 0,
+          },
+        },
       });
 
       await sendEmail('quote-request', {
@@ -75,10 +143,10 @@ export const handler = createHandler<QuoteRequestPayload>(
           downloadModelUrl,
           firstName: payload.firstName,
           lastName: payload.lastName,
-          email: payload.email,
+          email,
           description: payload.description,
-          copies: payload.copies.toString(),
-          estimatedQuoteTotal: payload.estimatedQuote.total.toString(),
+          quantity: payload.quantity.toString(),
+          estimated: payload.pricing.estimated.toString(),
         },
       });
 

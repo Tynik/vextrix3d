@@ -3,7 +3,6 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 
 import { ROUTES } from '~/configs';
 import { useAppContext } from '~/models';
-import { Progress } from '~/components';
 import {
   LandingPage,
   MaterialSafetyDisclaimerPage,
@@ -13,7 +12,6 @@ import {
   TermsOfServicePage,
   IntellectualPropertyPolicyPage,
   QuoteRequestPage,
-  SignUpPage,
   SignInPage,
   ProfilePage,
   Page,
@@ -25,11 +23,7 @@ const AccountRoutes = () => {
   const { isUserLoading, user } = useAppContext();
 
   if (isUserLoading) {
-    return (
-      <Page title="Loading...">
-        <Progress $margin={[0, 'auto']} />
-      </Page>
-    );
+    return <Page title="Loading..." loading={isUserLoading} />;
   }
 
   if (!user) {
@@ -57,7 +51,7 @@ export const AppRoutes = () => {
       <Route path={ROUTES.legal.ip} element={<IntellectualPropertyPolicyPage />} />
 
       <Route path={ROUTES.quote} element={<QuoteRequestPage />} />
-      <Route path={ROUTES.auth.signUp} element={<SignUpPage />} />
+      {/*<Route path={ROUTES.auth.signUp} element={<SignUpPage />} />*/}
       <Route path={ROUTES.auth.signIn} element={<SignInPage />} />
       <Route path={ROUTES.home} element={<LandingPage />} />
 
