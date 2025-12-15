@@ -53,7 +53,7 @@ export const handler = createHandler<SignupPayload>(
       await userDocument.set({
         id: userRecord.uid,
         stripeCustomerId: null,
-        role: 'user',
+        role: 'customer',
         email: userRecord.email,
         displayName: userRecord.displayName ?? null,
         phoneNumber: userRecord.phoneNumber ?? null,
