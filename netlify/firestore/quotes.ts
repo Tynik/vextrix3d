@@ -16,15 +16,25 @@ import type {
   QuoteRequester,
   QuoteStatus,
   UserDocument,
+  QuoteHistoryId,
 } from './document-types';
-import { getQuoteHistoryCollection, QUOTES_COLLECTION_NAME } from './collections';
-import { quoteConverter } from './data-convertors';
+import { QUOTE_HISTORY_COLLECTION_NAME, QUOTES_COLLECTION_NAME } from './collections';
+import { quoteConverter, quoteHistoryStatusChangeConverter } from './data-convertors';
 
 export const getQuoteDocumentRef = (
   quoteId: QuoteId,
   firestore = admin.firestore(),
 ): DocumentReference<QuoteDocument> =>
   firestore.doc(`${QUOTES_COLLECTION_NAME}/${quoteId}`).withConverter(quoteConverter);
+
+export const getQuoteHistoryStatusChangeDocumentRef = (
+  quoteId: QuoteId,
+  quoteHistoryId: QuoteHistoryId,
+  firestore = admin.firestore(),
+): DocumentReference<QuoteHistoryStatusChangeDocument> =>
+  firestore
+    .doc(`${QUOTES_COLLECTION_NAME}/${quoteId}/${QUOTE_HISTORY_COLLECTION_NAME}/${quoteHistoryId}`)
+    .withConverter(quoteHistoryStatusChangeConverter);
 
 export const getExistingQuoteDocument = async (quoteId: QuoteId): Promise<QuoteDocument> => {
   const documentReference = getQuoteDocumentRef(quoteId);
@@ -55,31 +65,32 @@ export const createQuote = async ({
 }: CreateQuoteOptions): Promise<{
   quoteId: QuoteId;
 }> => {
+  const firestore = admin.firestore();
+
   const quoteId = uuidv4();
   const now = Timestamp.now();
 
-  const quoteDocument: QuoteDocument = {
-    id: quoteId,
-    requester,
-    status: 'new',
-    job,
-    model,
-    pricing,
-    pricedAt: null,
-    sentAt: null,
-    acceptedAt: null,
-    rejectedAt: null,
-    expiredAt: null,
-    createdAt: now,
-    updatedAt: now,
-  };
+  await firestore.runTransaction(async tx => {
+    const quoteRef = getQuoteDocumentRef(quoteId, firestore);
+    tx.set(quoteRef, {
+      id: quoteId,
+      requester,
+      status: 'new',
+      job,
+      model,
+      pricing,
+      pricedAt: null,
+      sentAt: null,
+      acceptedAt: null,
+      rejectedAt: null,
+      expiredAt: null,
+      createdAt: now,
+      updatedAt: now,
+    });
 
-  await admin.firestore().runTransaction(async tx => {
-    const quoteRef = getQuoteDocumentRef(quoteId);
-    tx.set(quoteRef, quoteDocument);
-
-    const quoteHistoryRef = getQuoteHistoryCollection(quoteRef).doc();
+    const quoteHistoryRef = getQuoteHistoryStatusChangeDocumentRef(quoteId, uuidv4(), firestore);
     tx.set(quoteHistoryRef, {
+      id: quoteHistoryRef.id,
       type: 'status-change',
       at: now,
       by,
@@ -116,8 +127,10 @@ export const changeQuoteStatus = async ({
   by,
   reason,
 }: ChangeQuoteStatusOptions) => {
-  await admin.firestore().runTransaction(async tx => {
-    const quoteRef = getQuoteDocumentRef(quoteId);
+  const firestore = admin.firestore();
+
+  await firestore.runTransaction(async tx => {
+    const quoteRef = getQuoteDocumentRef(quoteId, firestore);
 
     const quoteDocumentSnapshot = await tx.get(quoteRef);
     assert(quoteDocumentSnapshot.exists, 'Quote does not exist');
@@ -155,17 +168,16 @@ export const changeQuoteStatus = async ({
 
     tx.update(quoteRef, quoteStatusUpdate);
 
-    const historyChange: QuoteHistoryStatusChangeDocument = {
+    const quoteHistoryRef = getQuoteHistoryStatusChangeDocumentRef(quoteId, uuidv4(), firestore);
+    tx.set(quoteHistoryRef, {
+      id: quoteHistoryRef.id,
       type: 'status-change',
       at: now,
       by,
       from: quoteDocument.status,
       to: toStatus,
       reason: reason ?? null,
-    };
-
-    const quoteHistoryRef = getQuoteHistoryCollection(quoteRef).doc();
-    tx.set(quoteHistoryRef, historyChange);
+    });
   });
 };
 

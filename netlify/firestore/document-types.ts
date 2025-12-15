@@ -7,6 +7,8 @@ export type UserId = string;
 
 export type QuoteId = string;
 
+export type QuoteHistoryId = string;
+
 export type AccountRole = 'customer' | 'admin';
 
 export type ActorRole = AccountRole | 'system';
@@ -91,6 +93,7 @@ export interface QuoteHistoryActor {
 }
 
 export interface QuoteHistoryStatusChangeDocument {
+  id: QuoteHistoryId;
   type: 'status-change';
   at: Timestamp;
   by: QuoteHistoryActor;
