@@ -4,6 +4,7 @@ export type NetlifyFunction =
   | 'sign-up'
   | 'sign-in'
   | 'sign-out'
+  | 'get-user-profile'
   | 'quote-request'
   | 'upload-quote-request-model';
 
@@ -27,12 +28,19 @@ interface NetlifyRequestOptions<Payload> {
   payload?: Payload;
   method?: HTTPRequestMethod;
   params?: Record<string, string | number>;
-  request?: RequestInit;
+  headers?: HeadersInit;
+  request?: Omit<RequestInit, 'headers'>;
 }
 
 export const netlifyRequest = async <Response, Payload = unknown>(
   funcName: NetlifyFunction,
-  { payload, method = 'GET', params = {}, request }: NetlifyRequestOptions<Payload> = {},
+  {
+    payload,
+    method = 'GET',
+    params = {},
+    headers = {},
+    request,
+  }: NetlifyRequestOptions<Payload> = {},
 ): Promise<NetlifyRequestResponse<Response>> => {
   let body: Nullable<BodyInit> = null;
 
@@ -59,11 +67,12 @@ export const netlifyRequest = async <Response, Payload = unknown>(
       method,
       body,
       credentials: 'include',
-      headers: isFormData
-        ? {}
-        : {
-            'Content-Type': 'application/json',
-          },
+      headers: {
+        ...(!isFormData && {
+          'Content-Type': 'application/json',
+        }),
+        ...headers,
+      },
       ...request,
     },
   );

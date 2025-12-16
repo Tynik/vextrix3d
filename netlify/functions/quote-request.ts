@@ -77,8 +77,7 @@ export const handler = createHandler<QuoteRequestPayload>(
       let userDocument: Nullable<UserDocument> = null;
 
       if (cookies.session) {
-        const firebaseAuth = getAuth();
-        const decodedIdToken = await firebaseAuth.verifySessionCookie(cookies.session, true);
+        const decodedIdToken = await getAuth().verifySessionCookie(cookies.session, true);
 
         requester = {
           type: 'registered',

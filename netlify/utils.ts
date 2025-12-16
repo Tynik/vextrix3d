@@ -84,7 +84,7 @@ const createResponse = <Data>(
   headers: {
     'Access-Control-Allow-Origin': SITE_DOMAIN ?? '',
     'Access-Control-Allow-Credentials': 'true',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Authorization, Content-Type',
     'Access-Control-Allow-Methods': allowedMethods?.join(', ') ?? '*',
     'Content-Type': 'application/json',
     ...headers,
@@ -97,6 +97,7 @@ const createResponse = <Data>(
 export interface CreateHandlerFunctionOptions<Payload = unknown> {
   event: HandlerEvent;
   context: HandlerContext;
+  headers: Record<string, string | undefined>;
   cookies: Record<string, string>;
   payload: Payload | null;
 }
@@ -118,7 +119,7 @@ export type CreateHandlerFunction<Payload, Response = unknown> = (
 >;
 
 export const createHandler = <Payload = unknown>(
-  options: CreateHandlerOptions,
+  { allowedMethods }: CreateHandlerOptions,
   fn: CreateHandlerFunction<Payload>,
 ): Handler => {
   return async (event, context) => {
@@ -128,18 +129,15 @@ export const createHandler = <Payload = unknown>(
           message: 'Successful preflight call.',
         },
         {
-          allowedMethods: options?.allowedMethods,
+          allowedMethods,
         },
       );
     }
 
-    if (
-      options?.allowedMethods &&
-      !options.allowedMethods.includes(event.httpMethod as HttpRequestMethod)
-    ) {
+    if (allowedMethods && !allowedMethods.includes(event.httpMethod as HttpRequestMethod)) {
       return createResponse(`You cannot use HTTP method "${event.httpMethod}" for this endpoint`, {
         statusCode: 400,
-        allowedMethods: options.allowedMethods,
+        allowedMethods,
       });
     }
 
@@ -159,13 +157,19 @@ export const createHandler = <Payload = unknown>(
         event.body && !event.isBase64Encoded ? (JSON.parse(event.body) as Payload) : null;
 
       const { statusCode, headers, cookie, ...result } =
-        (await fn({ event, context, cookies, payload })) || {};
+        (await fn({
+          event,
+          context,
+          headers: event.headers,
+          cookies,
+          payload,
+        })) || {};
 
       return createResponse(result, {
         statusCode,
         headers,
         cookie,
-        allowedMethods: options?.allowedMethods,
+        allowedMethods,
       });
     } catch (e) {
       console.error(e);
@@ -176,7 +180,7 @@ export const createHandler = <Payload = unknown>(
         },
         {
           statusCode: 500,
-          allowedMethods: options?.allowedMethods,
+          allowedMethods,
         },
       );
     }

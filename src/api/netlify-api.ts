@@ -23,17 +23,19 @@ interface SignInRequestPayload {
   idToken: string;
 }
 
+type AccountRole = 'customer' | 'admin';
+
 export interface User {
-  id: string;
+  role: AccountRole;
   email: string;
+  isEmailVerified: boolean;
   displayName: Nullable<string>;
   phoneNumber: Nullable<string>;
-  isEmailVerified: boolean;
 }
 
 export const signInRequest = async (payload: SignInRequestPayload) =>
   (
-    await netlifyRequest<User>('sign-in', {
+    await netlifyRequest('sign-in', {
       method: 'POST',
       payload,
     })
@@ -41,8 +43,18 @@ export const signInRequest = async (payload: SignInRequestPayload) =>
 
 export const signOutRequest = async () =>
   (
-    await netlifyRequest<User>('sign-out', {
+    await netlifyRequest('sign-out', {
       method: 'POST',
+    })
+  ).data;
+
+export const getUserProfileRequest = async (idToken: string) =>
+  (
+    await netlifyRequest<User>('get-user-profile', {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
     })
   ).data;
 
