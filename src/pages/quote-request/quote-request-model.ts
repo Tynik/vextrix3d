@@ -8,6 +8,9 @@ export type QuoteRequestFormData = {
   firstName: string;
   lastName: string;
   email: string | undefined;
+  isCreateAccount: boolean | undefined;
+  password: string | undefined;
+  repeatPassword: string;
   description: string;
   quantity: number;
 };
@@ -45,6 +48,27 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     mode: 'blur',
     max: 255,
     skip: ({ formContext }) => Boolean(formContext.user),
+  },
+  isCreateAccount: {
+    type: 'checkbox',
+    defaultValue: true,
+    skip: ({ formContext }) => Boolean(formContext.user),
+  },
+  password: {
+    type: 'string',
+    required: true,
+    mode: 'blur',
+    min: 6,
+    max: 255,
+    skip: ({ formValues }) => !formValues.isCreateAccount,
+  },
+  repeatPassword: {
+    type: 'string',
+    required: true,
+    mode: 'blur',
+    validator: (value, { formValues }) =>
+      value === formValues.password || 'Passwords must be equal',
+    skip: ({ formValues }) => !formValues.isCreateAccount,
   },
   description: {
     type: 'string',

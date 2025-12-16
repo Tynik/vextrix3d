@@ -16,11 +16,9 @@ export const FIREBASE_CONFIG: FirebaseOptions = {
 export const FIREBASE_AUTH_ERRORS: Record<string, string> = {
   'auth/invalid-credential': 'Invalid email or password.',
   'auth/user-not-found': 'Invalid email or password.',
-  'auth/wrong-password': 'Invalid email or password.',
+  'auth/invalid-password': 'Invalid email or password.',
   'auth/too-many-requests': 'Too many attempts. Try again later.',
-  'auth/network-request-failed': 'Network error. Check your connection.',
-  'auth/email-already-in-use': 'Email is already in use.',
+  'auth/email-already-exists': 'Email is already in use.',
   'auth/invalid-email': 'Invalid email.',
   'auth/invalid-phone-number': 'Invalid phone number.',
-  'auth/weak-password': 'Password must be at least 6 characters.',
 };

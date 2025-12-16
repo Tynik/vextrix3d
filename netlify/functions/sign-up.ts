@@ -1,19 +1,15 @@
-import admin from 'firebase-admin';
 import type { FirebaseError } from 'firebase-admin';
 import type { UserRecord } from 'firebase-admin/auth';
-import { Timestamp } from 'firebase-admin/firestore';
-import { assert } from '@react-hive/honey-utils';
+import { getAuth } from 'firebase-admin/auth';
 
 import type { Nullable } from '../types';
 import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
-import { getUserDocumentRef } from '../firestore';
+import { createUser } from '../firestore';
 
 interface SignupPayload {
   email: string;
   password: string;
-  displayName?: string;
-  phoneNumber?: string;
 }
 
 export const handler = createHandler<SignupPayload>(
@@ -33,32 +29,14 @@ export const handler = createHandler<SignupPayload>(
 
     await initFirebaseAdminApp();
 
-    const firebaseAuth = admin.auth();
+    const firebaseAuth = getAuth();
 
     let userRecord: Nullable<UserRecord> = null;
 
     try {
-      userRecord = await firebaseAuth.createUser({
+      userRecord = await createUser({
         email: payload.email,
         password: payload.password,
-        displayName: payload.displayName,
-        phoneNumber: payload.phoneNumber,
-      });
-
-      assert(userRecord.email, 'The email must be set');
-
-      const userDocument = getUserDocumentRef(userRecord.uid);
-      const now = Timestamp.now();
-
-      await userDocument.set({
-        id: userRecord.uid,
-        stripeCustomerId: null,
-        role: 'customer',
-        email: userRecord.email,
-        displayName: userRecord.displayName ?? null,
-        phoneNumber: userRecord.phoneNumber ?? null,
-        createdAt: now,
-        updatedAt: now,
       });
 
       return {

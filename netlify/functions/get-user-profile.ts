@@ -34,8 +34,9 @@ export const handler = createHandler<{ idToken: string }>(
           role: userDocument.role,
           email: userDocument.email,
           isEmailVerified: decodedIdToken.email_verified,
-          displayName: userDocument.displayName,
-          phoneNumber: userDocument.phoneNumber,
+          firstName: userDocument.firstName,
+          lastName: userDocument.lastName,
+          phone: userDocument.phone,
         },
       };
     } catch (e) {

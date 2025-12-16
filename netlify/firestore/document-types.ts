@@ -26,8 +26,9 @@ export interface UserDocument {
   stripeCustomerId: Nullable<StipeCustomerId>;
   role: AccountRole;
   email: string;
-  displayName: Nullable<string>;
-  phoneNumber: Nullable<string>;
+  firstName: Nullable<string>;
+  lastName: Nullable<string>;
+  phone: Nullable<string>;
   updatedAt: Timestamp;
   createdAt: Timestamp;
 }

@@ -9,12 +9,12 @@ import type { Nullable } from '~/types';
 import type { EstimatedQuote } from '~/utils';
 import { IS_LOCAL_ENV } from '~/configs';
 import { estimateQuote, ModelLoaderError } from '~/utils';
-import { useAppContext, useOnChange } from '~/models';
+import { useOnChange } from '~/models';
 import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
-import { Alert, Button, FilePicker, Progress, Text, TextInput } from '~/components';
+import { Alert, Button, Checkbox, FilePicker, Progress, Text, TextInput } from '~/components';
 import { FileCard } from '~/pages';
+import type { QuoteRequestFormContext, QuoteRequestFormData } from './quote-request-model';
 import { QuoteRequestFilaments } from './widgets';
-import type { QuoteRequestFormData } from './quote-request-model';
 
 interface QuoteRequestFormContentProps {
   estimatedQuote: Nullable<EstimatedQuote>;
@@ -25,8 +25,10 @@ export const QuoteRequestFormContent = ({
   estimatedQuote,
   onEstimatedQuoteChange,
 }: QuoteRequestFormContentProps) => {
-  const { user } = useAppContext();
-  const { formFields, formValues, isFormSubmitting } = useHoneyFormContext<QuoteRequestFormData>();
+  const { formFields, formValues, isFormSubmitting, formContext } = useHoneyFormContext<
+    QuoteRequestFormData,
+    QuoteRequestFormContext
+  >();
 
   const [isQuoteCalculating, setIsQuoteCalculating] = useState(false);
 
@@ -161,10 +163,49 @@ export const QuoteRequestFormContent = ({
 
           <TextInput
             label="* Email"
-            disabled={Boolean(user) || isQuoteCalculating || isFormSubmitting}
+            disabled={Boolean(formContext.user) || isQuoteCalculating || isFormSubmitting}
             error={formFields.email.errors[0]?.message}
             {...formFields.email.props}
+            inputProps={{
+              autoComplete: 'new-email',
+            }}
           />
+
+          {!formContext.user && (
+            <>
+              <Checkbox
+                label="Create an account to manage my quotes"
+                checked={formValues.isCreateAccount}
+                onChange={formFields.isCreateAccount.setValue}
+              />
+
+              {formValues.isCreateAccount && (
+                <>
+                  <TextInput
+                    label="* Password"
+                    disabled={isFormSubmitting}
+                    error={formFields.password.errors[0]?.message}
+                    {...formFields.password.props}
+                    inputProps={{
+                      type: 'password',
+                      autoComplete: 'new-password',
+                    }}
+                  />
+
+                  <TextInput
+                    label="* Repeat Password"
+                    disabled={isFormSubmitting}
+                    error={formFields.repeatPassword.errors[0]?.message}
+                    {...formFields.repeatPassword.props}
+                    inputProps={{
+                      type: 'password',
+                      autoComplete: 'new-password',
+                    }}
+                  />
+                </>
+              )}
+            </>
+          )}
 
           <TextInput
             label="* Description"

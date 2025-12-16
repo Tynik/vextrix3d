@@ -14,7 +14,12 @@ import { createHandler, sendEmail } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
 import type { Nullable } from '../types';
 import type { QuoteHistoryActor, QuoteRequester, UserDocument } from '../firestore';
-import { buildQuoteHistoryActor, getExistingUserDocument, createQuote } from '../firestore';
+import {
+  createUser,
+  buildQuoteHistoryActor,
+  getExistingUserDocument,
+  createQuote,
+} from '../firestore';
 
 interface QuoteRequestPayload {
   fileName: string;
@@ -22,6 +27,8 @@ interface QuoteRequestPayload {
   firstName: string;
   lastName: string;
   email: Nullable<string>;
+  phone: Nullable<string>;
+  password: Nullable<string>;
   description: string;
   quantity: number;
   pricing: {
@@ -49,6 +56,59 @@ export const handler = createHandler<QuoteRequestPayload>(
     try {
       await initFirebaseAdminApp();
 
+      let quoteRequester: QuoteRequester;
+      let quoteHistoryActor: QuoteHistoryActor;
+      let userDocument: Nullable<UserDocument> = null;
+
+      if (cookies.session) {
+        const decodedIdToken = await getAuth().verifySessionCookie(cookies.session, true);
+
+        quoteRequester = {
+          type: 'registered',
+          userId: decodedIdToken.uid,
+          guest: null,
+        };
+
+        userDocument = await getExistingUserDocument(decodedIdToken.uid);
+        quoteHistoryActor = buildQuoteHistoryActor(userDocument);
+      } else {
+        assert(payload.email, 'The email must be set');
+
+        if (payload.password) {
+          const userRecord = await createUser({
+            email: payload.email,
+            password: payload.password,
+            firstName: payload.firstName,
+            lastName: payload.lastName,
+            phone: payload.phone,
+          });
+
+          quoteRequester = {
+            type: 'registered',
+            userId: userRecord.uid,
+            guest: null,
+          };
+
+          userDocument = await getExistingUserDocument(userRecord.uid);
+          quoteHistoryActor = buildQuoteHistoryActor(userDocument);
+        } else {
+          quoteRequester = {
+            type: 'guest',
+            userId: null,
+            guest: {
+              name: `${payload.firstName} ${payload.lastName}`,
+              email: payload.email,
+              phone: null,
+            },
+          };
+
+          quoteHistoryActor = buildQuoteHistoryActor(null);
+        }
+      }
+
+      const email = userDocument?.email ?? payload.email;
+      assert(email, 'The email must be set');
+
       const bucket = getStorage().bucket(FIREBASE_STORAGE_BUCKET);
       //
       const fileId = uuidv4();
@@ -72,44 +132,9 @@ export const handler = createHandler<QuoteRequestPayload>(
         contentType: payload.contentType,
       });
 
-      let requester: QuoteRequester;
-      let historyActor: QuoteHistoryActor;
-      let userDocument: Nullable<UserDocument> = null;
-
-      if (cookies.session) {
-        const decodedIdToken = await getAuth().verifySessionCookie(cookies.session, true);
-
-        requester = {
-          type: 'registered',
-          userId: decodedIdToken.uid,
-          guest: null,
-        };
-
-        userDocument = await getExistingUserDocument(decodedIdToken.uid);
-
-        historyActor = buildQuoteHistoryActor(userDocument);
-      } else {
-        assert(payload.email, 'The email must be set');
-
-        requester = {
-          type: 'guest',
-          userId: null,
-          guest: {
-            name: `${payload.firstName} ${payload.lastName}`,
-            email: payload.email,
-            phone: null,
-          },
-        };
-
-        historyActor = buildQuoteHistoryActor(null);
-      }
-
-      const email = userDocument?.email ?? payload.email;
-      assert(email, 'The email must be set');
-
       await createQuote({
-        requester,
-        by: historyActor,
+        requester: quoteRequester,
+        by: quoteHistoryActor,
         job: {
           technology: 'FDM',
           material: 'PLA',
@@ -140,9 +165,9 @@ export const handler = createHandler<QuoteRequestPayload>(
         subject: 'Quote Request',
         parameters: {
           downloadModelUrl,
+          email,
           firstName: payload.firstName,
           lastName: payload.lastName,
-          email,
           description: payload.description,
           quantity: payload.quantity.toString(),
           estimated: payload.pricing.estimated.toString(),
@@ -165,6 +190,7 @@ export const handler = createHandler<QuoteRequestPayload>(
           error: {
             name: 'Error',
             code: e.code,
+            message: e.message,
           },
         },
       };

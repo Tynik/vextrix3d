@@ -34,6 +34,10 @@ export const TextInputStyled = styled(HoneyBox, ({ $width = '100%' }) => ({
       border-radius: 4px;
       color: ${colors.secondary.carbonInk};
 
+      &:disabled {
+        opacity: 0.5;
+      }
+
       &:-webkit-autofill {
         -webkit-background-clip: text;
       }

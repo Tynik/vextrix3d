@@ -1,7 +1,7 @@
 import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox } from '@react-hive/honey-layout';
-import { HoneyColorKey, HoneyCSSDimensionValue, resolveColor } from '@react-hive/honey-style';
-import { css, styled } from '@react-hive/honey-style';
+import type { HoneyColorKey, HoneyCSSDimensionValue } from '@react-hive/honey-style';
+import { css, styled, resolveColor } from '@react-hive/honey-style';
 
 interface LoadingProps extends Omit<HoneyBoxProps, 'color'> {
   size?: HoneyCSSDimensionValue;

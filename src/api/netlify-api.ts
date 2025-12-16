@@ -29,8 +29,9 @@ export interface User {
   role: AccountRole;
   email: string;
   isEmailVerified: boolean;
-  displayName: Nullable<string>;
-  phoneNumber: Nullable<string>;
+  firstName: Nullable<string>;
+  lastName: Nullable<string>;
+  phone: Nullable<string>;
 }
 
 export const signInRequest = async (payload: SignInRequestPayload) =>
@@ -64,6 +65,8 @@ interface QuoteRequestPayload {
   firstName: string;
   lastName: string;
   email: Nullable<string>;
+  phone: Nullable<string>;
+  password: Nullable<string>;
   description: string;
   quantity: number;
   pricing: {

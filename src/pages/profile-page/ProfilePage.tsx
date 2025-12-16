@@ -85,45 +85,52 @@ export const ProfilePage = () => {
   }, [user, emailVerificationCooldownMs]);
 
   const userProfileInfoRows = useMemo<InfoTableRow[]>(
-    () => [
-      {
-        label: 'Name',
-        value: user?.displayName,
-      },
-      {
-        label: 'Email',
-        value: user ? (
-          user.isEmailVerified ? (
-            <>
-              <Text variant="inherit">{user.email}</Text>
+    () =>
+      user
+        ? [
+            {
+              label: 'First Name',
+              value: user.firstName,
+            },
+            {
+              label: 'Last Name',
+              value: user.lastName,
+            },
+            {
+              label: 'Email',
+              value: user ? (
+                user.isEmailVerified ? (
+                  <>
+                    <Text variant="inherit">{user.email}</Text>
 
-              <Tooltip content="Verified">
-                <VerifiedIcon size="small" color="success.emeraldGreen" />
-              </Tooltip>
-            </>
-          ) : (
-            <HoneyFlex $gap={1}>
-              <Text variant="inherit">{user.email}</Text>
+                    <Tooltip content="Verified">
+                      <VerifiedIcon size="small" color="success.emeraldGreen" />
+                    </Tooltip>
+                  </>
+                ) : (
+                  <HoneyFlex $gap={1}>
+                    <Text variant="inherit">{user.email}</Text>
 
-              <Button
-                disabled={emailVerificationCooldownMs > 0}
-                loading={isSendingEmailVerification}
-                onClick={handleSendEmailVerification}
-                variant="secondary"
-              >
-                {emailVerificationCooldownMs > 0
-                  ? `Retry In ${Math.ceil(emailVerificationCooldownMs / 1000)}s`
-                  : 'Verify'}
-              </Button>
-            </HoneyFlex>
-          )
-        ) : null,
-      },
-      {
-        label: 'Phone',
-        value: user?.phoneNumber,
-      },
-    ],
+                    <Button
+                      disabled={emailVerificationCooldownMs > 0}
+                      loading={isSendingEmailVerification}
+                      onClick={handleSendEmailVerification}
+                      variant="secondary"
+                    >
+                      {emailVerificationCooldownMs > 0
+                        ? `Retry In ${Math.ceil(emailVerificationCooldownMs / 1000)}s`
+                        : 'Verify'}
+                    </Button>
+                  </HoneyFlex>
+                )
+              ) : null,
+            },
+            {
+              label: 'Phone',
+              value: user.phone,
+            },
+          ]
+        : [],
     [user, isSendingEmailVerification, emailVerificationCooldownMs, handleSendEmailVerification],
   );
 

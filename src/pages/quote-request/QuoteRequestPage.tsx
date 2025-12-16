@@ -56,6 +56,8 @@ export const QuoteRequestPage = () => {
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email ?? null,
+        phone: null,
+        password: data.password ?? null,
         description: data.description,
         quantity: data.quantity,
         pricing: {
