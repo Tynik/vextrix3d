@@ -28,7 +28,7 @@ export const ProfilePageTitle = () => {
 
   return (
     <>
-      <HoneyFlex row center $width="100%">
+      <HoneyFlex row centerY $width="100%">
         <Text as="h1" variant="inherit">
           Profile
         </Text>

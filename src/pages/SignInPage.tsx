@@ -98,7 +98,7 @@ export const SignInPage = () => {
               }}
             />
 
-            <HoneyFlex row center $gap={2} $width="100%">
+            <HoneyFlex row centerY $gap={2} $width="100%">
               {/*<Link*/}
               {/*  to={ROUTES.auth.signUp}*/}
               {/*  variant="body2"*/}

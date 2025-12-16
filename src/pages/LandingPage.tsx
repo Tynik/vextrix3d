@@ -111,8 +111,8 @@ export const LandingPage = () => {
           $position="absolute"
           $top="40%"
           $left="50%"
-          $transform="translate(-50%, -50%)"
           $gap={3}
+          $transform="translate(-50%, -50%)"
           $textAlign="center"
         >
           <Text variant="h1" $color="primary.aquaMintPulse" shadow="strong">

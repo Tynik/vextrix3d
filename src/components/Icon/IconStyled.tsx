@@ -18,10 +18,9 @@ const SIZES_MAP: Record<IconSize, HoneyCSSDimensionValue> = {
 
 export const IconStyled = styled('svg')<IconStyledProps>`
   ${({ width, height, color = 'neutral.black', size = 'medium', rotate, stroke, scale }) => css`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    @honey-center {
+      flex-shrink: 0;
+    }
 
     transition: all 0.3s linear;
 
