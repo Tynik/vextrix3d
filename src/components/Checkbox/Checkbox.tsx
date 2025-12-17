@@ -1,30 +1,43 @@
+import type { ReactNode } from 'react';
 import React, { useId } from 'react';
 
 import { CheckboxStyled } from './CheckboxStyled';
+import { ErrorIcon } from '~/icons';
 
 export interface CheckboxProps {
   checked: boolean | undefined;
   onChange: (checked: boolean) => void;
-  label?: React.ReactNode;
+  label?: ReactNode;
   disabled?: boolean;
+  error?: ReactNode;
 }
 
-export const Checkbox = ({ checked, onChange, label, disabled = false }: CheckboxProps) => {
+export const Checkbox = ({ checked, onChange, label, disabled = false, error }: CheckboxProps) => {
   const id = useId();
 
   return (
     <CheckboxStyled htmlFor={id} aria-disabled={disabled}>
-      <input
-        id={id}
-        type="checkbox"
-        checked={checked}
-        disabled={disabled}
-        onChange={e => onChange(e.target.checked)}
-      />
+      <div className="checkbox__control">
+        <input
+          id={id}
+          type="checkbox"
+          checked={checked}
+          disabled={disabled}
+          onChange={e => onChange(e.target.checked)}
+        />
 
-      <span className="checkbox" />
+        <span className="checkbox" />
 
-      {label && <span className="label">{label}</span>}
+        {label && <span className="label">{label}</span>}
+      </div>
+
+      {error && (
+        <p className="checkbox__error">
+          <ErrorIcon size="small" color="error.signalCoral" />
+
+          {error}
+        </p>
+      )}
     </CheckboxStyled>
   );
 };

@@ -73,8 +73,7 @@ export const SignUpPage = () => {
     <Page
       title="Sign Up"
       contentProps={{
-        $flexGrow: 1,
-        $justifyContent: 'center',
+        centerY: true,
       }}
     >
       <Form fields={SIGN_UP_FORM_FIELDS} onSubmit={signUp}>

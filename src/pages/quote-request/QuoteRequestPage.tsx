@@ -56,7 +56,7 @@ export const QuoteRequestPage = () => {
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email ?? null,
-        phone: data.phone ?? null,
+        phone: data.phone ? `+44${data.phone}` : null,
         password: data.password ?? null,
         description: data.description,
         quantity: data.quantity,
@@ -94,7 +94,7 @@ export const QuoteRequestPage = () => {
             firstName: user.firstName ?? '',
             lastName: user.lastName ?? '',
             email: user.email,
-            phone: user.phone ?? '',
+            phone: user.phone?.replace('+44', '') ?? '',
           }
         : {},
     [user],

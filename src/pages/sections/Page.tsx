@@ -43,8 +43,8 @@ export const Page = ({
 
         <Divider />
 
-        <HoneyFlex $marginTop={2} data-testid="page-content" {...contentProps}>
-          {loading ? <Progress $margin={[0, 'auto']} /> : children}
+        <HoneyFlex $marginTop={2} $flexGrow={1} data-testid="page-content" {...contentProps}>
+          {loading ? <Progress $margin="auto" /> : children}
         </HoneyFlex>
       </Container>
     </>

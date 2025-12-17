@@ -5,7 +5,7 @@ import { ToastContainer } from 'react-toastify';
 import type { AppContextValue } from '~/models';
 import { AppContext, useAuth } from '~/models';
 import { ProfessionalServiceMicrodata } from '~/seo';
-import { AppRoutes } from '~/AppRoutes';
+import { AppRoutes } from '~/routes';
 import { Footer, Header } from '~/pages';
 
 export const App = () => {

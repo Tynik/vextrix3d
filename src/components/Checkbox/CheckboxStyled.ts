@@ -2,9 +2,13 @@ import { css, pxToRem, styled } from '@react-hive/honey-style';
 
 export const CheckboxStyled = styled('label')`
   ${({ theme: { colors } }) => css`
-    display: inline-flex;
-    align-items: center;
-    gap: ${1};
+    @honey-stack (0.5);
+
+    .checkbox__control {
+      display: inline-flex;
+      align-items: center;
+      gap: ${1};
+    }
 
     cursor: pointer;
     user-select: none;
@@ -23,6 +27,7 @@ export const CheckboxStyled = styled('label')`
       display: inline-flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
 
       width: 18px;
       height: 18px;
@@ -32,6 +37,10 @@ export const CheckboxStyled = styled('label')`
 
       transition: all 0.15s ease;
       background: transparent;
+    }
+
+    &:has(.checkbox__error) .checkbox {
+      border-color: ${colors.error.signalCoral};
     }
 
     /* Checkmark */
@@ -64,6 +73,15 @@ export const CheckboxStyled = styled('label')`
     .label {
       font-size: ${pxToRem(14)};
       color: ${colors.secondary.slateAlloy};
+    }
+
+    .checkbox__error {
+      @honey-center (vertical) {
+        gap: ${0.5};
+
+        font-size: ${pxToRem(12)};
+        color: ${colors.error.crimsonRed};
+      }
     }
   `}
 `;

@@ -75,6 +75,7 @@ export const handler = createHandler<QuoteRequestPayload>(
         assert(payload.firstName, 'The first name must be set');
         assert(payload.lastName, 'The last name must be set');
         assert(payload.email, 'The email must be set');
+        assert(payload.phone, 'The phone must be set');
 
         if (payload.password) {
           const userRecord = await createUser({

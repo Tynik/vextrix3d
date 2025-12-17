@@ -14,6 +14,7 @@ export type QuoteRequestFormData = {
   repeatPassword: string;
   description: string;
   quantity: number;
+  policyDecision: boolean;
 };
 
 export type QuoteRequestFormContext = {
@@ -81,7 +82,7 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     mode: 'blur',
     min: 6,
     max: 255,
-    skip: ({ formValues }) => !formValues.isCreateAccount,
+    skip: ({ formValues, formContext }) => Boolean(formContext.user) || !formValues.isCreateAccount,
   },
   repeatPassword: {
     type: 'string',
@@ -89,7 +90,7 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     mode: 'blur',
     validator: (value, { formValues }) =>
       value === formValues.password || 'Passwords must be equal',
-    skip: ({ formValues }) => !formValues.isCreateAccount,
+    skip: ({ formValues, formContext }) => Boolean(formContext.user) || !formValues.isCreateAccount,
   },
   description: {
     type: 'string',
@@ -102,5 +103,13 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     min: 1,
     max: 250,
     defaultValue: 1,
+  },
+  policyDecision: {
+    type: 'checkbox',
+    required: true,
+    skip: ({ formValues, formContext }) => Boolean(formContext.user) || !formValues.isCreateAccount,
+    errorMessages: {
+      required: 'Please agree to the Terms of Service and related policies to continue',
+    },
   },
 };

@@ -17,8 +17,8 @@ const POLICY_ACCEPTANCE_FORM_FIELDS: HoneyFormFieldsConfig<PolicyAcceptanceFormD
     required: true,
     max: 10,
     validator: decision =>
-      decision?.toLowerCase() === 'agree' ||
-      'To proceed, please type "agree" to confirm your acceptance',
+      decision?.toLowerCase().trim() === 'agree' ||
+      'To proceed, please type "agree" to confirm your decision',
   },
 };
 
@@ -33,42 +33,40 @@ export const ModelSubmissionPolicyDialog = ({
   const { onClose } = props;
 
   return (
-    <>
-      <Dialog title="Model Submission Policy" {...props}>
-        <HoneyForm fields={POLICY_ACCEPTANCE_FORM_FIELDS} onSubmit={onContinue}>
-          {({ formFields, isFormErred, isFormSubmitting }) => (
-            <>
-              <CueShadows $margin={-2} $padding={2}>
-                <ModelSubmissionPolicyContent />
-              </CueShadows>
+    <Dialog title="Model Submission Policy" {...props}>
+      <HoneyForm fields={POLICY_ACCEPTANCE_FORM_FIELDS} onSubmit={onContinue}>
+        {({ formFields, isFormErred, isFormSubmitting }) => (
+          <>
+            <CueShadows $margin={-2} $padding={2}>
+              <ModelSubmissionPolicyContent />
+            </CueShadows>
 
-              <TextInput
-                label="Policy Acceptance"
-                placeholder={'If you agree, type "agree" here'}
-                disabled={isFormSubmitting}
-                error={formFields.decision.errors[0]?.message}
-                {...formFields.decision.props}
-              />
+            <TextInput
+              label="Policy Acceptance"
+              placeholder={'If you agree, type "agree" here'}
+              disabled={isFormSubmitting}
+              error={formFields.decision.errors[0]?.message}
+              {...formFields.decision.props}
+            />
 
-              <HoneyBox
-                $display="flex"
-                $gap={2}
-                $justifyContent="flex-end"
-                $paddingTop={2}
-                $marginTop={3}
-              >
-                <Button disabled={isFormErred} type="submit" variant="accent">
-                  Continue
-                </Button>
+            <HoneyBox
+              $display="flex"
+              $gap={2}
+              $justifyContent="flex-end"
+              $paddingTop={2}
+              $marginTop={3}
+            >
+              <Button disabled={isFormErred} type="submit" variant="accent">
+                Continue
+              </Button>
 
-                <Button variant="secondary" onClick={onClose}>
-                  Close
-                </Button>
-              </HoneyBox>
-            </>
-          )}
-        </HoneyForm>
-      </Dialog>
-    </>
+              <Button variant="secondary" onClick={onClose}>
+                Close
+              </Button>
+            </HoneyBox>
+          </>
+        )}
+      </HoneyForm>
+    </Dialog>
   );
 };

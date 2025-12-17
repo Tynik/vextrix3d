@@ -110,7 +110,13 @@ export const QuoteRequestFormContent = ({
         </HoneyGridColumn>
 
         <HoneyGridColumn $gap={2} $minWidth="300px">
-          <Alert variant="info">We support *.3mf, *.obj and *.stl files</Alert>
+          <Alert variant="info">
+            <span>
+              Supported file formats: <strong>*.3mf</strong>, <strong>*.obj</strong>, and{' '}
+              <strong>*.stl</strong>. If your model is in another format, please convert it to one
+              of these before uploading.
+            </span>
+          </Alert>
 
           <HoneyFlex $gap={0.5}>
             {formValues.file ? (
@@ -253,6 +259,16 @@ export const QuoteRequestFormContent = ({
                 <Text variant="body1">£{estimatedQuote?.total ?? 0} + (Shipping Fee)</Text>
               )}
             </HoneyBox>
+          )}
+
+          {!formContext.user && formValues.isCreateAccount && (
+            <Checkbox
+              label="I agree to the Terms of Service, Model Submission Policy, Material Safety Disclaimer, and Privacy Policy"
+              checked={formValues.policyDecision}
+              disabled={isQuoteCalculating || isFormSubmitting}
+              error={formFields.policyDecision.errors[0]?.message}
+              onChange={formFields.policyDecision.setValue}
+            />
           )}
 
           <Button

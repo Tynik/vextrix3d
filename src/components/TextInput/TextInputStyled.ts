@@ -1,6 +1,6 @@
 import { bpMedia, HoneyBoxProps } from '@react-hive/honey-layout';
 import { HoneyBox } from '@react-hive/honey-layout';
-import { css, pxToRem, resolveFont, styled } from '@react-hive/honey-style';
+import { css, pxToRem, styled } from '@react-hive/honey-style';
 
 export type TextInputStyledProps = HoneyBoxProps;
 
@@ -63,9 +63,9 @@ export const TextInputStyled = styled(HoneyBox, ({ $width = '100%' }) => ({
 
     .text-input__error {
       @honey-center (vertical) {
-        ${resolveFont('caption1')}
-
         gap: ${0.5};
+
+        font-size: ${pxToRem(12)};
         color: ${colors.error.crimsonRed};
       }
     }

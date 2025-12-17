@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
 import { HoneyFlex } from '@react-hive/honey-layout';
+import { delay } from '@react-hive/honey-utils';
 import { FirebaseError } from 'firebase/app';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { toast } from 'react-toastify';
@@ -56,6 +57,8 @@ export const SignInPage = () => {
 
       const redirectPath = queryParams.get('redirect') || ROUTE_PATHS.accountProfile;
 
+      await delay(1000);
+
       navigate(decodeURIComponent(redirectPath), {
         replace: true,
       });
@@ -74,8 +77,7 @@ export const SignInPage = () => {
     <Page
       title="Sign In"
       contentProps={{
-        $flexGrow: 1,
-        $justifyContent: 'center',
+        centerY: true,
       }}
     >
       <Form fields={SIGN_IN_FORM_FIELDS} onSubmit={signIn}>
