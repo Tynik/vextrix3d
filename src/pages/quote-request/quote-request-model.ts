@@ -9,6 +9,7 @@ export type QuoteRequestFormData = {
   lastName: string;
   email: string | undefined;
   isCreateAccount: boolean | undefined;
+  phone: string | undefined;
   password: string | undefined;
   repeatPassword: string;
   description: string;
@@ -53,6 +54,24 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     type: 'checkbox',
     defaultValue: true,
     skip: ({ formContext }) => Boolean(formContext.user),
+  },
+  phone: {
+    type: 'string',
+    required: true,
+    filter: value => value?.replace(/\D/g, '').slice(0, 11),
+    formatter: value => {
+      if (!value) {
+        return value;
+      }
+
+      // Expect 11 digits starting with 07
+      if (!/^07\d{9}$/.test(value)) {
+        return value;
+      }
+
+      return `${value.slice(0, 5)} ${value.slice(5)}`;
+    },
+    skip: ({ formValues }) => !formValues.isCreateAccount,
   },
   password: {
     type: 'string',

@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 import type { Nullable } from '~/types';
 import type { EstimatedQuote } from '~/utils';
 import { scrollIntoView } from '~/utils';
-import { HEADER_HEIGHT_PX } from '~/configs';
+import { HEADER_HEIGHT_PX, ROUTES } from '~/configs';
 import { handleApiError, quoteRequest } from '~/api';
 import { Form } from '~/components';
 import { useAppContext } from '~/models';
@@ -56,7 +56,7 @@ export const QuoteRequestPage = () => {
         firstName: data.firstName,
         lastName: data.lastName,
         email: data.email ?? null,
-        phone: null,
+        phone: data.phone ?? null,
         password: data.password ?? null,
         description: data.description,
         quantity: data.quantity,
@@ -77,7 +77,7 @@ export const QuoteRequestPage = () => {
         type: 'success',
       });
 
-      navigate('/', {
+      navigate(data.isCreateAccount ? ROUTES.auth.signIn : ROUTES.home, {
         replace: true,
       });
     } catch (e) {

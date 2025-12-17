@@ -176,14 +176,23 @@ export const QuoteRequestFormContent = ({
               <Checkbox
                 label="Create an account to manage my quotes"
                 checked={formValues.isCreateAccount}
+                disabled={isQuoteCalculating || isFormSubmitting}
                 onChange={formFields.isCreateAccount.setValue}
               />
 
               {formValues.isCreateAccount && (
                 <>
                   <TextInput
+                    label="* Phone"
+                    placeholder="07XXX XXXXXX"
+                    disabled={isQuoteCalculating || isFormSubmitting}
+                    error={formFields.phone.errors[0]?.message}
+                    {...formFields.phone.props}
+                  />
+
+                  <TextInput
                     label="* Password"
-                    disabled={isFormSubmitting}
+                    disabled={isQuoteCalculating || isFormSubmitting}
                     error={formFields.password.errors[0]?.message}
                     {...formFields.password.props}
                     inputProps={{
@@ -194,7 +203,7 @@ export const QuoteRequestFormContent = ({
 
                   <TextInput
                     label="* Repeat Password"
-                    disabled={isFormSubmitting}
+                    disabled={isQuoteCalculating || isFormSubmitting}
                     error={formFields.repeatPassword.errors[0]?.message}
                     {...formFields.repeatPassword.props}
                     inputProps={{

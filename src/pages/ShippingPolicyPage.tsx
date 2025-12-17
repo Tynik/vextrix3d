@@ -7,20 +7,26 @@ import { Page } from './sections';
 export const ShippingPolicyPage = () => {
   return (
     <Page title="Shipping & Delivery Policy">
-      <Text variant="subtitle1">Processing time</Text>
+      <Text variant="subtitle1">Order processing & dispatch</Text>
 
       <Text variant="body1">
-        Typical processing time is 1-3 business days for small/standard prints. Larger or complex
-        jobs may require up to 7 business days. Expedited options may be available at checkout.
+        All orders are custom-manufactured and require processing time before dispatch. Typical
+        processing times are 1–3 business days for small or standard prints. Larger, complex, or
+        multi-part orders may require up to 7 business days.
+      </Text>
+
+      <Text variant="body1">
+        Processing and delivery timeframes are estimates only and are not guaranteed. Expedited
+        production or shipping options may be available at checkout where applicable.
       </Text>
 
       <Text variant="subtitle1" $marginTop={2}>
-        Carriers & tracking
+        Shipping carriers & tracking
       </Text>
 
       <Text variant="body1">
-        We ship via reputable carriers (e.g., Royal Mail, DPD). Tracking numbers are provided when
-        dispatch is confirmed.
+        Orders are shipped via reputable carriers such as Royal Mail or DPD. Once your order is
+        dispatched, a tracking number will be provided by email where supported by the carrier.
       </Text>
 
       <Text variant="subtitle1" $marginTop={2}>
@@ -28,22 +34,30 @@ export const ShippingPolicyPage = () => {
       </Text>
 
       <Text variant="body1">
-        Shipping costs are calculated at checkout based on weight, destination, and chosen service
-        level. Local pickup may be offered where available.
+        Shipping costs are calculated at checkout based on package size, weight, destination, and
+        selected service level. Local collection may be offered where available and confirmed prior
+        to order completion.
       </Text>
 
       <Text variant="subtitle1" $marginTop={2}>
-        Lost or damaged parcels
+        Lost, delayed, or damaged parcels
       </Text>
 
       <Text variant="body1">
-        If your item arrives damaged, photograph the package and contents and contact us within 48
-        hours at{' '}
+        If your order arrives damaged, please retain the original packaging and contact us within 48
+        hours of delivery at{' '}
         <Text as="a" variant="body1" $fontWeight={700} href={`mailto:${CONTACT_EMAIL}`}>
           {CONTACT_EMAIL}
         </Text>
-        . We will assist with claims against the carrier. Liability passes to the buyer once the
-        parcel is marked delivered by the carrier, except where damage during transit is verified.
+        , including photographs of the parcel and contents. We will assist with initiating a claim
+        with the shipping carrier where applicable.
+      </Text>
+
+      <Text variant="body1">
+        Responsibility for the shipment transfers to the customer once the carrier marks the parcel
+        as delivered. Vextrix3D is not responsible for delays, loss, or delivery issues caused by
+        the carrier, incorrect delivery information provided by the customer, or failed delivery
+        attempts, except where damage during transit is verified.
       </Text>
 
       <Text
@@ -53,7 +67,7 @@ export const ShippingPolicyPage = () => {
         $textAlign="right"
         $marginTop={2}
       >
-        Last updated: 12/11/2025
+        Last updated: 17/12/2025
       </Text>
     </Page>
   );

@@ -8,66 +8,99 @@ export const TermsOfServicePage = () => {
   return (
     <Page title="Terms of Service">
       <Text variant="body1">
-        These Terms of Service govern your use of Vextrix3D's website and printing services. By
-        placing an order or using the site, you agree to these terms.
-      </Text>
-
-      <Text variant="subtitle1" $marginTop={2}>
-        1. Use of Service
+        These Terms of Service (“Terms”) govern your access to and use of the Vextrix3D website and
+        services. By creating an account, submitting files, or placing an order, you confirm that
+        you have read, understood, and agree to be bound by these Terms.
       </Text>
 
       <Text variant="body1">
-        Vextrix3D provides on-demand FDM 3D printing services. You may submit digital 3D files for
-        printing subject to these Terms and our Model Submission Policy. We reserve the right to
-        refuse service for any design that is unlawful, unsafe, or violates our policies.
+        These Terms apply together with our Model Submission Policy, Refund Policy, Shipping Policy,
+        and Material Safety Disclaimer. Where policies conflict, these Terms take precedence.
       </Text>
 
       <Text variant="subtitle1" $marginTop={2}>
-        2. Orders, Pricing & Payments
+        1. Use of the service
       </Text>
 
       <Text variant="body1">
-        Orders are accepted once payment is confirmed. Prices shown on the site include printing,
-        basic post-print checks, and packaging unless stated otherwise. Custom quotes may apply for
-        complex jobs. Taxes and shipping costs will be added at checkout.
+        Vextrix3D provides on-demand FDM 3D printing and related services. You may submit digital 3D
+        files for manufacturing subject to these Terms and our published policies.
+      </Text>
+
+      <Text variant="body1">
+        We reserve the right, at our sole discretion, to refuse, suspend, or cancel any order or
+        service request that is unlawful, unsafe, violates intellectual property rights, or breaches
+        our policies.
       </Text>
 
       <Text variant="subtitle1" $marginTop={2}>
-        3. Cancellations & Changes
+        2. Orders, pricing & payment
       </Text>
 
       <Text variant="body1">
-        Orders can be cancelled or changed only before the printing process begins. Once a print job
-        has started, cancellation is not guaranteed and may be subject to fees.
+        Orders are accepted only after full payment is received. All prices displayed are for custom
+        manufacturing services and may include printing, basic post-print inspection, and packaging
+        unless stated otherwise.
+      </Text>
+
+      <Text variant="body1">
+        Prices may change without notice. Custom quotes may apply for complex, large, or specialised
+        jobs. Applicable taxes, shipping fees, and additional services are calculated at checkout.
       </Text>
 
       <Text variant="subtitle1" $marginTop={2}>
-        4. Prohibited Items
+        3. Cancellations & changes
       </Text>
 
       <Text variant="body1">
-        We will not print weapons, illicit or counterfeit items, or material that promotes hate or
-        violence. We may refuse any design that is illegal or presents a safety risk.
+        Because items are custom-made, orders may only be cancelled or modified before the printing
+        or post-processing stage begins. Once production has started, cancellations, changes, or
+        refunds are not guaranteed and may incur fees.
       </Text>
 
       <Text variant="subtitle1" $marginTop={2}>
-        5. Liability & Warranty
+        4. Prohibited content & designs
       </Text>
 
       <Text variant="body1">
-        Vextrix3D performs reasonable quality checks and will reprint or refund in cases of clear
-        manufacturing defects. We are not liable for indirect, incidental, or consequential damages,
-        product misuse, or failure where the design itself is at fault. Printed parts are supplied
-        “as-is” unless a written specification or warranty is provided.
+        You may not submit designs intended to produce weapons, weapon components, illegal items,
+        counterfeit goods, or content that promotes violence, hate, or discrimination.
+      </Text>
+
+      <Text variant="body1">
+        Vextrix3D may refuse to print any design that presents a legal, ethical, or safety risk,
+        without obligation to provide a detailed explanation.
       </Text>
 
       <Text variant="subtitle1" $marginTop={2}>
-        6. Governing Law
+        5. Quality, liability & warranties
       </Text>
 
       <Text variant="body1">
-        These Terms are governed by the laws of the United Kingdom. Any disputes will be subject to
-        the competent courts of the UK.
+        Vextrix3D performs reasonable quality checks and will address verified manufacturing defects
+        in accordance with our Refund & Reprint Policy.
+      </Text>
+
+      <Text variant="body1">
+        Printed parts are supplied “as-is” and are not certified for medical, safety-critical,
+        load-bearing, or regulated applications unless explicitly agreed in writing. We make no
+        guarantees regarding fitness for a particular purpose.
+      </Text>
+
+      <Text variant="body1">
+        To the maximum extent permitted by law, Vextrix3D shall not be liable for indirect,
+        incidental, special, or consequential damages, including loss of profits, misuse of printed
+        parts, or failures arising from customer-provided designs.
+      </Text>
+
+      <Text variant="subtitle1" $marginTop={2}>
+        6. Governing law
+      </Text>
+
+      <Text variant="body1">
+        These Terms are governed by and construed in accordance with the laws of the United Kingdom.
+        Any disputes arising under these Terms shall be subject to the exclusive jurisdiction of the
+        competent courts of the United Kingdom.
       </Text>
 
       <Text
@@ -77,7 +110,7 @@ export const TermsOfServicePage = () => {
         $textAlign="right"
         $marginTop={2}
       >
-        Last updated: 12/11/2025
+        Last updated: 17/12/2025
       </Text>
 
       <Text variant="h6" $marginTop={3}>
@@ -85,10 +118,11 @@ export const TermsOfServicePage = () => {
       </Text>
 
       <Text variant="body1">
-        Questions about these Terms? Email:{' '}
+        If you have questions about these Terms, please contact us at{' '}
         <Text as="a" variant="body1" $fontWeight={700} href={`mailto:${CONTACT_EMAIL}`}>
           {CONTACT_EMAIL}
         </Text>
+        .
       </Text>
     </Page>
   );

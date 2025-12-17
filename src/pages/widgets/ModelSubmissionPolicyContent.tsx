@@ -7,43 +7,57 @@ import { Text } from '~/components';
 export const ModelSubmissionPolicyContent = (props: HoneyFlexProps) => {
   return (
     <HoneyFlex $gap={1} {...props}>
-      <Text variant="subtitle1">Accepted file types</Text>
+      <Text variant="subtitle1">Accepted file formats</Text>
 
       <Text variant="body1">
-        We accept standard 3D file formats such as <strong>.stl</strong>, <strong>.obj</strong>, and{' '}
-        <strong>.3mf</strong>. Please ensure files are manifold/sliced or indicate if you want us to
-        prepare them for printing.
+        We accept common 3D file formats including <strong>.stl</strong>, <strong>.obj</strong>, and{' '}
+        <strong>.3mf</strong>. Files should be watertight, manifold, and suitable for additive
+        manufacturing. If a file is not print-ready, you may request file preparation services,
+        which may incur additional fees.
       </Text>
 
-      <Text variant="subtitle1">Ownership & Licensing</Text>
+      <Text variant="subtitle1">Ownership & licensing</Text>
 
       <Text variant="body1">
-        By submitting a file you confirm that you own or are licensed to print the design. You
-        retain intellectual property rights to your model. You agree not to submit designs that
-        infringe third-party IP or violate laws.
+        By submitting a file, you represent and warrant that you own the intellectual property
+        rights to the design or have obtained all necessary licenses and permissions to manufacture
+        it. You retain ownership of your model at all times.
       </Text>
 
-      <Text variant="subtitle1">Safety & Compliance</Text>
-
       <Text variant="body1">
-        Do not submit designs intended to create weapons, regulated devices, or items that present a
-        high risk of harm. Vextrix3D reserves the right to refuse or cancel any order which we deem
-        unsafe or non-compliant.
+        You agree not to submit designs that infringe third-party intellectual property rights,
+        violate applicable laws, or breach any third-party agreements.
       </Text>
 
-      <Text variant="subtitle1">File retention</Text>
+      <Text variant="subtitle1">Safety, legality & compliance</Text>
 
       <Text variant="body1">
-        Uploaded files are retained for a limited period (typically 30 days) unless you request
-        otherwise. After the retention period, files may be deleted from our servers for privacy and
-        storage management.
+        Designs intended to create weapons, weapon components, regulated items, or objects that pose
+        a significant risk of injury or harm are strictly prohibited. Vextrix3D reserves the right,
+        at its sole discretion, to refuse, suspend, or cancel any order that is deemed unsafe,
+        unlawful, or non-compliant, without obligation to provide detailed justification.
       </Text>
 
-      <Text variant="subtitle1">Post-submission checks</Text>
+      <Text variant="subtitle1">File inspection & modification</Text>
 
       <Text variant="body1">
-        We may inspect and repair files where necessary to improve printability. Any major changes
-        will be reported for approval before printing; minor fixes may be applied at our discretion.
+        Submitted files may be reviewed for printability. Minor technical adjustments (such as mesh
+        repairs, wall-thickness corrections, or orientation changes) may be applied at our
+        discretion to improve print success.
+      </Text>
+
+      <Text variant="body1">
+        Any substantial modifications affecting geometry, function, or appearance will be
+        communicated to you for approval prior to printing.
+      </Text>
+
+      <Text variant="subtitle1">File storage & retention</Text>
+
+      <Text variant="body1">
+        Uploaded files are stored securely and retained for a limited period, typically up to 30
+        days after order completion, unless you request earlier deletion or extended retention.
+        Files may be permanently deleted after this period for privacy and storage management
+        purposes.
       </Text>
 
       <Text
@@ -53,7 +67,7 @@ export const ModelSubmissionPolicyContent = (props: HoneyFlexProps) => {
         $textAlign="right"
         $marginTop={2}
       >
-        Last updated: 12/11/2025
+        Last updated: 17/12/2025
       </Text>
     </HoneyFlex>
   );
