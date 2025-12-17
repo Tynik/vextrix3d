@@ -1,11 +1,11 @@
 import React from 'react';
+import { HoneyFlex } from '@react-hive/honey-layout';
 
 import { Text } from '~/components';
-import { Page } from './sections';
 
-export const MaterialSafetyDisclaimerPage = () => {
+export const MaterialSafetyDisclaimerContent = () => {
   return (
-    <Page title="Material Safety & Print Quality Disclaimer">
+    <HoneyFlex $gap={1}>
       <Text variant="subtitle1">Intended use</Text>
 
       <Text variant="body1">
@@ -70,6 +70,6 @@ export const MaterialSafetyDisclaimerPage = () => {
       >
         Last updated: 17/12/2025
       </Text>
-    </Page>
+    </HoneyFlex>
   );
 };

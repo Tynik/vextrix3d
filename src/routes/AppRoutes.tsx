@@ -12,6 +12,7 @@ import {
   IntellectualPropertyPolicyPage,
   QuoteRequestPage,
   SignInPage,
+  PrivacyPolicyPage,
 } from '~/pages';
 import { AccountRoutes } from './AccountRoutes';
 
@@ -24,7 +25,11 @@ export const AppRoutes = () => {
       <Route path={ROUTES.legal.refund} element={<RefundPolicyPage />} />
       <Route path={ROUTES.legal.modelSubmission} element={<ModelSubmissionPolicyPage />} />
       <Route path={ROUTES.legal.safety} element={<MaterialSafetyDisclaimerPage />} />
-      <Route path={ROUTES.legal.ip} element={<IntellectualPropertyPolicyPage />} />
+      <Route
+        path={ROUTES.legal.intellectualProperty}
+        element={<IntellectualPropertyPolicyPage />}
+      />
+      <Route path={ROUTES.legal.privacy} element={<PrivacyPolicyPage />} />
 
       <Route path={ROUTES.quote} element={<QuoteRequestPage />} />
       {/*<Route path={ROUTES.auth.signUp} element={<SignUpPage />} />*/}

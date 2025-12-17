@@ -43,24 +43,28 @@ export const Footer = (props: HoneyBoxProps) => (
               Terms of Service
             </Link>
 
+            <Link to={ROUTES.legal.privacy} variant="body1" $color="neutral.white">
+              Privacy Policy
+            </Link>
+
             <Link to={ROUTES.legal.modelSubmission} variant="body1" $color="neutral.white">
               Model Submission Policy
             </Link>
 
-            <Link to={ROUTES.legal.shipping} variant="body1" $color="neutral.white">
-              Shipping Policy
-            </Link>
-
-            <Link to={ROUTES.legal.refund} variant="body1" $color="neutral.white">
-              Refund Policy
+            <Link to={ROUTES.legal.intellectualProperty} variant="body1" $color="neutral.white">
+              Intellectual Property Policy
             </Link>
 
             <Link to={ROUTES.legal.safety} variant="body1" $color="neutral.white">
               Material Safety Disclaimer
             </Link>
 
-            <Link to={ROUTES.legal.ip} variant="body1" $color="neutral.white">
-              Intellectual Property Policy
+            <Link to={ROUTES.legal.shipping} variant="body1" $color="neutral.white">
+              Shipping & Delivery Policy
+            </Link>
+
+            <Link to={ROUTES.legal.refund} variant="body1" $color="neutral.white">
+              Refund & Reprint Policy
             </Link>
           </HoneyFlex>
         </HoneyGridColumn>

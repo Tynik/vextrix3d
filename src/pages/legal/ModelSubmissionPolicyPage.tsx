@@ -2,8 +2,7 @@ import React from 'react';
 
 import { CONTACT_EMAIL } from '~/configs';
 import { Text } from '~/components';
-import { Page } from './sections';
-import { ModelSubmissionPolicyContent } from './widgets';
+import { ModelSubmissionPolicyContent, Page } from '~/pages';
 
 export const ModelSubmissionPolicyPage = () => {
   return (

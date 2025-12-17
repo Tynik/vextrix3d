@@ -1,12 +1,11 @@
 import React from 'react';
+import { HoneyFlex } from '@react-hive/honey-layout';
 
-import { CONTACT_EMAIL } from '~/configs';
 import { Text } from '~/components';
-import { Page } from './sections';
 
-export const TermsOfServicePage = () => {
+export const TermsOfServiceContent = () => {
   return (
-    <Page title="Terms of Service">
+    <HoneyFlex $gap={1}>
       <Text variant="body1">
         These Terms of Service (“Terms”) govern your access to and use of the Vextrix3D website and
         services. By creating an account, submitting files, or placing an order, you confirm that
@@ -112,18 +111,6 @@ export const TermsOfServicePage = () => {
       >
         Last updated: 17/12/2025
       </Text>
-
-      <Text variant="h6" $marginTop={3}>
-        Contact
-      </Text>
-
-      <Text variant="body1">
-        If you have questions about these Terms, please contact us at{' '}
-        <Text as="a" variant="body1" $fontWeight={700} href={`mailto:${CONTACT_EMAIL}`}>
-          {CONTACT_EMAIL}
-        </Text>
-        .
-      </Text>
-    </Page>
+    </HoneyFlex>
   );
 };

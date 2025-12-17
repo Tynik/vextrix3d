@@ -5,7 +5,7 @@ import { HoneyBox } from '@react-hive/honey-layout';
 
 import type { DialogProps } from '~/components';
 import { Button, CueShadows, Dialog, TextInput } from '~/components';
-import { ModelSubmissionPolicyContent } from './ModelSubmissionPolicyContent';
+import { ModelSubmissionPolicyContent } from './legal/ModelSubmissionPolicyContent';
 
 type PolicyAcceptanceFormData = {
   decision: string;

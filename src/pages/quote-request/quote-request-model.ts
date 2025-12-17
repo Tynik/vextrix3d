@@ -56,6 +56,7 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
   phone: {
     type: 'string',
     required: true,
+    skip: ({ formContext }) => Boolean(formContext.user?.phone),
     filter: value => value?.replace(/\D/g, '').slice(0, 11),
     formatter: value => {
       if (!value) {
@@ -69,7 +70,6 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
 
       return `${value.slice(0, 5)} ${value.slice(5)}`;
     },
-    skip: ({ formContext }) => Boolean(formContext.user?.phone),
   },
   isCreateAccount: {
     type: 'checkbox',
@@ -107,9 +107,10 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
   policyDecision: {
     type: 'checkbox',
     required: true,
-    skip: ({ formValues, formContext }) => Boolean(formContext.user) || !formValues.isCreateAccount,
+    defaultValue: false,
     errorMessages: {
       required: 'Please agree to the Terms of Service and related policies to continue',
     },
+    skip: ({ formValues, formContext }) => Boolean(formContext.user) || !formValues.isCreateAccount,
   },
 };

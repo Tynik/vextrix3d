@@ -12,7 +12,7 @@ import { estimateQuote, ModelLoaderError } from '~/utils';
 import { useOnChange } from '~/models';
 import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
 import { Alert, Button, Checkbox, FilePicker, Progress, Text, TextInput } from '~/components';
-import { FileCard } from '~/pages';
+import { FileCard, PolicyLink } from '~/pages';
 import type { QuoteRequestFormContext, QuoteRequestFormData } from './quote-request-model';
 import { QuoteRequestFilaments } from './widgets';
 
@@ -263,7 +263,16 @@ export const QuoteRequestFormContent = ({
 
           {!formContext.user && formValues.isCreateAccount && (
             <Checkbox
-              label="I agree to the Terms of Service, Model Submission Policy, Material Safety Disclaimer, and Privacy Policy"
+              label={
+                <>
+                  I agree to the <PolicyLink policy="terms-of-service">Terms of Service</PolicyLink>
+                  , <PolicyLink policy="model-submission">Model Submission Policy</PolicyLink>,{' '}
+                  <PolicyLink policy="material-safety-disclaimer">
+                    Material Safety Disclaimer
+                  </PolicyLink>
+                  , and <PolicyLink policy="privacy-policy">Privacy Policy</PolicyLink>
+                </>
+              }
               checked={formValues.policyDecision}
               disabled={isQuoteCalculating || isFormSubmitting}
               error={formFields.policyDecision.errors[0]?.message}

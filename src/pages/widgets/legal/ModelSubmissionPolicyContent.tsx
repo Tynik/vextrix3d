@@ -1,12 +1,11 @@
 import React from 'react';
-import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
 import { Text } from '~/components';
 
-export const ModelSubmissionPolicyContent = (props: HoneyFlexProps) => {
+export const ModelSubmissionPolicyContent = () => {
   return (
-    <HoneyFlex $gap={1} {...props}>
+    <HoneyFlex $gap={1}>
       <Text variant="subtitle1">Accepted file formats</Text>
 
       <Text variant="body1">
@@ -16,7 +15,9 @@ export const ModelSubmissionPolicyContent = (props: HoneyFlexProps) => {
         which may incur additional fees.
       </Text>
 
-      <Text variant="subtitle1">Ownership & licensing</Text>
+      <Text variant="subtitle1" $marginTop={2}>
+        Ownership & licensing
+      </Text>
 
       <Text variant="body1">
         By submitting a file, you represent and warrant that you own the intellectual property
@@ -29,7 +30,9 @@ export const ModelSubmissionPolicyContent = (props: HoneyFlexProps) => {
         violate applicable laws, or breach any third-party agreements.
       </Text>
 
-      <Text variant="subtitle1">Safety, legality & compliance</Text>
+      <Text variant="subtitle1" $marginTop={2}>
+        Safety, legality & compliance
+      </Text>
 
       <Text variant="body1">
         Designs intended to create weapons, weapon components, regulated items, or objects that pose
@@ -38,7 +41,9 @@ export const ModelSubmissionPolicyContent = (props: HoneyFlexProps) => {
         unlawful, or non-compliant, without obligation to provide detailed justification.
       </Text>
 
-      <Text variant="subtitle1">File inspection & modification</Text>
+      <Text variant="subtitle1" $marginTop={2}>
+        File inspection & modification
+      </Text>
 
       <Text variant="body1">
         Submitted files may be reviewed for printability. Minor technical adjustments (such as mesh
@@ -51,7 +56,9 @@ export const ModelSubmissionPolicyContent = (props: HoneyFlexProps) => {
         communicated to you for approval prior to printing.
       </Text>
 
-      <Text variant="subtitle1">File storage & retention</Text>
+      <Text variant="subtitle1" $marginTop={2}>
+        File storage & retention
+      </Text>
 
       <Text variant="body1">
         Uploaded files are stored securely and retained for a limited period, typically up to 30

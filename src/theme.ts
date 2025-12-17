@@ -4,6 +4,8 @@ type PrimaryColors = 'primaryIndigo' | 'aquaMintPulse' | 'mintGlow';
 
 type SecondaryColors = 'cloudMist' | 'slateAlloy' | 'carbonInk';
 
+type AccentColors = 'azureCurrent' | 'deepAzure' | 'duskViolet';
+
 type NeutralColors = 'black' | 'white' | 'grayLight' | 'grayMedium' | 'grayDark';
 
 type SuccessColors = 'mintGreen' | 'emeraldGreen';
@@ -31,6 +33,7 @@ declare module '@react-hive/honey-style' {
   export interface HoneyColors {
     primary: Record<PrimaryColors, HoneyCSSColor>;
     secondary: Record<SecondaryColors, HoneyCSSColor>;
+    accent: Record<AccentColors, HoneyCSSColor>;
     neutral: Record<NeutralColors, HoneyCSSColor>;
     success: Record<SuccessColors, HoneyCSSColor>;
     warning: Record<WarningColors, HoneyCSSColor>;
@@ -77,7 +80,11 @@ export const theme: HoneyTheme = {
       slateAlloy: '#5C6470', // Secondary text / icon color
       carbonInk: '#1A1A1A', // Primary text color
     },
-    accent: {},
+    accent: {
+      azureCurrent: '#3F5BFF',
+      deepAzure: '#2F49D8',
+      duskViolet: '#6B5B95',
+    },
     neutral: {
       black: '#000000',
       white: '#FFFFFF',

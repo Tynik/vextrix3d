@@ -14,7 +14,8 @@ export const ROUTES = {
     refund: '/refund-policy',
     modelSubmission: '/model-submission-policy',
     safety: '/material-safety-disclaimer',
-    ip: '/intellectual-property-policy',
+    intellectualProperty: '/intellectual-property-policy',
+    privacy: '/privacy-policy',
   },
   quote: '/quote-request',
 } as const;
