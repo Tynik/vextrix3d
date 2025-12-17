@@ -149,21 +149,23 @@ export const QuoteRequestFormContent = ({
 
           <TextInput
             label="* First Name"
-            disabled={isQuoteCalculating || isFormSubmitting}
+            disabled={
+              Boolean(formContext.user?.firstName) || isQuoteCalculating || isFormSubmitting
+            }
             error={formFields.firstName.errors[0]?.message}
             {...formFields.firstName.props}
           />
 
           <TextInput
             label="* Last Name"
-            disabled={isQuoteCalculating || isFormSubmitting}
+            disabled={Boolean(formContext.user?.lastName) || isQuoteCalculating || isFormSubmitting}
             error={formFields.lastName.errors[0]?.message}
             {...formFields.lastName.props}
           />
 
           <TextInput
             label="* Email"
-            disabled={Boolean(formContext.user) || isQuoteCalculating || isFormSubmitting}
+            disabled={Boolean(formContext.user?.email) || isQuoteCalculating || isFormSubmitting}
             error={formFields.email.errors[0]?.message}
             {...formFields.email.props}
             inputProps={{

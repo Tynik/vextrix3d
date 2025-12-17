@@ -88,7 +88,14 @@ export const QuoteRequestPage = () => {
   const formContext = useMemo<QuoteRequestFormContext>(() => ({ user }), [user]);
 
   const formDefaults = useMemo<HoneyFormDefaultValues<QuoteRequestFormData>>(
-    () => ({ email: user?.email }),
+    () =>
+      user
+        ? {
+            firstName: user.firstName ?? '',
+            lastName: user.lastName ?? '',
+            email: user.email,
+          }
+        : {},
     [user],
   );
 

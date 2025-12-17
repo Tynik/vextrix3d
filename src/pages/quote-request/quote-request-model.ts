@@ -37,18 +37,20 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     type: 'string',
     required: true,
     max: 50,
+    skip: ({ formContext }) => Boolean(formContext.user?.firstName),
   },
   lastName: {
     type: 'string',
     required: true,
     max: 50,
+    skip: ({ formContext }) => Boolean(formContext.user?.lastName),
   },
   email: {
     type: 'email',
     required: true,
     mode: 'blur',
     max: 255,
-    skip: ({ formContext }) => Boolean(formContext.user),
+    skip: ({ formContext }) => Boolean(formContext.user?.email),
   },
   isCreateAccount: {
     type: 'checkbox',
