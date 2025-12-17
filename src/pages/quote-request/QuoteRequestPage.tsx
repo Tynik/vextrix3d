@@ -94,6 +94,7 @@ export const QuoteRequestPage = () => {
             firstName: user.firstName ?? '',
             lastName: user.lastName ?? '',
             email: user.email,
+            phone: user.phone ?? '',
           }
         : {},
     [user],

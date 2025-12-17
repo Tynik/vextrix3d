@@ -52,11 +52,6 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     max: 255,
     skip: ({ formContext }) => Boolean(formContext.user?.email),
   },
-  isCreateAccount: {
-    type: 'checkbox',
-    defaultValue: true,
-    skip: ({ formContext }) => Boolean(formContext.user),
-  },
   phone: {
     type: 'string',
     required: true,
@@ -73,7 +68,12 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
 
       return `${value.slice(0, 5)} ${value.slice(5)}`;
     },
-    skip: ({ formValues }) => !formValues.isCreateAccount,
+    skip: ({ formContext }) => Boolean(formContext.user?.phone),
+  },
+  isCreateAccount: {
+    type: 'checkbox',
+    defaultValue: true,
+    skip: ({ formContext }) => Boolean(formContext.user),
   },
   password: {
     type: 'string',

@@ -24,8 +24,8 @@ import {
 interface QuoteRequestPayload {
   fileName: string;
   contentType: string;
-  firstName: string;
-  lastName: string;
+  firstName: Nullable<string>;
+  lastName: Nullable<string>;
   email: Nullable<string>;
   phone: Nullable<string>;
   password: Nullable<string>;
@@ -72,6 +72,8 @@ export const handler = createHandler<QuoteRequestPayload>(
         userDocument = await getExistingUserDocument(decodedIdToken.uid);
         quoteHistoryActor = buildQuoteHistoryActor(userDocument);
       } else {
+        assert(payload.firstName, 'The first name must be set');
+        assert(payload.lastName, 'The last name must be set');
         assert(payload.email, 'The email must be set');
 
         if (payload.password) {
@@ -96,9 +98,10 @@ export const handler = createHandler<QuoteRequestPayload>(
             type: 'guest',
             userId: null,
             guest: {
-              name: `${payload.firstName} ${payload.lastName}`,
+              firstName: payload.firstName,
+              lastName: payload.lastName,
               email: payload.email,
-              phone: null,
+              phone: payload.phone,
             },
           };
 
@@ -108,6 +111,12 @@ export const handler = createHandler<QuoteRequestPayload>(
 
       const email = userDocument?.email ?? payload.email;
       assert(email, 'The email must be set');
+
+      const firstName = userDocument?.firstName ?? payload.firstName;
+      assert(firstName, 'The first name must be set');
+
+      const lastName = userDocument?.lastName ?? payload.lastName;
+      assert(lastName, 'The last name must be set');
 
       const bucket = getStorage().bucket(FIREBASE_STORAGE_BUCKET);
       //
@@ -164,10 +173,10 @@ export const handler = createHandler<QuoteRequestPayload>(
         to: COMPANY_EMAIL,
         subject: 'Quote Request',
         parameters: {
-          downloadModelUrl,
+          firstName,
+          lastName,
           email,
-          firstName: payload.firstName,
-          lastName: payload.lastName,
+          downloadModelUrl,
           description: payload.description,
           quantity: payload.quantity.toString(),
           estimated: payload.pricing.estimated.toString(),

@@ -173,6 +173,14 @@ export const QuoteRequestFormContent = ({
             }}
           />
 
+          <TextInput
+            label="* Phone"
+            placeholder="07XXX XXXXXX"
+            disabled={Boolean(formContext.user?.phone) || isQuoteCalculating || isFormSubmitting}
+            error={formFields.phone.errors[0]?.message}
+            {...formFields.phone.props}
+          />
+
           {!formContext.user && (
             <>
               <Checkbox
@@ -184,14 +192,6 @@ export const QuoteRequestFormContent = ({
 
               {formValues.isCreateAccount && (
                 <>
-                  <TextInput
-                    label="* Phone"
-                    placeholder="07XXX XXXXXX"
-                    disabled={isQuoteCalculating || isFormSubmitting}
-                    error={formFields.phone.errors[0]?.message}
-                    {...formFields.phone.props}
-                  />
-
                   <TextInput
                     label="* Password"
                     disabled={isQuoteCalculating || isFormSubmitting}

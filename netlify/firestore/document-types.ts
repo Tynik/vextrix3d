@@ -42,7 +42,8 @@ export interface QuoteJob {
 }
 
 interface QuoteGuest {
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   phone: Nullable<string>;
 }
