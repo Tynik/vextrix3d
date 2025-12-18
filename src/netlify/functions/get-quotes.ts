@@ -1,3 +1,5 @@
+import { Timestamp } from 'firebase-admin/firestore';
+
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
 import { getQuotesCollection } from '../firestore';
@@ -12,18 +14,16 @@ export const handler = createHandler(
   {
     allowedMethods: ['GET'],
   },
-  withSession<GetQuotesPayload>(async ({ payload }) => {
+  withSession<GetQuotesPayload>(async ({ decodedIdToken, payload }) => {
     const limit = Math.min(payload?.limit ?? 20, 50);
 
     let quotesQuery = getQuotesCollection()
+      .where('requester.userId', '==', decodedIdToken.uid)
       .orderBy('createdAt', 'desc')
       .limit(limit + 1);
 
     if (payload?.cursor) {
-      quotesQuery = quotesQuery.startAfter({
-        seconds: payload.cursor,
-        nanoseconds: 0,
-      });
+      quotesQuery = quotesQuery.startAfter(Timestamp.fromMillis(payload.cursor));
     }
 
     const quotesSnapshot = await quotesQuery.get();
