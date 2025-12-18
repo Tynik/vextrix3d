@@ -95,7 +95,7 @@ const createResponse = <Data>(
   },
 });
 
-export interface CreateHandlerFunctionOptions<Payload = unknown> {
+export interface HandlerFunctionOptions<Payload = unknown> {
   event: HandlerEvent;
   context: HandlerContext;
   headers: Record<string, string | undefined>;
@@ -108,7 +108,7 @@ interface CreateHandlerOptions {
 }
 
 export type CreateHandlerFunction<Payload, Response = unknown> = (
-  options: CreateHandlerFunctionOptions<Payload>,
+  options: HandlerFunctionOptions<Payload>,
 ) => Promise<
   Nullable<{
     data?: Response;

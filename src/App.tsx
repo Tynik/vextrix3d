@@ -20,16 +20,16 @@ export const App = () => {
     });
   }, [location.pathname]);
 
-  const { firebaseAuth, user, setUser, isUserLoading } = useAuth();
+  const { auth, user, setUser, isUserLoading } = useAuth();
 
   const contextValue = useMemo<AppContextValue>(
     () => ({
-      firebaseAuth,
+      auth,
       user,
       isUserLoading,
       setUser,
     }),
-    [firebaseAuth, user, isUserLoading],
+    [auth, user, isUserLoading],
   );
 
   return (

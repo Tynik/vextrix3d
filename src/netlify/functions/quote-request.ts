@@ -21,7 +21,7 @@ import {
   createQuote,
 } from '../firestore';
 
-interface QuoteRequestPayload {
+export interface QuoteRequestPayload {
   fileName: string;
   contentType: string;
   firstName: Nullable<string>;

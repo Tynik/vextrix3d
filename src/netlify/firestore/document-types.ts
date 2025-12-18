@@ -2,20 +2,9 @@ import { Timestamp } from 'firebase-admin/firestore';
 
 import type { Nullable } from '~/types';
 import type { StipeCustomerId } from './generic';
-
-export type UserId = string;
-
-export type QuoteId = string;
+import type { ActorRole, AccountRole, UserId, QuoteStatus, QuoteJobTechnology } from '../types';
 
 export type QuoteHistoryId = string;
-
-export type AccountRole = 'customer' | 'admin';
-
-export type ActorRole = AccountRole | 'system';
-
-export type QuoteStatus = 'new' | 'priced' | 'sent' | 'accepted' | 'rejected' | 'expired';
-
-type QuoteJobTechnology = 'FDM' | 'SLA';
 
 type QuoteRequesterType = 'registered' | 'guest';
 

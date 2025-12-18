@@ -5,7 +5,8 @@ import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
 import type { StipeCustomerId } from './generic';
-import type { AccountRole, UserDocument } from './document-types';
+import type { UserDocument } from './document-types';
+import type { AccountRole } from '../types';
 import { USERS_COLLECTION_NAME } from './collections';
 import { userConverter } from './data-convertors';
 
@@ -43,9 +44,9 @@ export const createUser = async ({
   phone = null,
   stripeCustomerId = null,
 }: CreateUserOptions) => {
-  const firebaseAuth = admin.auth();
+  const auth = admin.auth();
 
-  const userRecord = await firebaseAuth.createUser({
+  const userRecord = await auth.createUser({
     email,
     password,
     displayName: [firstName, lastName].filter(Boolean).join(' '),

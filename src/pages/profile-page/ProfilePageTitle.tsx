@@ -10,14 +10,14 @@ import { useAppContext } from '~/models';
 import { IconButton, Text } from '~/components';
 
 export const ProfilePageTitle = () => {
-  const { firebaseAuth } = useAppContext();
+  const { auth } = useAppContext();
 
   const signOutMutationRequest = useMutation({
     mutationFn: async () => {
       try {
         await signOutRequest();
       } finally {
-        await firebaseAuth.signOut();
+        await auth.signOut();
       }
     },
   });

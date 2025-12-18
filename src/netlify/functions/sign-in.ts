@@ -5,7 +5,7 @@ import { IS_LOCAL_ENV, ONE_DAY_SECS } from '../constants';
 import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
 
-interface SignInPayload {
+export interface SignInPayload {
   idToken: string;
 }
 
@@ -25,12 +25,12 @@ export const handler = createHandler<SignInPayload>(
     try {
       await initFirebaseAdminApp();
 
-      const firebaseAuth = admin.auth();
+      const auth = admin.auth();
 
-      await firebaseAuth.verifyIdToken(payload.idToken, true);
+      await auth.verifyIdToken(payload.idToken, true);
 
       const expiresInMs = ONE_DAY_SECS;
-      const sessionCookie = await firebaseAuth.createSessionCookie(payload.idToken, {
+      const sessionCookie = await auth.createSessionCookie(payload.idToken, {
         expiresIn: expiresInMs * 1000,
       });
 

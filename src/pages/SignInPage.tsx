@@ -39,15 +39,11 @@ export const SignInPage = () => {
   const navigate = useNavigate();
   const queryParams = useQueryParams();
 
-  const { firebaseAuth } = useAppContext();
+  const { auth } = useAppContext();
 
   const signIn: HoneyFormOnSubmit<SignInFormData> = async data => {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        firebaseAuth,
-        data.email,
-        data.password,
-      );
+      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
 
       const idToken = await userCredential.user.getIdToken(true);
 

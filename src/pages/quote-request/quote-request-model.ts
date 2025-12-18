@@ -1,7 +1,7 @@
 import type { HoneyFormFieldsConfig } from '@react-hive/honey-form';
 
 import type { Nullable } from '~/types';
-import type { User } from '~/api';
+import type { User } from '~/netlify/types';
 
 export type QuoteRequestFormData = {
   file: File | undefined;

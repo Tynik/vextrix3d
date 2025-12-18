@@ -3,8 +3,8 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 import type { Nullable } from '~/types';
+import type { User } from '~/netlify/types';
 import { FIREBASE_CONFIG } from '~/configs';
-import type { User } from '~/api';
 import { handleApiError, getUserProfileRequest } from '~/api';
 
 export const useAuth = () => {
@@ -13,10 +13,10 @@ export const useAuth = () => {
 
   const firebaseApp = useMemo(() => initializeApp(FIREBASE_CONFIG, 'Vextrix3D'), []);
 
-  const firebaseAuth = useMemo(() => getAuth(firebaseApp), [firebaseApp]);
+  const auth = useMemo(() => getAuth(firebaseApp), [firebaseApp]);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebaseAuth, fbUser => {
+    const unsubscribe = onAuthStateChanged(auth, fbUser => {
       if (fbUser) {
         fbUser.getIdToken().then(idToken => {
           getUserProfileRequest(idToken)
@@ -31,11 +31,11 @@ export const useAuth = () => {
     });
 
     return unsubscribe;
-  }, [firebaseAuth]);
+  }, [auth]);
 
   return {
     firebaseApp,
-    firebaseAuth,
+    auth,
     user,
     setUser,
     isUserLoading,

@@ -1,40 +1,24 @@
-import type { Nullable } from '~/types';
 import { FIREBASE_AUTH_ERRORS } from '~/configs';
+import type { PaginatedResponse, Quote, User } from '~/netlify/types';
+import type { SignupPayload } from '~/netlify/functions/sign-up';
+import type { SignInPayload } from '~/netlify/functions/sign-in';
+import type { QuoteRequestPayload } from '~/netlify/functions/quote-request';
+import type { GetQuotesPayload } from '~/netlify/functions/get-quotes';
 import type { NetlifyRequestError } from './netlify-request';
 import { netlifyRequest } from './netlify-request';
-
-interface SignUpRequestPayload {
-  email: string;
-  password: string;
-}
 
 export type SignUpRequestError = NetlifyRequestError<
   'FirebaseError',
   keyof typeof FIREBASE_AUTH_ERRORS
 >;
 
-export const signUpRequest = (payload: SignUpRequestPayload) =>
+export const signUpRequest = (payload: SignupPayload) =>
   netlifyRequest('sign-up', {
     method: 'POST',
     payload,
   });
 
-interface SignInRequestPayload {
-  idToken: string;
-}
-
-type AccountRole = 'customer' | 'admin';
-
-export interface User {
-  role: AccountRole;
-  email: string;
-  isEmailVerified: boolean;
-  firstName: Nullable<string>;
-  lastName: Nullable<string>;
-  phone: Nullable<string>;
-}
-
-export const signInRequest = async (payload: SignInRequestPayload) =>
+export const signInRequest = async (payload: SignInPayload) =>
   (
     await netlifyRequest('sign-in', {
       method: 'POST',
@@ -59,25 +43,6 @@ export const getUserProfileRequest = async (idToken: string) =>
     })
   ).data;
 
-interface QuoteRequestPayload {
-  fileName: string;
-  contentType: string;
-  firstName: string;
-  lastName: string;
-  email: Nullable<string>;
-  phone: Nullable<string>;
-  password: Nullable<string>;
-  description: string;
-  quantity: number;
-  model: {
-    solidVolumeMm3: number;
-  };
-  pricing: {
-    estimated: number;
-  };
-  hasAcceptedLegalDocuments: Nullable<boolean>;
-}
-
 export const quoteRequest = async (payload: QuoteRequestPayload) => {
   const { uploadModelUrl } = (
     await netlifyRequest<{ uploadModelUrl: string }>('quote-request', {
@@ -88,3 +53,11 @@ export const quoteRequest = async (payload: QuoteRequestPayload) => {
 
   return uploadModelUrl;
 };
+
+export const getQuotes = async (params: GetQuotesPayload) =>
+  (
+    await netlifyRequest<PaginatedResponse<Quote>>('get-quotes', {
+      method: 'GET',
+      params,
+    })
+  ).data;

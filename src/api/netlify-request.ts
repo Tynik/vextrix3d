@@ -6,6 +6,7 @@ export type NetlifyFunction =
   | 'sign-out'
   | 'get-user-profile'
   | 'quote-request'
+  | 'get-quotes'
   | 'upload-quote-request-model';
 
 export interface NetlifyRequestResponse<Response = unknown> {

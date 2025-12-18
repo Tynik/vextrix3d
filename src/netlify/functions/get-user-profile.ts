@@ -2,6 +2,7 @@ import { FirebaseAuthError, getAuth } from 'firebase-admin/auth';
 
 import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
+import type { User } from '../types';
 import { getExistingUserDocument } from '../firestore';
 
 export const handler = createHandler<{ idToken: string }>(
@@ -33,11 +34,11 @@ export const handler = createHandler<{ idToken: string }>(
         data: {
           role: userDocument.role,
           email: userDocument.email,
-          isEmailVerified: decodedIdToken.email_verified,
+          isEmailVerified: decodedIdToken.email_verified ?? false,
           firstName: userDocument.firstName,
           lastName: userDocument.lastName,
           phone: userDocument.phone,
-        },
+        } satisfies User,
       };
     } catch (e) {
       const error = e as FirebaseAuthError;

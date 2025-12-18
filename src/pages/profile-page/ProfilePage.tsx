@@ -8,7 +8,7 @@ import { useAppContext } from '~/models';
 import { VerifiedIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
 import { Button, InfoTable, Tooltip, Text } from '~/components';
-import { Page } from '~/pages';
+import { Page, QuotesList } from '~/pages';
 import { ProfilePageTitle } from './ProfilePageTitle';
 
 const VERIFY_EMAIL_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
@@ -37,7 +37,7 @@ const saveEmailVerificationCooldown = (cooldown: number) => {
 };
 
 export const ProfilePage = () => {
-  const { firebaseAuth, user } = useAppContext();
+  const { auth, user } = useAppContext();
 
   const [emailVerificationCooldownMs, setEmailVerificationCooldownMs] = useState(
     getEmailVerificationRemainingMs,
@@ -46,14 +46,14 @@ export const ProfilePage = () => {
   const [isSendingEmailVerification, setIsSendingEmailVerification] = useState(false);
 
   const handleSendEmailVerification = useCallback(async () => {
-    if (!firebaseAuth.currentUser) {
+    if (!auth.currentUser) {
       return;
     }
 
     setIsSendingEmailVerification(true);
 
     try {
-      await sendEmailVerification(firebaseAuth.currentUser);
+      await sendEmailVerification(auth.currentUser);
 
       saveEmailVerificationCooldown(VERIFY_EMAIL_COOLDOWN_MS);
       setEmailVerificationCooldownMs(VERIFY_EMAIL_COOLDOWN_MS);
@@ -70,7 +70,7 @@ export const ProfilePage = () => {
     } finally {
       setIsSendingEmailVerification(false);
     }
-  }, [firebaseAuth.currentUser]);
+  }, [auth.currentUser]);
 
   useEffect(() => {
     if (user?.isEmailVerified || emailVerificationCooldownMs <= 0) {
@@ -154,6 +154,8 @@ export const ProfilePage = () => {
         // Data
         data-testid="user-profile"
       />
+
+      <QuotesList />
     </Page>
   );
 };

@@ -7,7 +7,7 @@ import { createHandler } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
 import { createUser } from '../firestore';
 
-interface SignupPayload {
+export interface SignupPayload {
   email: string;
   password: string;
 }
@@ -29,7 +29,7 @@ export const handler = createHandler<SignupPayload>(
 
     await initFirebaseAdminApp();
 
-    const firebaseAuth = getAuth();
+    const auth = getAuth();
 
     let userRecord: Nullable<UserRecord> = null;
 
@@ -45,7 +45,7 @@ export const handler = createHandler<SignupPayload>(
       };
     } catch (e) {
       if (userRecord) {
-        await firebaseAuth.deleteUser(userRecord.uid);
+        await auth.deleteUser(userRecord.uid);
       }
 
       const error = e as FirebaseError;

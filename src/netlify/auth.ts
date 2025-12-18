@@ -1,13 +1,18 @@
-import { FirebaseError } from 'firebase-admin';
-import { FirebaseAuthError } from 'firebase-admin/auth';
+import { auth, FirebaseError } from 'firebase-admin';
+import type { Auth } from 'firebase-admin/auth';
+import { getAuth, FirebaseAuthError } from 'firebase-admin/auth';
 
-import type { CreateHandlerFunction, CreateHandlerFunctionOptions } from './utils';
+import type { CreateHandlerFunction, HandlerFunctionOptions } from './utils';
+import { initFirebaseAdminApp } from './firebase';
+
+interface SessionHandlerOptions<Payload = unknown> extends HandlerFunctionOptions<Payload> {
+  auth: Auth;
+  decodedIdToken: auth.DecodedIdToken;
+}
 
 export const withSession =
   <Payload = unknown>(
-    fn: (
-      options: CreateHandlerFunctionOptions<Payload>,
-    ) => ReturnType<CreateHandlerFunction<Payload>>,
+    fn: (options: SessionHandlerOptions<Payload>) => ReturnType<CreateHandlerFunction<Payload>>,
   ): CreateHandlerFunction<Payload> =>
   async options => {
     const { cookies } = options;
@@ -23,7 +28,16 @@ export const withSession =
     }
 
     try {
-      return fn(options);
+      await initFirebaseAdminApp();
+
+      const auth = getAuth();
+      const decodedIdToken = await auth.verifySessionCookie(cookies.session, true);
+
+      return fn({
+        auth,
+        decodedIdToken,
+        ...options,
+      });
     } catch (e) {
       const error = e as FirebaseError;
 
