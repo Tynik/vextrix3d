@@ -44,7 +44,7 @@ interface PolicyLinkProps {
   policy: LegalDocumentType;
 }
 
-export const PolicyLink = ({ children, policy }: PropsWithChildren<PolicyLinkProps>) => {
+export const LegalDocumentPreview = ({ children, policy }: PropsWithChildren<PolicyLinkProps>) => {
   const [isShowPolicy, setIsShowPolicy] = useState(false);
 
   const handleClosePolicy = useCallback(() => {
@@ -75,7 +75,7 @@ export const PolicyLink = ({ children, policy }: PropsWithChildren<PolicyLinkPro
           $gap={2}
           $justifyContent="flex-end"
           $paddingTop={2}
-          $marginTop={3}
+          $marginTop={2}
         >
           <Button variant="secondary" onClick={handleClosePolicy}>
             Close

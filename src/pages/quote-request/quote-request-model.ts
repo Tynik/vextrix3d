@@ -14,7 +14,7 @@ export type QuoteRequestFormData = {
   repeatPassword: string;
   description: string;
   quantity: number;
-  policyDecision: boolean;
+  legalDocumentsAcceptance: boolean;
 };
 
 export type QuoteRequestFormContext = {
@@ -104,13 +104,13 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     max: 250,
     defaultValue: 1,
   },
-  policyDecision: {
+  legalDocumentsAcceptance: {
     type: 'checkbox',
     required: true,
     defaultValue: false,
     errorMessages: {
       required: 'Please agree to the Terms of Service and related policies to continue',
     },
-    skip: ({ formValues, formContext }) => Boolean(formContext.user) || !formValues.isCreateAccount,
+    skip: ({ formContext }) => Boolean(formContext.user),
   },
 };

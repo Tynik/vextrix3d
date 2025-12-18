@@ -3,7 +3,7 @@ import { bpMedia, HoneyOverlay, honeyVisibilityTransitionEffect } from '@react-h
 
 export const DIALOG_TRANSITION_DURATION_MS = 250;
 
-const TOP_PERCENTAGE = '25%';
+const TOP_PERCENTAGE = '50%';
 
 export const DialogStyled = styled(HoneyOverlay)`
   ${({ theme: { colors } }) => css`
@@ -32,7 +32,7 @@ export const DialogStyled = styled(HoneyOverlay)`
       left: 50%;
       top: ${TOP_PERCENTAGE};
 
-      transform: translateX(-50%);
+      transform: translate(-50%, -50%);
       background-color: white;
 
       border-radius: 8px;

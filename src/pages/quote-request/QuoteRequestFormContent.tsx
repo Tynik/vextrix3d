@@ -12,7 +12,7 @@ import { estimateQuote, ModelLoaderError } from '~/utils';
 import { useOnChange } from '~/models';
 import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
 import { Alert, Button, Checkbox, FilePicker, Progress, Text, TextInput } from '~/components';
-import { FileCard, PolicyLink } from '~/pages';
+import { FileCard, LegalDocumentPreview } from '~/pages';
 import type { QuoteRequestFormContext, QuoteRequestFormData } from './quote-request-model';
 import { QuoteRequestFilaments } from './widgets';
 
@@ -261,22 +261,32 @@ export const QuoteRequestFormContent = ({
             </HoneyBox>
           )}
 
-          {!formContext.user && formValues.isCreateAccount && (
+          {!formContext.user && (
             <Checkbox
               label={
                 <>
-                  I agree to the <PolicyLink policy="terms-of-service">Terms of Service</PolicyLink>
-                  , <PolicyLink policy="model-submission">Model Submission Policy</PolicyLink>,{' '}
-                  <PolicyLink policy="material-safety-disclaimer">
+                  I agree to the{' '}
+                  <LegalDocumentPreview policy="terms-of-service">
+                    Terms of Service
+                  </LegalDocumentPreview>
+                  ,{' '}
+                  <LegalDocumentPreview policy="model-submission">
+                    Model Submission Policy
+                  </LegalDocumentPreview>
+                  ,{' '}
+                  <LegalDocumentPreview policy="material-safety-disclaimer">
                     Material Safety Disclaimer
-                  </PolicyLink>
-                  , and <PolicyLink policy="privacy-policy">Privacy Policy</PolicyLink>
+                  </LegalDocumentPreview>
+                  , and{' '}
+                  <LegalDocumentPreview policy="privacy-policy">
+                    Privacy Policy
+                  </LegalDocumentPreview>
                 </>
               }
-              checked={formValues.policyDecision}
+              checked={formValues.legalDocumentsAcceptance}
               disabled={isQuoteCalculating || isFormSubmitting}
-              error={formFields.policyDecision.errors[0]?.message}
-              onChange={formFields.policyDecision.setValue}
+              error={formFields.legalDocumentsAcceptance.errors[0]?.message}
+              onChange={formFields.legalDocumentsAcceptance.setValue}
             />
           )}
 

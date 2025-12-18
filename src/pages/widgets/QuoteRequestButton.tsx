@@ -1,23 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import type { ButtonProps } from '~/components';
 import { Button } from '~/components';
-import { ModelSubmissionPolicyDialog } from './ModelSubmissionPolicyDialog';
 
 export const QuoteRequestButton = (props: ButtonProps) => {
   const navigate = useNavigate();
 
-  const [isShowModelSubmissionPolicy, setIsShowModelSubmissionPolicy] = useState(false);
-
-  const handleCloseSubmissionPolicyAcceptance = useCallback(() => {
-    setIsShowModelSubmissionPolicy(false);
-  }, []);
-
   return (
     <>
       <Button
-        onClick={() => setIsShowModelSubmissionPolicy(true)}
+        onClick={() => navigate('/quote-request')}
         variant="accent"
         size="large"
         $height="50px"
@@ -25,12 +18,6 @@ export const QuoteRequestButton = (props: ButtonProps) => {
       >
         Get a Quote
       </Button>
-
-      <ModelSubmissionPolicyDialog
-        open={isShowModelSubmissionPolicy}
-        onContinue={async () => navigate('/quote-request')}
-        onClose={handleCloseSubmissionPolicyAcceptance}
-      />
     </>
   );
 };
