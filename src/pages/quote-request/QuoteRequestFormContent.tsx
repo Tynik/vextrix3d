@@ -267,22 +267,10 @@ export const QuoteRequestFormContent = ({
             <Checkbox
               label={
                 <>
-                  I agree to the{' '}
-                  <LegalDocumentPreview policy="terms-of-service">
-                    Terms of Service
-                  </LegalDocumentPreview>
-                  ,{' '}
-                  <LegalDocumentPreview policy="model-submission">
-                    Model Submission Policy
-                  </LegalDocumentPreview>
-                  ,{' '}
-                  <LegalDocumentPreview policy="material-safety-disclaimer">
-                    Material Safety Disclaimer
-                  </LegalDocumentPreview>
-                  , and{' '}
-                  <LegalDocumentPreview policy="privacy-policy">
-                    Privacy Policy
-                  </LegalDocumentPreview>
+                  I agree to the <LegalDocumentPreview documentType="termsOfService" />,{' '}
+                  <LegalDocumentPreview documentType="modelSubmission" />,{' '}
+                  <LegalDocumentPreview documentType="materialSafetyDisclaimer" />
+                  , and <LegalDocumentPreview documentType="privacyPolicy" />
                 </>
               }
               checked={formValues.hasAcceptedLegalDocuments}

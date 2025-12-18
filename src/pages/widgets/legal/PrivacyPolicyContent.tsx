@@ -1,6 +1,7 @@
 import React from 'react';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
+import { LEGAL_DOCUMENTS } from '~/configs';
 import { Text } from '~/components';
 
 export const PrivacyPolicyContent = () => {
@@ -88,7 +89,7 @@ export const PrivacyPolicyContent = () => {
         $textAlign="right"
         $marginTop={2}
       >
-        Last updated: 17/12/2025
+        Last updated: {LEGAL_DOCUMENTS.privacyPolicy.version}
       </Text>
     </HoneyFlex>
   );

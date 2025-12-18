@@ -4,7 +4,7 @@ import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 import { v4 as uuidv4 } from 'uuid';
 
-import type { Nullable } from '../types';
+import type { Nullable } from '~/types';
 import type {
   QuoteHistoryActor,
   QuoteDocument,

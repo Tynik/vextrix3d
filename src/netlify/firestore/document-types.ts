@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase-admin/firestore';
 
-import type { Nullable } from '../types';
+import type { Nullable } from '~/types';
 import type { StipeCustomerId } from './generic';
 
 export type UserId = string;

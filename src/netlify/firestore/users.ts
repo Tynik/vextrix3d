@@ -3,7 +3,7 @@ import { Timestamp } from 'firebase-admin/firestore';
 import type { DocumentReference } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
-import type { Nullable } from '../types';
+import type { Nullable } from '~/types';
 import type { StipeCustomerId } from './generic';
 import type { AccountRole, UserDocument } from './document-types';
 import { USERS_COLLECTION_NAME } from './collections';

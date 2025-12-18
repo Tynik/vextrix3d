@@ -2,6 +2,7 @@ import React from 'react';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
 import { Text } from '~/components';
+import { LEGAL_DOCUMENTS } from '~/configs';
 
 export const MaterialSafetyDisclaimerContent = () => {
   return (
@@ -68,7 +69,7 @@ export const MaterialSafetyDisclaimerContent = () => {
         $textAlign="right"
         $marginTop={2}
       >
-        Last updated: 17/12/2025
+        Last updated: {LEGAL_DOCUMENTS.materialSafetyDisclaimer.version}
       </Text>
     </HoneyFlex>
   );

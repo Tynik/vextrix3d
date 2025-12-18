@@ -3,6 +3,7 @@ import { getAuth } from 'firebase-admin/auth';
 import { getStorage } from 'firebase-admin/storage';
 import { v4 as uuidv4 } from 'uuid';
 
+import type { Nullable } from '~/types';
 import {
   COMPANY_EMAIL,
   FIREBASE_STORAGE_BUCKET,
@@ -12,7 +13,6 @@ import {
 } from '../constants';
 import { createHandler, sendEmail } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
-import type { Nullable } from '../types';
 import type { QuoteHistoryActor, QuoteRequester, UserDocument } from '../firestore';
 import {
   createUser,

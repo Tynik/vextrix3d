@@ -1,7 +1,8 @@
 import type { Handler, HandlerResponse, HandlerEvent, HandlerContext } from '@netlify/functions';
 import { assert } from '@react-hive/honey-utils';
 
-import type { Email, EmailTemplateName, Nullable } from './types';
+import type { Nullable } from '~/types';
+import type { Email, EmailTemplateName } from './types';
 import { NETLIFY_EMAILS_SECRET, URL, SITE_DOMAIN } from './constants';
 
 type HttpRequestMethod = 'POST' | 'GET' | 'OPTIONS' | 'PUT' | 'PATCH' | 'DELETE';
