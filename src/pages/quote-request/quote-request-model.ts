@@ -14,7 +14,7 @@ export type QuoteRequestFormData = {
   repeatPassword: string;
   description: string;
   quantity: number;
-  legalDocumentsAcceptance: boolean;
+  hasAcceptedLegalDocuments: boolean | undefined;
 };
 
 export type QuoteRequestFormContext = {
@@ -104,7 +104,7 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     max: 250,
     defaultValue: 1,
   },
-  legalDocumentsAcceptance: {
+  hasAcceptedLegalDocuments: {
     type: 'checkbox',
     required: true,
     defaultValue: false,

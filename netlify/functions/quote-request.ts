@@ -31,9 +31,13 @@ interface QuoteRequestPayload {
   password: Nullable<string>;
   description: string;
   quantity: number;
+  model: {
+    solidVolumeMm3: number;
+  };
   pricing: {
     estimated: number;
   };
+  hasAcceptedLegalDocuments: Nullable<boolean>;
 }
 
 export const handler = createHandler<QuoteRequestPayload>(
@@ -76,6 +80,7 @@ export const handler = createHandler<QuoteRequestPayload>(
         assert(payload.lastName, 'The last name must be set');
         assert(payload.email, 'The email must be set');
         assert(payload.phone, 'The phone must be set');
+        assert(payload.hasAcceptedLegalDocuments, 'The legal documents must be accepted');
 
         if (payload.password) {
           const userRecord = await createUser({
@@ -155,7 +160,7 @@ export const handler = createHandler<QuoteRequestPayload>(
         model: {
           fileName: payload.fileName,
           fileUrl: downloadModelUrl,
-          volumeCm3: 0,
+          solidVolumeMm3: payload.model.solidVolumeMm3,
         },
         pricing: {
           type: 'estimated',

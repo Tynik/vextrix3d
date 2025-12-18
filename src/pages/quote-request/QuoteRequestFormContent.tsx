@@ -6,9 +6,9 @@ import { toast } from 'react-toastify';
 import debounce from 'lodash.debounce';
 
 import type { Nullable } from '~/types';
-import type { EstimatedQuote } from '~/utils';
+import type { PrintCostEstimate } from '~/utils';
 import { IS_LOCAL_ENV } from '~/configs';
-import { estimateQuote, ModelLoaderError } from '~/utils';
+import { estimatePrintCost, ModelLoaderError } from '~/utils';
 import { useOnChange } from '~/models';
 import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
 import { Alert, Button, Checkbox, FilePicker, Progress, Text, TextInput } from '~/components';
@@ -17,32 +17,32 @@ import type { QuoteRequestFormContext, QuoteRequestFormData } from './quote-requ
 import { QuoteRequestFilaments } from './widgets';
 
 interface QuoteRequestFormContentProps {
-  estimatedQuote: Nullable<EstimatedQuote>;
-  onEstimatedQuoteChange: (estimatedQuote: Nullable<EstimatedQuote>) => void;
+  printCostEstimate: Nullable<PrintCostEstimate>;
+  onEstimate: (printCostEstimate: Nullable<PrintCostEstimate>) => void;
 }
 
 export const QuoteRequestFormContent = ({
-  estimatedQuote,
-  onEstimatedQuoteChange,
+  printCostEstimate,
+  onEstimate,
 }: QuoteRequestFormContentProps) => {
   const { formFields, formValues, isFormSubmitting, formContext } = useHoneyFormContext<
     QuoteRequestFormData,
     QuoteRequestFormContext
   >();
 
-  const [isQuoteCalculating, setIsQuoteCalculating] = useState(false);
+  const [isPrintCostEstimating, setIsPrintCostEstimating] = useState(false);
 
   const handleRemoveFile = () => {
-    onEstimatedQuoteChange(null);
+    onEstimate(null);
 
     formFields.file.setValue(undefined);
   };
 
   const calculateQuote = async (file: File, quantity: number) => {
     try {
-      setIsQuoteCalculating(true);
+      setIsPrintCostEstimating(true);
 
-      const quote = await estimateQuote(
+      const estimate = await estimatePrintCost(
         file,
         {
           infill: 0.15,
@@ -65,9 +65,9 @@ export const QuoteRequestFormContent = ({
         },
       );
 
-      console.info(quote);
+      console.info(estimate);
 
-      onEstimatedQuoteChange(quote);
+      onEstimate(estimate);
     } catch (e) {
       console.error(e);
 
@@ -75,7 +75,7 @@ export const QuoteRequestFormContent = ({
         type: 'error',
       });
     } finally {
-      setIsQuoteCalculating(false);
+      setIsPrintCostEstimating(false);
     }
   };
 
@@ -122,7 +122,7 @@ export const QuoteRequestFormContent = ({
             {formValues.file ? (
               <FileCard
                 file={formValues.file}
-                removeDisabled={isQuoteCalculating || isFormSubmitting}
+                removeDisabled={isPrintCostEstimating || isFormSubmitting}
                 onRemove={handleRemoveFile}
               />
             ) : (
@@ -156,7 +156,7 @@ export const QuoteRequestFormContent = ({
           <TextInput
             label="* First Name"
             disabled={
-              Boolean(formContext.user?.firstName) || isQuoteCalculating || isFormSubmitting
+              Boolean(formContext.user?.firstName) || isPrintCostEstimating || isFormSubmitting
             }
             error={formFields.firstName.errors[0]?.message}
             {...formFields.firstName.props}
@@ -164,14 +164,16 @@ export const QuoteRequestFormContent = ({
 
           <TextInput
             label="* Last Name"
-            disabled={Boolean(formContext.user?.lastName) || isQuoteCalculating || isFormSubmitting}
+            disabled={
+              Boolean(formContext.user?.lastName) || isPrintCostEstimating || isFormSubmitting
+            }
             error={formFields.lastName.errors[0]?.message}
             {...formFields.lastName.props}
           />
 
           <TextInput
             label="* Email"
-            disabled={Boolean(formContext.user?.email) || isQuoteCalculating || isFormSubmitting}
+            disabled={Boolean(formContext.user?.email) || isPrintCostEstimating || isFormSubmitting}
             error={formFields.email.errors[0]?.message}
             {...formFields.email.props}
             inputProps={{
@@ -182,7 +184,7 @@ export const QuoteRequestFormContent = ({
           <TextInput
             label="* Phone"
             placeholder="07XXX XXXXXX"
-            disabled={Boolean(formContext.user?.phone) || isQuoteCalculating || isFormSubmitting}
+            disabled={Boolean(formContext.user?.phone) || isPrintCostEstimating || isFormSubmitting}
             error={formFields.phone.errors[0]?.message}
             {...formFields.phone.props}
           />
@@ -192,7 +194,7 @@ export const QuoteRequestFormContent = ({
               <Checkbox
                 label="Create an account to manage my quotes"
                 checked={formValues.isCreateAccount}
-                disabled={isQuoteCalculating || isFormSubmitting}
+                disabled={isPrintCostEstimating || isFormSubmitting}
                 onChange={formFields.isCreateAccount.setValue}
               />
 
@@ -200,7 +202,7 @@ export const QuoteRequestFormContent = ({
                 <>
                   <TextInput
                     label="* Password"
-                    disabled={isQuoteCalculating || isFormSubmitting}
+                    disabled={isPrintCostEstimating || isFormSubmitting}
                     error={formFields.password.errors[0]?.message}
                     {...formFields.password.props}
                     inputProps={{
@@ -211,7 +213,7 @@ export const QuoteRequestFormContent = ({
 
                   <TextInput
                     label="* Repeat Password"
-                    disabled={isQuoteCalculating || isFormSubmitting}
+                    disabled={isPrintCostEstimating || isFormSubmitting}
                     error={formFields.repeatPassword.errors[0]?.message}
                     {...formFields.repeatPassword.props}
                     inputProps={{
@@ -226,7 +228,7 @@ export const QuoteRequestFormContent = ({
 
           <TextInput
             label="* Description"
-            disabled={isQuoteCalculating || isFormSubmitting}
+            disabled={isPrintCostEstimating || isFormSubmitting}
             error={formFields.description.errors[0]?.message}
             multiline={true}
             {...formFields.description.props}
@@ -234,7 +236,7 @@ export const QuoteRequestFormContent = ({
 
           <TextInput
             label="* Quantity"
-            disabled={isQuoteCalculating || isFormSubmitting}
+            disabled={isPrintCostEstimating || isFormSubmitting}
             error={formFields.quantity.errors[0]?.message}
             $width={{ xs: '100%', sm: '180px' }}
             {...formFields.quantity.props}
@@ -251,12 +253,12 @@ export const QuoteRequestFormContent = ({
               $border="1px solid"
               $borderColor="neutral.grayLight"
             >
-              <Text variant="body1">Estimated Printing Quote:</Text>
+              <Text variant="body1">Estimated Printing Cost:</Text>
 
-              {isQuoteCalculating ? (
+              {isPrintCostEstimating ? (
                 <Progress size="16px" lineWidth="2px" />
               ) : (
-                <Text variant="body1">£{estimatedQuote?.total ?? 0} + (Shipping Fee)</Text>
+                <Text variant="body1">£{printCostEstimate?.total ?? 0} + (Shipping Fee)</Text>
               )}
             </HoneyBox>
           )}
@@ -283,16 +285,16 @@ export const QuoteRequestFormContent = ({
                   </LegalDocumentPreview>
                 </>
               }
-              checked={formValues.legalDocumentsAcceptance}
-              disabled={isQuoteCalculating || isFormSubmitting}
-              error={formFields.legalDocumentsAcceptance.errors[0]?.message}
-              onChange={formFields.legalDocumentsAcceptance.setValue}
+              checked={formValues.hasAcceptedLegalDocuments}
+              disabled={isPrintCostEstimating || isFormSubmitting}
+              error={formFields.hasAcceptedLegalDocuments.errors[0]?.message}
+              onChange={formFields.hasAcceptedLegalDocuments.setValue}
             />
           )}
 
           <Button
             loading={isFormSubmitting}
-            disabled={isQuoteCalculating}
+            disabled={isPrintCostEstimating}
             type="submit"
             variant="primary"
             icon={<SendIcon color="neutral.white" />}

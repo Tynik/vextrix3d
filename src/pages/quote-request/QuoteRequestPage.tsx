@@ -9,7 +9,7 @@ import { assert } from '@react-hive/honey-utils';
 import { toast } from 'react-toastify';
 
 import type { Nullable } from '~/types';
-import type { EstimatedQuote } from '~/utils';
+import type { PrintCostEstimate } from '~/utils';
 import { scrollIntoView } from '~/utils';
 import { HEADER_HEIGHT_PX, ROUTES } from '~/configs';
 import { handleApiError, quoteRequest } from '~/api';
@@ -24,7 +24,7 @@ export const QuoteRequestPage = () => {
   const navigate = useNavigate();
   const { user, isUserLoading } = useAppContext();
 
-  const [estimatedQuote, setEstimatedQuote] = useState<Nullable<EstimatedQuote>>(null);
+  const [printCostEstimate, setPrintCostEstimate] = useState<Nullable<PrintCostEstimate>>(null);
 
   const handleOnAfterValidateForm: HoneyFormOnAfterValidate<
     QuoteRequestFormData,
@@ -47,6 +47,7 @@ export const QuoteRequestPage = () => {
     QuoteRequestFormData,
     QuoteRequestFormContext
   > = async data => {
+    assert(printCostEstimate, 'Print cost estimate is required');
     assert(data.file, 'File is required');
 
     try {
@@ -60,9 +61,13 @@ export const QuoteRequestPage = () => {
         password: data.password ?? null,
         description: data.description,
         quantity: data.quantity,
-        pricing: {
-          estimated: estimatedQuote?.total ?? 0,
+        model: {
+          solidVolumeMm3: printCostEstimate.solidVolumeMm3,
         },
+        pricing: {
+          estimated: printCostEstimate.total,
+        },
+        hasAcceptedLegalDocuments: data.hasAcceptedLegalDocuments ?? null,
       });
 
       await fetch(uploadModelUrl, {
@@ -110,8 +115,8 @@ export const QuoteRequestPage = () => {
         onSubmit={submitQuoteRequest}
       >
         <QuoteRequestFormContent
-          estimatedQuote={estimatedQuote}
-          onEstimatedQuoteChange={setEstimatedQuote}
+          printCostEstimate={printCostEstimate}
+          onEstimate={setPrintCostEstimate}
         />
       </Form>
     </Page>

@@ -69,9 +69,13 @@ interface QuoteRequestPayload {
   password: Nullable<string>;
   description: string;
   quantity: number;
+  model: {
+    solidVolumeMm3: number;
+  };
   pricing: {
     estimated: number;
   };
+  hasAcceptedLegalDocuments: Nullable<boolean>;
 }
 
 export const quoteRequest = async (payload: QuoteRequestPayload) => {

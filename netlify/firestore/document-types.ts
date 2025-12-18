@@ -57,7 +57,7 @@ export interface QuoteRequester {
 export interface QuoteModel {
   fileName: string;
   fileUrl: string;
-  volumeCm3: number;
+  solidVolumeMm3: number;
 }
 
 interface QuotePricingBreakdown {

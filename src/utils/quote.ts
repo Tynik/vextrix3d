@@ -25,7 +25,7 @@ export interface PriceSettings {
   quantity: number;
 }
 
-export interface EstimatedQuote {
+export interface PrintCostEstimate {
   solidVolumeMm3: number;
   surfaceAreaMm2: number;
   printedVolumeMm3: number;
@@ -61,12 +61,12 @@ const DEFAULT_PRICE_SETTINGS: PriceSettings = {
   quantity: 1,
 };
 
-const computeQuoteInternal = (
+const estimatePrintCostInternal = (
   solidVolumeMm3: number,
   surfaceAreaMm2: number,
   slicerSettings: Partial<SlicerSettings> = {},
   priceSettings: Partial<PriceSettings> = {},
-): EstimatedQuote => {
+): PrintCostEstimate => {
   const finalSlicerSettings: SlicerSettings = {
     ...DEFAULT_SLICER_SETTINGS,
     ...slicerSettings,
@@ -122,15 +122,15 @@ const computeQuoteInternal = (
   };
 };
 
-export const estimateQuote = async (
+export const estimatePrintCost = async (
   file: File,
   slicerSettings: Partial<SlicerSettings> = {},
   priceSettings: Partial<PriceSettings> = {},
-): Promise<EstimatedQuote> => {
+): Promise<PrintCostEstimate> => {
   const geometry = await load3dModel(file);
 
   const solidVolumeMm3 = calculateSolidVolumeMm3(geometry);
   const surfaceAreaMm2 = calculateSurfaceAreaMm2(geometry);
 
-  return computeQuoteInternal(solidVolumeMm3, surfaceAreaMm2, slicerSettings, priceSettings);
+  return estimatePrintCostInternal(solidVolumeMm3, surfaceAreaMm2, slicerSettings, priceSettings);
 };
