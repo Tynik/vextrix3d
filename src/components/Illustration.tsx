@@ -6,23 +6,39 @@ import { Text } from '~/components';
 
 export interface IllustrationProps extends HoneyFlexProps {
   title?: string;
-  image: string;
+  subtitle?: string;
+  illustration: string;
   widthPx: number;
   heightPx: number;
 }
 
-export const Illustration = ({ title, image, widthPx, heightPx, ...props }: IllustrationProps) => {
+export const Illustration = ({
+  title,
+  subtitle,
+  illustration,
+  widthPx,
+  heightPx,
+  ...props
+}: IllustrationProps) => {
   return (
     <HoneyFlex centerX $gap={2} {...props}>
       <HoneyBox
         $flexShrink={0}
         $width={`${widthPx}px`}
         $height={`${heightPx}px`}
-        $backgroundImage={`url('/assets/images/${image}')`}
+        $backgroundImage={`url('/assets/illustrations/${illustration}')`}
         $backgroundSize="cover"
       />
 
-      {title && <Text variant="subtitle1">{title}</Text>}
+      <HoneyFlex $gap={1} centerX>
+        {title && <Text variant="subtitle1">{title}</Text>}
+
+        {subtitle && (
+          <Text variant="subtitle2" $color="secondary.slateAlloy">
+            {subtitle}
+          </Text>
+        )}
+      </HoneyFlex>
     </HoneyFlex>
   );
 };

@@ -5,7 +5,7 @@ import { sendEmailVerification } from '@firebase/auth';
 import { toast } from 'react-toastify';
 
 import { useAppContext } from '~/models';
-import { VerifiedIcon } from '~/icons';
+import { DescriptionIcon, VerifiedIcon } from '~/icons';
 import { ROUTE_PATHS } from '~/configs';
 import type { InfoTableRow } from '~/components';
 import { Button, InfoTable, Tooltip, Text, Link } from '~/components';
@@ -128,7 +128,7 @@ export const ProfilePage = () => {
             },
             {
               label: 'Phone',
-              value: user.phone,
+              value: user.phone?.replace('+44', ''),
             },
           ]
         : [],
@@ -162,7 +162,9 @@ export const ProfilePage = () => {
       />
 
       <Link to={ROUTE_PATHS.accountQuotes} variant="body2">
-        <Button variant="accent">My Quotes</Button>
+        <Button variant="accent" icon={<DescriptionIcon color="neutral.white" />}>
+          My Quotes
+        </Button>
       </Link>
     </Page>
   );

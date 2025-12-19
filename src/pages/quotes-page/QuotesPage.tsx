@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Page, QuotesList } from '~/pages';
+import { Page } from '~/pages';
+import { QuotesList } from './widgets';
 
 export const QuotesPage = () => {
   return (

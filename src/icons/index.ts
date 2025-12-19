@@ -23,3 +23,4 @@ export * from './ExitToAppIcon';
 export * from './VerifiedIcon';
 export * from './ReportProblemIcon';
 export * from './MarkEmailReadIcon';
+export * from './DescriptionIcon';

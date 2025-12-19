@@ -4,7 +4,7 @@ type PrimaryColors = 'primaryIndigo' | 'aquaMintPulse' | 'mintGlow';
 
 type SecondaryColors = 'cloudMist' | 'slateAlloy' | 'carbonInk';
 
-type AccentColors = 'azureCurrent' | 'deepAzure' | 'duskViolet';
+type AccentColors = 'azureCurrent' | 'deepAzure' | 'duskViolet' | 'infoBlue' | 'infoSoft';
 
 type NeutralColors = 'black' | 'white' | 'grayUltraLight' | 'grayLight' | 'grayMedium' | 'grayDark';
 
@@ -84,6 +84,8 @@ export const theme: HoneyTheme = {
       azureCurrent: '#3F5BFF',
       deepAzure: '#2F49D8',
       duskViolet: '#6B5B95',
+      infoBlue: '#3F7DFF',
+      infoSoft: '#E9F0FF',
     },
     neutral: {
       black: '#000000',
