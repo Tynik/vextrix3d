@@ -90,7 +90,7 @@ export const createQuote = async ({
     const quoteHistoryRef = getQuoteHistoryStatusChangeDocumentRef(quoteId, uuidv4(), firestore);
     tx.set(quoteHistoryRef, {
       id: quoteHistoryRef.id,
-      type: 'status-change',
+      type: 'statusChange',
       at: now,
       by,
       from: 'new',
@@ -170,7 +170,7 @@ export const changeQuoteStatus = async ({
     const quoteHistoryRef = getQuoteHistoryStatusChangeDocumentRef(quoteId, uuidv4(), firestore);
     tx.set(quoteHistoryRef, {
       id: quoteHistoryRef.id,
-      type: 'status-change',
+      type: 'statusChange',
       at: now,
       by,
       from: quoteDocument.status,

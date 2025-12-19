@@ -1,9 +1,18 @@
 import React from 'react';
 import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { createGlobalStyle, css } from '@react-hive/honey-style';
 
 import { ROUTES } from '~/configs';
 import { useAppContext } from '~/models';
-import { ProfilePage, Page } from '~/pages';
+import { Page, ProfilePage, QuotesPage } from '~/pages';
+
+const GlobalStyle = createGlobalStyle`
+   ${({ theme: { colors } }) => css`
+     #root {
+       background-color: ${colors.neutral.grayUltraLight};
+     }
+   `}
+  `;
 
 export const AccountRoutes = () => {
   const location = useLocation();
@@ -21,8 +30,13 @@ export const AccountRoutes = () => {
   }
 
   return (
-    <Routes>
-      <Route path={ROUTES.account.profile} element={<ProfilePage />} />
-    </Routes>
+    <>
+      <GlobalStyle />
+
+      <Routes>
+        <Route path={ROUTES.account.profile} element={<ProfilePage />} />
+        <Route path={ROUTES.account.quotes} element={<QuotesPage />} />
+      </Routes>
+    </>
   );
 };

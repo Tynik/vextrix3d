@@ -31,7 +31,7 @@ export const AppRoutes = () => {
       />
       <Route path={ROUTES.legal.privacy} element={<PrivacyPolicyPage />} />
 
-      <Route path={ROUTES.quote} element={<QuoteRequestPage />} />
+      <Route path={ROUTES.quoteRequest} element={<QuoteRequestPage />} />
       {/*<Route path={ROUTES.auth.signUp} element={<SignUpPage />} />*/}
       <Route path={ROUTES.auth.signIn} element={<SignInPage />} />
       <Route path={ROUTES.home} element={<LandingPage />} />

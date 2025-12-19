@@ -6,9 +6,10 @@ import { toast } from 'react-toastify';
 
 import { useAppContext } from '~/models';
 import { VerifiedIcon } from '~/icons';
+import { ROUTE_PATHS } from '~/configs';
 import type { InfoTableRow } from '~/components';
-import { Button, InfoTable, Tooltip, Text } from '~/components';
-import { Page, QuotesList } from '~/pages';
+import { Button, InfoTable, Tooltip, Text, Link } from '~/components';
+import { Page } from '~/pages';
 import { ProfilePageTitle } from './ProfilePageTitle';
 
 const VERIFY_EMAIL_COOLDOWN_MS = 5 * 60 * 1000; // 5 minutes
@@ -151,11 +152,18 @@ export const ProfilePage = () => {
           $width: '100%',
           $maxWidth: '100px',
         }}
+        $padding={2}
+        $borderRadius="4px"
+        $border="1px solid"
+        $borderColor="neutral.grayLight"
+        $backgroundColor="neutral.white"
         // Data
         data-testid="user-profile"
       />
 
-      <QuotesList />
+      <Link to={ROUTE_PATHS.accountQuotes} variant="body2">
+        <Button variant="accent">My Quotes</Button>
+      </Link>
     </Page>
   );
 };

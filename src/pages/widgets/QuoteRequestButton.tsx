@@ -1,23 +1,15 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import type { ButtonProps } from '~/components';
-import { Button } from '~/components';
+import { ROUTES } from '~/configs';
+import type { LinkProps } from '~/components';
+import { Link, Button } from '~/components';
 
-export const QuoteRequestButton = (props: ButtonProps) => {
-  const navigate = useNavigate();
-
+export const QuoteRequestButton = (props: Omit<LinkProps, 'to' | 'variant'>) => {
   return (
-    <>
-      <Button
-        onClick={() => navigate('/quote-request')}
-        variant="accent"
-        size="large"
-        $height="50px"
-        {...props}
-      >
+    <Link to={ROUTES.quoteRequest} variant="body2" {...props}>
+      <Button variant="accent" size="large" $height="50px">
         Get a Quote
       </Button>
-    </>
+    </Link>
   );
 };

@@ -1,5 +1,7 @@
 import type { FirebaseOptions } from '@firebase/app';
 
+export const FIREBASE_APP_NAME = 'Vextrix3D';
+
 export const FIREBASE_CONFIG: FirebaseOptions = {
   apiKey: 'AIzaSyC9DVlMv__44e0WR8zeqT_fVnYY5dtbB2Q',
   authDomain: 'vextrix3d-a164a.firebaseapp.com',

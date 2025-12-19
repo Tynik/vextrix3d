@@ -21,6 +21,11 @@ export const GlobalStyle = createGlobalStyle`
       min-height: 100%;
     }
 
+    #root {
+      display: flex;
+      flex-direction: column;
+    }
+
     a,
     a:hover,
     a:focus,
@@ -40,11 +45,6 @@ export const GlobalStyle = createGlobalStyle`
 
     *:focus {
       outline: none;
-    }
-
-    #root {
-      display: flex;
-      flex-direction: column;
     }
 
     h1 {

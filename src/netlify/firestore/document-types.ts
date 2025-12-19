@@ -85,7 +85,7 @@ export interface QuoteHistoryActor {
 
 export interface QuoteHistoryStatusChangeDocument {
   id: QuoteHistoryId;
-  type: 'status-change';
+  type: 'statusChange';
   at: Timestamp;
   by: QuoteHistoryActor;
   from: QuoteStatus;

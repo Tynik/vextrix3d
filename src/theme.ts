@@ -6,7 +6,7 @@ type SecondaryColors = 'cloudMist' | 'slateAlloy' | 'carbonInk';
 
 type AccentColors = 'azureCurrent' | 'deepAzure' | 'duskViolet';
 
-type NeutralColors = 'black' | 'white' | 'grayLight' | 'grayMedium' | 'grayDark';
+type NeutralColors = 'black' | 'white' | 'grayUltraLight' | 'grayLight' | 'grayMedium' | 'grayDark';
 
 type SuccessColors = 'mintGreen' | 'emeraldGreen';
 
@@ -88,6 +88,7 @@ export const theme: HoneyTheme = {
     neutral: {
       black: '#000000',
       white: '#FFFFFF',
+      grayUltraLight: '#F7F8FA',
       grayLight: '#E6E8EC',
       grayMedium: '#A7ABB3',
       grayDark: '#2E3035',

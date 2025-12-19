@@ -6,3 +6,4 @@ export * from './LandingPage';
 export * from './SignUpPage';
 export * from './SignInPage';
 export * from './profile-page';
+export * from './quotes-page';
