@@ -8,7 +8,7 @@ export type QuoteHistoryId = string;
 
 type QuoteRequesterType = 'registered' | 'guest';
 
-type QuotePricingType = 'estimated' | 'final';
+type QuotePricingStage = 'estimated' | 'final';
 
 export interface UserDocument {
   id: UserId;
@@ -56,9 +56,12 @@ interface QuotePricingBreakdown {
 }
 
 export interface QuotePricing {
-  type: QuotePricingType;
+  type: QuotePricingStage;
   currency: 'GBP';
   amount: number;
+  discount: Nullable<number>;
+  vat: Nullable<number>;
+  total: Nullable<number>;
   breakdown: QuotePricingBreakdown;
 }
 

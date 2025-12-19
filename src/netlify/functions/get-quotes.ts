@@ -34,19 +34,30 @@ export const handler = createHandler(
     const data = quoteDocuments.map<Quote>(document => {
       const quote = document.data();
 
+      const { job, model, pricing } = quote;
+
       return {
         id: quote.id,
         status: quote.status,
         job: {
-          technology: quote.job.technology,
-          material: quote.job.material,
-          color: quote.job.color,
-          quantity: quote.job.quantity,
-          notes: quote.job.notes,
+          technology: job.technology,
+          material: job.material,
+          color: job.color,
+          quantity: job.quantity,
+          notes: job.notes,
         },
         model: {
-          fileName: quote.model.fileName,
+          fileName: model.fileName,
         },
+        pricing:
+          quote.status === 'sent' || quote.status === 'accepted' || quote.status === 'expired'
+            ? {
+                amount: pricing.amount,
+                discount: pricing.discount,
+                vat: pricing.vat,
+                total: pricing.total,
+              }
+            : null,
         pricedAt: quote.pricedAt?.toMillis() ?? null,
         sentAt: quote.sentAt?.toMillis() ?? null,
         acceptedAt: quote.acceptedAt?.toMillis() ?? null,

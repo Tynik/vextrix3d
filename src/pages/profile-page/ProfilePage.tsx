@@ -151,7 +151,9 @@ export const ProfilePage = () => {
         rowProps={{
           $width: '100%',
           $maxWidth: '100px',
+          $fontWeight: 500,
         }}
+        textVariant="body1"
         $padding={2}
         $borderRadius="4px"
         $border="1px solid"

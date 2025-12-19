@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
-import { formateDatetime } from '~/utils';
+import { formatCurrency, formatDatetime } from '~/utils';
 import type { Quote } from '~/netlify/types';
-import { Divider, Text } from '~/components';
+import type { InfoTableRow } from '~/components';
+import { Divider, InfoTable, Text } from '~/components';
 import { QuoteStatusInfo } from './QuoteStatus';
 
 interface QuoteProps extends HoneyFlexProps {
@@ -12,6 +13,24 @@ interface QuoteProps extends HoneyFlexProps {
 }
 
 export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
+  const infoTableRows = useMemo<InfoTableRow[]>(
+    () => [
+      {
+        label: 'Technology',
+        value: quote.job.technology,
+      },
+      {
+        label: 'Quantity',
+        value: quote.job.quantity,
+      },
+      {
+        label: 'Submitted',
+        value: formatDatetime(quote.createdAt),
+      },
+    ],
+    [quote],
+  );
+
   return (
     <HoneyFlex
       $gap={1}
@@ -23,11 +42,14 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       {...props}
     >
       <HoneyFlex row centerY $gap={1}>
-        <Text variant="body2" $color="secondary.slateAlloy">
-          {formateDatetime(quote.createdAt)}
-        </Text>
+        <QuoteStatusInfo status={quote.status} />
 
-        <QuoteStatusInfo status={quote.status} $marginLeft="auto" />
+        {(quote.status === 'sent' || quote.status === 'accepted' || quote.status === 'expired') &&
+          quote.pricing && (
+            <Text variant="body1" $fontWeight={700} ellipsis $marginLeft="auto">
+              {formatCurrency(quote.pricing.total)}
+            </Text>
+          )}
       </HoneyFlex>
 
       <Divider />
@@ -38,11 +60,15 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
         </Text>
       </HoneyFlex>
 
-      <HoneyFlex row centerY $gap={1}>
-        <Text variant="body2" ellipsis>
-          Quantity: {quote.job.quantity}
-        </Text>
-      </HoneyFlex>
+      <InfoTable
+        rows={infoTableRows}
+        textVariant="body2"
+        rowProps={{
+          $width: '100%',
+          $maxWidth: '70px',
+          $color: 'neutral.grayMedium',
+        }}
+      />
     </HoneyFlex>
   );
 };

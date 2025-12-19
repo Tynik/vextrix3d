@@ -8,7 +8,7 @@ import debounce from 'lodash.debounce';
 import type { Nullable } from '~/types';
 import type { PrintCostEstimate } from '~/utils';
 import { IS_LOCAL_ENV } from '~/configs';
-import { estimatePrintCost, ModelLoaderError } from '~/utils';
+import { formatCurrency, estimatePrintCost, ModelLoaderError } from '~/utils';
 import { useOnChange } from '~/models';
 import { AttachFileIcon, ErrorIcon, SendIcon } from '~/icons';
 import { Alert, Button, Checkbox, FilePicker, Progress, Text, TextInput } from '~/components';
@@ -258,7 +258,9 @@ export const QuoteRequestFormContent = ({
               {isPrintCostEstimating ? (
                 <Progress size="16px" lineWidth="2px" />
               ) : (
-                <Text variant="body1">£{printCostEstimate?.total ?? 0} + (Shipping Fee)</Text>
+                <Text variant="body1">
+                  {formatCurrency(printCostEstimate?.total)} + (Shipping Fee)
+                </Text>
               )}
             </HoneyBox>
           )}

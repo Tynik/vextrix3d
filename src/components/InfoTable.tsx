@@ -1,9 +1,10 @@
 import React from 'react';
 import type { ReactNode } from 'react';
 import { isNilOrEmptyString } from '@react-hive/honey-utils';
-import type { HoneyFlexProps, HoneyListProps, HoneyListItem } from '@react-hive/honey-layout';
+import type { HoneyListProps, HoneyListItem } from '@react-hive/honey-layout';
 import { HoneyFlex, HoneyList } from '@react-hive/honey-layout';
 
+import type { TextProps } from '~/components';
 import { Text } from '~/components';
 
 export interface InfoTableRow {
@@ -16,11 +17,13 @@ interface InfoTableProps<Item extends HoneyListItem> extends Omit<
   'children' | 'items' | 'itemKey'
 > {
   rows: InfoTableRow[];
-  rowProps?: HoneyFlexProps;
+  textVariant?: TextProps['variant'];
+  rowProps?: Omit<TextProps, 'variant'>;
 }
 
 export const InfoTable = <Item extends HoneyListItem>({
   rows,
+  textVariant = 'body2',
   rowProps,
   ...props
 }: InfoTableProps<Item>) => {
@@ -28,16 +31,16 @@ export const InfoTable = <Item extends HoneyListItem>({
     <HoneyList items={rows} itemKey="label" $gap={1} data-testid="user-profile" {...props}>
       {row => (
         <HoneyFlex row $gap={2}>
-          <Text variant="body1" $fontWeight="500" {...rowProps}>
+          <Text variant={textVariant} {...rowProps}>
             {row.label}:
           </Text>
 
           {isNilOrEmptyString(row.value) ? (
-            <Text variant="body1" $color="neutral.grayMedium" $fontStyle="italic">
+            <Text variant={textVariant} $color="neutral.grayMedium" $fontStyle="italic">
               Empty
             </Text>
           ) : (
-            <Text variant="body1" $display="flex" $gap={1} $alignItems="center" ellipsis>
+            <Text variant={textVariant} $display="flex" $gap={1} $alignItems="center" ellipsis>
               {row.value}
             </Text>
           )}

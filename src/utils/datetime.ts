@@ -3,7 +3,7 @@ interface FormateDatetimeOptions {
   timeStyle?: 'full' | 'long' | 'medium' | 'short';
 }
 
-export const formateDatetime = (timestamp: number, options?: FormateDatetimeOptions) =>
+export const formatDatetime = (timestamp: number, options?: FormateDatetimeOptions) =>
   new Intl.DateTimeFormat('en-GB', {
     dateStyle: 'medium',
     timeStyle: 'short',

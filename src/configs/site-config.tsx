@@ -18,6 +18,8 @@ export const CONTACT_PHONE = '+447918993712';
 
 export const HEADER_HEIGHT_PX = 50;
 
+export const GBP_SYMBOL = '£';
+
 export type LegalDocumentType =
   | 'termsOfService'
   | 'privacyPolicy'

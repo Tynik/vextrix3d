@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { CONTACT_EMAIL, CONTACT_PHONE, SEO_SCHEMA_BASE_URL, SITE_URL } from '~/configs';
+import { CONTACT_EMAIL, CONTACT_PHONE, GBP_SYMBOL, SEO_SCHEMA_BASE_URL, SITE_URL } from '~/configs';
 
 export const ProfessionalServiceMicrodata = () => {
   return (
@@ -47,7 +47,7 @@ export const ProfessionalServiceMicrodata = () => {
 
       <meta itemProp="openingHours" content="Mo-Su 09:00-20:00" />
 
-      <meta itemProp="priceRange" content="££" />
+      <meta itemProp="priceRange" content={`${GBP_SYMBOL}`.repeat(2)} />
       <meta itemProp="currenciesAccepted" content="GBP" />
 
       <link itemProp="sameAs" href="https://uk.trustpilot.com/review/vextrix3d.co.uk" />

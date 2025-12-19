@@ -166,6 +166,9 @@ export const handler = createHandler<QuoteRequestPayload>(
           type: 'estimated',
           currency: 'GBP',
           amount: payload.pricing.estimated,
+          discount: null,
+          vat: null,
+          total: null,
           breakdown: {
             material: 0,
             machineTime: 0,

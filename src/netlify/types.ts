@@ -45,6 +45,12 @@ export interface Quote {
   model: {
     fileName: string;
   };
+  pricing: Nullable<{
+    amount: number;
+    discount: Nullable<number>;
+    vat: Nullable<number>;
+    total: Nullable<number>;
+  }>;
   pricedAt: Nullable<number>;
   sentAt: Nullable<number>;
   acceptedAt: Nullable<number>;
