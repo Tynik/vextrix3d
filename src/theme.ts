@@ -12,7 +12,7 @@ type SuccessColors = 'mintGreen' | 'emeraldGreen';
 
 type WarningColors = 'amber' | 'orange';
 
-type ErrorColors = 'signalCoral' | 'crimsonRed';
+type ErrorColors = 'signalCoralSoft' | 'signalCoral' | 'crimsonRed';
 
 declare module '@react-hive/honey-style' {
   export interface HoneyFonts {
@@ -104,6 +104,7 @@ export const theme: HoneyTheme = {
       orange: '#FF8C00',
     },
     error: {
+      signalCoralSoft: '#FFD6D6',
       signalCoral: '#FF5C5C',
       crimsonRed: '#DC143C',
     },

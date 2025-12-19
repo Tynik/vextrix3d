@@ -5,20 +5,32 @@ import { HoneyGrid, HoneyGridColumn, HoneyList } from '@react-hive/honey-layout'
 import { getQuotes } from '~/api';
 import { useAppContext } from '~/models';
 import { EmptyContentIllustration } from '~/illustrations';
-import { Progress } from '~/components';
+import { Alert, Progress } from '~/components';
 import { QuoteRow } from './QuoteRow';
 
 export const QuotesList = () => {
   const { user } = useAppContext();
 
-  const { data: quotes, isFetching: isQuotesFetching } = useQuery({
+  const {
+    data: quotes,
+    isFetching,
+    isError,
+  } = useQuery({
     queryKey: ['quotes'],
     queryFn: () => getQuotes({}),
     enabled: Boolean(user),
   });
 
-  if (isQuotesFetching) {
+  if (isError) {
+    return <Alert severity="error">Failed to fetch quotes.</Alert>;
+  }
+
+  if (isFetching) {
     return <Progress $margin="auto" />;
+  }
+
+  if (quotes?.data.length === 0) {
+    return <EmptyContentIllustration $margin="auto" />;
   }
 
   return (
@@ -27,7 +39,6 @@ export const QuotesList = () => {
         <HoneyList
           items={quotes?.data}
           itemKey="id"
-          emptyContent={<EmptyContentIllustration $margin="auto" />}
           $flexGrow={1}
           $gap={1}
           // Data

@@ -15,7 +15,7 @@ export const QuoteStatusInfo = ({ status, ...props }: QuoteStatusInfoProps) => {
   return (
     <Text
       variant="body2"
-      $padding={[0.25, 1]}
+      $padding={[0.5, 1]}
       $borderRadius="4px"
       $color={statusColorsConfig.text}
       $backgroundColor={statusColorsConfig.background}

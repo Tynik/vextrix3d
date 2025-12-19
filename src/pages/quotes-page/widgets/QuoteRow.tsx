@@ -55,7 +55,7 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       <Divider />
 
       <HoneyFlex row centerY $gap={1}>
-        <Text variant="subtitle2" ellipsis>
+        <Text variant="subtitle1" ellipsis>
           {quote.model.fileName}
         </Text>
       </HoneyFlex>

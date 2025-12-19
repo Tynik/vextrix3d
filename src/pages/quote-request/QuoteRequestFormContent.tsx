@@ -110,7 +110,7 @@ export const QuoteRequestFormContent = ({
         </HoneyGridColumn>
 
         <HoneyGridColumn $gap={2} $minWidth="300px">
-          <Alert variant="info">
+          <Alert severity="info">
             <span>
               Supported file formats: <strong>*.3mf</strong>, <strong>*.obj</strong>, and{' '}
               <strong>*.stl</strong>. If your model is in another format, please convert it to one
