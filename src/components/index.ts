@@ -17,3 +17,4 @@ export * from './Tooltip';
 export * from './Link';
 export * from './InfoTable';
 export * from './Checkbox';
+export * from './Illustration';
