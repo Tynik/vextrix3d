@@ -1,6 +1,7 @@
 import type { FirestoreDataConverter } from 'firebase-admin/firestore';
 
 import type {
+  OrderDocument,
   QuoteDocument,
   QuoteHistoryStatusChangeDocument,
   UserDocument,
@@ -21,3 +22,8 @@ export const quoteHistoryStatusChangeConverter: FirestoreDataConverter<QuoteHist
     toFirestore: data => data,
     fromFirestore: snapshot => snapshot.data() as QuoteHistoryStatusChangeDocument,
   };
+
+export const orderConverter: FirestoreDataConverter<OrderDocument> = {
+  toFirestore: data => data,
+  fromFirestore: snapshot => snapshot.data() as OrderDocument,
+};

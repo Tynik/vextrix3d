@@ -13,7 +13,7 @@ import {
 } from '../constants';
 import { createHandler, sendEmail } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
-import type { QuoteHistoryActor, QuoteRequester, UserDocument } from '../firestore';
+import type { Actor, QuoteRequester, UserDocument } from '../firestore';
 import {
   createUser,
   buildQuoteHistoryActor,
@@ -61,7 +61,7 @@ export const handler = createHandler<QuoteRequestPayload>(
       await initFirebaseAdminApp();
 
       let quoteRequester: QuoteRequester;
-      let quoteHistoryActor: QuoteHistoryActor;
+      let quoteHistoryActor: Actor;
       let userDocument: Nullable<UserDocument> = null;
 
       if (cookies.session) {

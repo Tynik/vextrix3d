@@ -8,6 +8,7 @@ import { initFirebaseAdminApp } from './firebase';
 interface SessionHandlerOptions<Payload = unknown> extends HandlerFunctionOptions<Payload> {
   auth: Auth;
   decodedIdToken: auth.DecodedIdToken;
+  isAdmin: boolean;
 }
 
 export const withSession =
@@ -33,9 +34,12 @@ export const withSession =
       const auth = getAuth();
       const decodedIdToken = await auth.verifySessionCookie(cookies.session, true);
 
+      const isAdmin = decodedIdToken.role === 'admin';
+
       return fn({
         auth,
         decodedIdToken,
+        isAdmin,
         ...options,
       });
     } catch (e) {

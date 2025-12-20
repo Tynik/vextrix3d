@@ -1,17 +1,11 @@
 import admin from 'firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
-import type { DocumentReference } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
-import type { StipeCustomerId } from './generic';
 import type { UserDocument } from './document-types';
-import type { AccountRole } from '../types';
-import { USERS_COLLECTION_NAME } from './collections';
-import { userConverter } from './data-convertors';
-
-export const getUserDocumentRef = (userId: string): DocumentReference<UserDocument> =>
-  admin.firestore().doc(`${USERS_COLLECTION_NAME}/${userId}`).withConverter(userConverter);
+import type { AccountRole, StripeCustomerId } from '../types';
+import { getUserDocumentRef } from './document-references';
 
 export const getExistingUserDocument = async (userId: string): Promise<UserDocument> => {
   const documentReference = getUserDocumentRef(userId);
@@ -32,7 +26,7 @@ interface CreateUserOptions {
   firstName?: Nullable<string>;
   lastName?: Nullable<string>;
   phone?: Nullable<string>;
-  stripeCustomerId?: Nullable<StipeCustomerId>;
+  stripeCustomerId?: Nullable<StripeCustomerId>;
 }
 
 export const createUser = async ({
@@ -53,8 +47,11 @@ export const createUser = async ({
     phoneNumber: phone ?? undefined,
   });
 
+  await auth.setCustomUserClaims(userRecord.uid, {
+    role,
+  });
+
   const userDocument = getUserDocumentRef(userRecord.uid);
-  const now = Timestamp.now();
 
   await userDocument.set({
     id: userRecord.uid,
@@ -64,8 +61,8 @@ export const createUser = async ({
     firstName,
     lastName,
     phone,
-    createdAt: now,
-    updatedAt: now,
+    updatedAt: null,
+    createdAt: Timestamp.now(),
   });
 
   return userRecord;

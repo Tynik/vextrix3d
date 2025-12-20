@@ -1,5 +1,4 @@
 import admin from 'firebase-admin';
-import type { DocumentReference } from 'firebase-admin/firestore';
 import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 import { v4 as uuidv4 } from 'uuid';
@@ -7,33 +6,35 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Nullable } from '~/types';
 import type { QuoteId, QuoteStatus } from '../types';
 import type {
-  QuoteHistoryActor,
+  Actor,
   QuoteDocument,
-  QuoteHistoryStatusChangeDocument,
   QuoteJob,
   QuoteModel,
   QuotePricing,
   QuoteRequester,
   UserDocument,
-  QuoteHistoryId,
 } from './document-types';
-import { QUOTE_HISTORY_COLLECTION_NAME, QUOTES_COLLECTION_NAME } from './collections';
-import { quoteConverter, quoteHistoryStatusChangeConverter } from './data-convertors';
+import { getQuoteDocumentRef, getQuoteHistoryStatusChangeDocumentRef } from './document-references';
 
-export const getQuoteDocumentRef = (
-  quoteId: QuoteId,
-  firestore = admin.firestore(),
-): DocumentReference<QuoteDocument> =>
-  firestore.doc(`${QUOTES_COLLECTION_NAME}/${quoteId}`).withConverter(quoteConverter);
+const ALLOWED_QUOTE_STATUS_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
+  new: ['quoted', 'rejected'],
+  quoted: ['changeRequested', 'accepted', 'rejected', 'expired'],
+  changeRequested: ['quoted', 'rejected'],
+  accepted: ['changeRequested', 'inProduction'],
+  rejected: [],
+  expired: [],
+  inProduction: ['completed'],
+  completed: [],
+};
 
-export const getQuoteHistoryStatusChangeDocumentRef = (
-  quoteId: QuoteId,
-  quoteHistoryId: QuoteHistoryId,
-  firestore = admin.firestore(),
-): DocumentReference<QuoteHistoryStatusChangeDocument> =>
-  firestore
-    .doc(`${QUOTES_COLLECTION_NAME}/${quoteId}/${QUOTE_HISTORY_COLLECTION_NAME}/${quoteHistoryId}`)
-    .withConverter(quoteHistoryStatusChangeConverter);
+export const QUOTE_PRICING_ALLOWED_STATUSES: QuoteStatus[] = [
+  'quoted',
+  'accepted',
+  'rejected',
+  'expired',
+  'inProduction',
+  'completed',
+];
 
 export const getExistingQuoteDocument = async (quoteId: QuoteId): Promise<QuoteDocument> => {
   const documentReference = getQuoteDocumentRef(quoteId);
@@ -49,7 +50,7 @@ export const getExistingQuoteDocument = async (quoteId: QuoteId): Promise<QuoteD
 
 interface CreateQuoteOptions {
   requester: QuoteRequester;
-  by: QuoteHistoryActor;
+  by: Actor;
   job: QuoteJob;
   model: QuoteModel;
   pricing: QuotePricing;
@@ -71,6 +72,7 @@ export const createQuote = async ({
 
   await firestore.runTransaction(async tx => {
     const quoteRef = getQuoteDocumentRef(quoteId, firestore);
+
     tx.set(quoteRef, {
       id: quoteId,
       requester,
@@ -78,24 +80,25 @@ export const createQuote = async ({
       job,
       model,
       pricing,
-      pricedAt: null,
-      sentAt: null,
+      quotedAt: null,
       acceptedAt: null,
+      inProductionAt: null,
       rejectedAt: null,
       expiredAt: null,
+      completedAt: null,
+      updatedAt: null,
       createdAt: now,
-      updatedAt: now,
     });
 
     const quoteHistoryRef = getQuoteHistoryStatusChangeDocumentRef(quoteId, uuidv4(), firestore);
     tx.set(quoteHistoryRef, {
       id: quoteHistoryRef.id,
       type: 'statusChange',
-      at: now,
       by,
       from: 'new',
       to: 'new',
       reason: null,
+      createdAt: now,
     });
   });
 
@@ -104,19 +107,10 @@ export const createQuote = async ({
   };
 };
 
-const ALLOWED_QUOTE_STATUS_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
-  new: ['priced', 'rejected'],
-  priced: ['sent', 'rejected'],
-  sent: ['accepted', 'rejected', 'expired'],
-  accepted: [],
-  rejected: [],
-  expired: [],
-};
-
 interface ChangeQuoteStatusOptions {
   quoteId: QuoteId;
   toStatus: QuoteStatus;
-  by: QuoteHistoryActor;
+  by: Actor;
   reason?: string;
 }
 
@@ -149,20 +143,23 @@ export const changeQuoteStatus = async ({
       updatedAt: now,
     };
 
-    if (toStatus === 'priced') {
-      quoteStatusUpdate.pricedAt = now;
-    }
-    if (toStatus === 'sent') {
-      quoteStatusUpdate.sentAt = now;
+    if (toStatus === 'quoted') {
+      quoteStatusUpdate.quotedAt = now;
     }
     if (toStatus === 'accepted') {
       quoteStatusUpdate.acceptedAt = now;
+    }
+    if (toStatus === 'inProduction') {
+      quoteStatusUpdate.inProductionAt = now;
     }
     if (toStatus === 'rejected') {
       quoteStatusUpdate.rejectedAt = now;
     }
     if (toStatus === 'expired') {
       quoteStatusUpdate.expiredAt = now;
+    }
+    if (toStatus === 'completed') {
+      quoteStatusUpdate.completedAt = now;
     }
 
     tx.update(quoteRef, quoteStatusUpdate);
@@ -171,16 +168,16 @@ export const changeQuoteStatus = async ({
     tx.set(quoteHistoryRef, {
       id: quoteHistoryRef.id,
       type: 'statusChange',
-      at: now,
       by,
       from: quoteDocument.status,
       to: toStatus,
       reason: reason ?? null,
+      createdAt: now,
     });
   });
 };
 
-export const buildQuoteHistoryActor = (user: Nullable<UserDocument>): QuoteHistoryActor => {
+export const buildQuoteHistoryActor = (user: Nullable<UserDocument>): Actor => {
   if (!user) {
     return {
       role: 'customer',

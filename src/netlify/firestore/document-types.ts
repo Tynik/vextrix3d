@@ -1,31 +1,54 @@
 import { Timestamp } from 'firebase-admin/firestore';
 
 import type { Nullable } from '~/types';
-import type { StipeCustomerId } from './generic';
-import type { ActorRole, AccountRole, UserId, QuoteStatus, QuoteJobTechnology } from '../types';
+import type {
+  ActorRole,
+  AccountRole,
+  UserId,
+  QuoteStatus,
+  QuoteJobTechnology,
+  QuoteId,
+  OrderId,
+  OrderStatus,
+  StripeCustomerId,
+  Currency,
+  StripePaymentIntentId,
+} from '../types';
 
-export type QuoteHistoryId = string;
+export type QuoteHistoryChangeId = string;
+
+export type QuoteChangeRequestId = string;
 
 type QuoteRequesterType = 'registered' | 'guest';
 
 type QuotePricingStage = 'estimated' | 'final';
 
-export interface UserDocument {
-  id: UserId;
-  stripeCustomerId: Nullable<StipeCustomerId>;
+type QuoteChangeRequestStatus = 'new' | 'accepted' | 'rejected';
+
+interface Document<Id extends string> {
+  id: Id;
+  createdAt: Timestamp;
+}
+
+export interface Actor {
+  id: Nullable<UserId>;
+  role: ActorRole;
+}
+
+export interface UserDocument extends Document<UserId> {
+  stripeCustomerId: Nullable<StripeCustomerId>;
   role: AccountRole;
   email: string;
   firstName: Nullable<string>;
   lastName: Nullable<string>;
   phone: Nullable<string>;
-  updatedAt: Timestamp;
-  createdAt: Timestamp;
+  updatedAt: Nullable<Timestamp>;
 }
 
 export interface QuoteJob {
   technology: QuoteJobTechnology;
-  material: string;
-  color: string;
+  material: Nullable<string>;
+  color: Nullable<string>;
   quantity: number;
   notes: Nullable<string>;
 }
@@ -50,48 +73,98 @@ export interface QuoteModel {
 }
 
 interface QuotePricingBreakdown {
-  material: number;
-  machineTime: number;
-  labor: number;
+  material: Nullable<number>;
+  machineTime: Nullable<number>;
+  labor: Nullable<number>;
 }
 
 export interface QuotePricing {
   type: QuotePricingStage;
-  currency: 'GBP';
+  currency: Currency;
   amount: number;
   discount: Nullable<number>;
   vat: Nullable<number>;
   total: Nullable<number>;
-  breakdown: QuotePricingBreakdown;
+  breakdown: Nullable<QuotePricingBreakdown>;
 }
 
-export interface QuoteDocument {
-  id: string;
+export interface QuoteDocument extends Document<QuoteId> {
   requester: QuoteRequester;
   status: QuoteStatus;
   job: QuoteJob;
   model: QuoteModel;
   pricing: QuotePricing;
-  pricedAt: Nullable<Timestamp>;
-  sentAt: Nullable<Timestamp>;
+  quotedAt: Nullable<Timestamp>;
   acceptedAt: Nullable<Timestamp>;
+  inProductionAt: Nullable<Timestamp>;
   rejectedAt: Nullable<Timestamp>;
   expiredAt: Nullable<Timestamp>;
-  updatedAt: Timestamp;
-  createdAt: Timestamp;
+  completedAt: Nullable<Timestamp>;
+  updatedAt: Nullable<Timestamp>;
 }
 
-export interface QuoteHistoryActor {
-  id: Nullable<UserId>;
-  role: ActorRole;
+interface QuoteHistoryChangeDocument<Type extends string> extends Document<QuoteHistoryChangeId> {
+  type: Type;
 }
 
-export interface QuoteHistoryStatusChangeDocument {
-  id: QuoteHistoryId;
-  type: 'statusChange';
-  at: Timestamp;
-  by: QuoteHistoryActor;
+export interface QuoteHistoryStatusChangeDocument extends QuoteHistoryChangeDocument<'statusChange'> {
+  by: Actor;
   from: QuoteStatus;
   to: QuoteStatus;
   reason: Nullable<string>;
+}
+
+export interface QuoteChangeRequestDocument extends Document<QuoteChangeRequestId> {
+  userId: UserId;
+  status: QuoteChangeRequestStatus;
+  fields: Nullable<{
+    quantity: Nullable<number>;
+    material: Nullable<string>;
+    notes: Nullable<string>;
+  }>;
+  message: Nullable<string>;
+  acceptedAt: Nullable<Timestamp>;
+  rejectedAt: Nullable<Timestamp>;
+}
+
+interface OrderCustomer {
+  userId: Nullable<UserId>;
+  stripeCustomerId: StripeCustomerId;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: Nullable<string>;
+}
+
+interface OrderPayment {
+  paymentIntentId: StripePaymentIntentId;
+  paidAt: Timestamp;
+  refundedAt: Nullable<Timestamp>;
+}
+
+interface OrderShippingAddress {
+  country: string;
+  city: string;
+  postalCode: string;
+  line1: string;
+  line2: Nullable<string>;
+}
+
+interface OrderShipping {
+  carrier: 'RoyalMail' | 'DHL';
+  trackingNumber: Nullable<string>;
+  dispatchedAt: Nullable<Timestamp>;
+  deliveredAt: Nullable<Timestamp>;
+  address: Nullable<OrderShippingAddress>;
+}
+
+export interface OrderDocument extends Document<OrderId> {
+  quoteId: QuoteId;
+  status: OrderStatus;
+  customer: OrderCustomer;
+  job: QuoteJob;
+  pricing: QuotePricing;
+  payment: OrderPayment;
+  shipping: Nullable<OrderShipping>;
+  updatedAt: Nullable<Timestamp>;
 }

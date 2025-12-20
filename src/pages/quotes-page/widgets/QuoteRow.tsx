@@ -44,12 +44,11 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       <HoneyFlex row centerY $gap={1}>
         <QuoteStatusInfo status={quote.status} />
 
-        {(quote.status === 'sent' || quote.status === 'accepted' || quote.status === 'expired') &&
-          quote.pricing && (
-            <Text variant="body1" $fontWeight={700} ellipsis $marginLeft="auto">
-              {formatCurrency(quote.pricing.total)}
-            </Text>
-          )}
+        {quote.pricing && (
+          <Text variant="body1" $fontWeight={700} ellipsis $marginLeft="auto">
+            {formatCurrency(quote.pricing.total)}
+          </Text>
+        )}
       </HoneyFlex>
 
       <Divider />

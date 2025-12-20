@@ -1,8 +1,16 @@
+import Stripe from 'stripe';
+
 import type { Nullable } from '~/types';
 
 export type UserId = string;
 
 export type QuoteId = string;
+
+export type OrderId = string;
+
+export type StripeCustomerId = Stripe.Customer['id'];
+
+export type StripePaymentIntentId = Stripe.PaymentIntent['id'];
 
 export type Email = `${string}@${string}.${string}`;
 
@@ -14,7 +22,65 @@ export type ActorRole = AccountRole | 'system';
 
 export type QuoteJobTechnology = 'FDM' | 'SLA';
 
-export type QuoteStatus = 'new' | 'priced' | 'sent' | 'accepted' | 'rejected' | 'expired';
+// https://www.iso.org/iso-4217-currency-codes.html
+export type Currency = 'GBP' | 'EUR' | 'USD';
+
+export type QuoteStatus =
+  /**
+   * Newly submitted quote request.
+   * Created by the customer and not yet reviewed.
+   * The customer may still edit allowed non-critical fields.
+   */
+  | 'new'
+  /**
+   * Quote has been reviewed and priced.
+   * Price, scope, and conditions are visible to the customer.
+   * The quote is locked; the customer may only request changes or accept it.
+   */
+  | 'quoted'
+  /**
+   * The customer has requested changes to a quoted or accepted quote.
+   * No direct edits are allowed.
+   * Awaiting review and action by admin.
+   */
+  | 'changeRequested'
+  /**
+   * The customer has agreed to the quoted price and terms.
+   * This status indicates intent only and does NOT imply payment by itself.
+   * Typically followed by payment confirmation and transition to production.
+   */
+  | 'accepted'
+  /**
+   * Quote was explicitly rejected by the customer or declined by admin.
+   * The quote is closed and no further actions are permitted.
+   */
+  | 'rejected'
+  /**
+   * Quote has expired due to inactivity or passing its validity period.
+   * The customer must submit a new quote request to proceed.
+   */
+  | 'expired'
+  /**
+   * Manufacturing is currently in progress.
+   * Printing and post-processing are underway.
+   * No changes or cancellations are permitted.
+   */
+  | 'inProduction'
+  /**
+   * Quote has been fully fulfilled.
+   * The quote is permanently locked and read-only.
+   */
+  | 'completed';
+
+export type OrderStatus =
+  | 'new'
+  | 'paid'
+  | 'inProduction'
+  | 'shipped'
+  | 'completed'
+  | 'cancelled'
+  | 'refunded'
+  | 'expired';
 
 export interface PaginatedResponse<T> {
   data: T[];
@@ -32,30 +98,35 @@ export interface User {
   phone: Nullable<string>;
 }
 
+interface QuoteJob {
+  technology: QuoteJobTechnology;
+  material: Nullable<string>;
+  color: Nullable<string>;
+  quantity: number;
+  notes: Nullable<string>;
+}
+
+interface QuotePricing {
+  amount: number;
+  discount: Nullable<number>;
+  vat: Nullable<number>;
+  total: Nullable<number>;
+}
+
 export interface Quote {
   id: QuoteId;
   status: QuoteStatus;
-  job: {
-    technology: QuoteJobTechnology;
-    material: string;
-    color: string;
-    quantity: number;
-    notes: Nullable<string>;
-  };
+  job: QuoteJob;
   model: {
     fileName: string;
   };
-  pricing: Nullable<{
-    amount: number;
-    discount: Nullable<number>;
-    vat: Nullable<number>;
-    total: Nullable<number>;
-  }>;
-  pricedAt: Nullable<number>;
-  sentAt: Nullable<number>;
+  pricing: Nullable<QuotePricing>;
+  quotedAt: Nullable<number>;
   acceptedAt: Nullable<number>;
+  inProductionAt: Nullable<number>;
   rejectedAt: Nullable<number>;
   expiredAt: Nullable<number>;
-  updatedAt: number;
+  completedAt: Nullable<number>;
+  updatedAt: Nullable<number>;
   createdAt: number;
 }

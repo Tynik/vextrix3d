@@ -4,7 +4,7 @@ import { HoneyFlex } from '@react-hive/honey-layout';
 import { Navigate } from 'react-router-dom';
 
 import { ROUTES } from '~/configs';
-import { signOutRequest } from '~/api';
+import { handleApiError, signOutRequest } from '~/api';
 import { ExitToAppIcon } from '~/icons';
 import { useAppContext } from '~/models';
 import { IconButton, Text } from '~/components';
@@ -22,6 +22,14 @@ export const ProfilePageTitle = () => {
     },
   });
 
+  const handleSignOut = async () => {
+    try {
+      await signOutMutationRequest.mutateAsync();
+    } catch (e) {
+      handleApiError(e);
+    }
+  };
+
   if (signOutMutationRequest.isSuccess) {
     return <Navigate to={ROUTES.home} replace />;
   }
@@ -35,7 +43,7 @@ export const ProfilePageTitle = () => {
 
         <IconButton
           disabled={signOutMutationRequest.isPending}
-          onClick={() => signOutMutationRequest.mutateAsync()}
+          onClick={handleSignOut}
           icon={
             <ExitToAppIcon
               color={

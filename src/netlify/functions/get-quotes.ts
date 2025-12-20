@@ -1,9 +1,9 @@
 import { Timestamp } from 'firebase-admin/firestore';
 
+import type { Quote } from '../types';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
-import { getQuotesCollection } from '../firestore';
-import type { Quote } from '../types';
+import { getQuotesCollection, QUOTE_PRICING_ALLOWED_STATUSES } from '../firestore';
 
 export type GetQuotesPayload = {
   limit?: number;
@@ -14,13 +14,16 @@ export const handler = createHandler(
   {
     allowedMethods: ['GET'],
   },
-  withSession<GetQuotesPayload>(async ({ decodedIdToken, payload }) => {
+  withSession<GetQuotesPayload>(async ({ decodedIdToken, isAdmin, payload }) => {
     const limit = Math.min(payload?.limit ?? 20, 50);
 
     let quotesQuery = getQuotesCollection()
-      .where('requester.userId', '==', decodedIdToken.uid)
       .orderBy('createdAt', 'desc')
       .limit(limit + 1);
+
+    if (!isAdmin) {
+      quotesQuery = quotesQuery.where('requester.userId', '==', decodedIdToken.uid);
+    }
 
     if (payload?.cursor) {
       quotesQuery = quotesQuery.startAfter(Timestamp.fromMillis(payload.cursor));
@@ -49,21 +52,21 @@ export const handler = createHandler(
         model: {
           fileName: model.fileName,
         },
-        pricing:
-          quote.status === 'sent' || quote.status === 'accepted' || quote.status === 'expired'
-            ? {
-                amount: pricing.amount,
-                discount: pricing.discount,
-                vat: pricing.vat,
-                total: pricing.total,
-              }
-            : null,
-        pricedAt: quote.pricedAt?.toMillis() ?? null,
-        sentAt: quote.sentAt?.toMillis() ?? null,
+        pricing: QUOTE_PRICING_ALLOWED_STATUSES.includes(quote.status)
+          ? {
+              amount: pricing.amount,
+              discount: pricing.discount,
+              vat: pricing.vat,
+              total: pricing.total,
+            }
+          : null,
+        quotedAt: quote.quotedAt?.toMillis() ?? null,
         acceptedAt: quote.acceptedAt?.toMillis() ?? null,
+        inProductionAt: quote.inProductionAt?.toMillis() ?? null,
         rejectedAt: quote.rejectedAt?.toMillis() ?? null,
         expiredAt: quote.expiredAt?.toMillis() ?? null,
-        updatedAt: quote.updatedAt.toMillis(),
+        completedAt: quote.completedAt?.toMillis() ?? null,
+        updatedAt: quote.updatedAt?.toMillis() ?? null,
         createdAt: quote.createdAt.toMillis(),
       };
     });

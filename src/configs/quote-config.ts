@@ -8,13 +8,13 @@ export const QUOTE_STATUS_COLORS_CONFIGS: Record<QuoteStatus, ColorsConfig> = {
     text: 'secondary.carbonInk',
     background: 'neutral.grayUltraLight',
   },
-  priced: {
+  quoted: {
     text: 'neutral.white',
     background: 'accent.infoBlue',
   },
-  sent: {
-    text: 'secondary.carbonInk',
-    background: 'accent.infoSoft',
+  changeRequested: {
+    text: 'neutral.white',
+    background: 'warning.orange',
   },
   accepted: {
     text: 'neutral.white',
@@ -27,5 +27,13 @@ export const QUOTE_STATUS_COLORS_CONFIGS: Record<QuoteStatus, ColorsConfig> = {
   expired: {
     text: 'secondary.carbonInk',
     background: 'neutral.grayLight',
+  },
+  inProduction: {
+    text: 'neutral.white',
+    background: 'success.emeraldGreen',
+  },
+  completed: {
+    text: 'neutral.white',
+    background: 'success.emeraldGreen',
   },
 };

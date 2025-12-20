@@ -31,10 +31,14 @@ export const Illustration = ({
       />
 
       <HoneyFlex $gap={1} centerX>
-        {title && <Text variant="subtitle1">{title}</Text>}
+        {title && (
+          <Text variant="subtitle1" $textAlign="center">
+            {title}
+          </Text>
+        )}
 
         {subtitle && (
-          <Text variant="subtitle2" $color="secondary.slateAlloy">
+          <Text variant="subtitle2" $color="secondary.slateAlloy" $textAlign="center">
             {subtitle}
           </Text>
         )}
