@@ -98,6 +98,39 @@ export interface User {
   phone: Nullable<string>;
 }
 
+interface OrderJob {
+  technology: QuoteJobTechnology;
+  material: Nullable<string>;
+  color: Nullable<string>;
+  quantity: number;
+  notes: Nullable<string>;
+}
+
+interface OrderPricing {
+  amount: number;
+  discountPct: number;
+  discountAmount: number;
+  vatPct: number;
+  vatAmount: number;
+  total: number;
+}
+
+interface OrderPayment {
+  paymentIntentId: StripePaymentIntentId;
+  paidAt: Nullable<number>;
+  refundedAt: Nullable<number>;
+}
+
+export interface Order {
+  id: OrderId;
+  orderNumber: string;
+  status: OrderStatus;
+  job: OrderJob;
+  pricing: OrderPricing;
+  payment: Nullable<OrderPayment>;
+  createdAt: number;
+}
+
 interface QuoteJob {
   technology: QuoteJobTechnology;
   material: Nullable<string>;

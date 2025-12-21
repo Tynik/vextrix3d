@@ -30,8 +30,8 @@ export const handler = createHandler(
         const quote = quoteSnap.data();
         assert(quote, 'Quote data is empty');
 
-        const isOwner = quote.requester.userId === decodedIdToken.uid;
-        assert(isAdmin || isOwner, 'Forbidden');
+        const isQuoteOwner = quote.requester.userId === decodedIdToken.uid;
+        assert(isAdmin || isQuoteOwner, 'Forbidden');
 
         await changeQuoteStatusTx(
           tx,

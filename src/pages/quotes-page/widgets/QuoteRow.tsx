@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -13,6 +13,7 @@ import type { InfoTableRow } from '~/components';
 import { Button, Divider, InfoTable, Text } from '~/components';
 import { QuoteStatusInfo } from './QuoteStatus';
 import { ProcessQuoteButton } from './ProcessQuoteButton';
+import { QuoteOrdersList } from './QuoteOrdersList';
 
 interface QuoteProps extends HoneyFlexProps {
   quote: Quote;
@@ -20,6 +21,7 @@ interface QuoteProps extends HoneyFlexProps {
 
 export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
   const queryClient = useQueryClient();
+
   const { isAdmin } = useAppContext();
 
   const acceptQuoteMutation = useMutation({
@@ -29,6 +31,8 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
   const rejectQuoteMutation = useMutation({
     mutationFn: rejectQuote,
   });
+
+  const [isViewOrders, setIsViewOrders] = useState(false);
 
   const handleAcceptQuote = async () => {
     try {
@@ -74,12 +78,14 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
 
   return (
     <HoneyFlex
+      onClick={() => setIsViewOrders(!isViewOrders)}
       $gap={1}
       $padding={2}
       $borderRadius="4px"
       $border="1px solid"
       $borderColor="neutral.grayLight"
       $backgroundColor="neutral.white"
+      $cursor="pointer"
       {...props}
     >
       <HoneyFlex row centerY $gap={1}>
@@ -143,6 +149,8 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
           </Button>
         )}
       </HoneyFlex>
+
+      {isViewOrders && <QuoteOrdersList quoteId={quote.id} />}
     </HoneyFlex>
   );
 };

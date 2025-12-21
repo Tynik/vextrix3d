@@ -34,6 +34,7 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
 
   assert(user.firstName, 'First name is missing');
   assert(user.lastName, 'Last name is missing');
+  assert(quote.pricing.total, 'Total price is missing');
 
   const ordersRef = getOrdersCollectionRef(firestore);
   const orderDocRef = ordersRef.doc();
@@ -64,8 +65,10 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
     pricing: {
       currency: quote.pricing.currency,
       amount: quote.pricing.amount,
-      discount: quote.pricing.discountPct,
-      vat: quote.pricing.vatPct,
+      discountPct: quote.pricing.discountPct,
+      discountAmount: quote.pricing.discountAmount,
+      vatPct: quote.pricing.vatPct,
+      vatAmount: quote.pricing.vatAmount,
       total: quote.pricing.total,
     },
     payment: null,

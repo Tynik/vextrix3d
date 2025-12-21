@@ -1,10 +1,11 @@
 import { FIREBASE_AUTH_ERRORS } from '~/configs';
-import type { PaginatedResponse, Quote, User } from '~/netlify/types';
+import type { Order, PaginatedResponse, Quote, User } from '~/netlify/types';
 import type { SignupPayload } from '~/netlify/functions/sign-up';
 import type { SignInPayload } from '~/netlify/functions/sign-in';
 import type { QuoteRequestPayload } from '~/netlify/functions/quote-request';
 import type { SendQuotePayload } from '~/netlify/functions/send-quote';
 import type { GetQuotesPayload } from '~/netlify/functions/get-quotes';
+import type { GetQuoteOrdersPayload } from '~/netlify/functions/get-quote-orders';
 import type { AcceptQuotePayload } from '~/netlify/functions/accept-quote';
 import type { RejectQuotePayload } from '~/netlify/functions/reject-quote';
 import type { NetlifyRequestError } from './netlify-request';
@@ -68,6 +69,14 @@ export const sendQuote = async (payload: SendQuotePayload) =>
 export const getQuotes = async (params: GetQuotesPayload) =>
   (
     await netlifyRequest<PaginatedResponse<Quote>>('get-quotes', {
+      method: 'GET',
+      params,
+    })
+  ).data;
+
+export const getQuoteOrders = async (params: GetQuoteOrdersPayload) =>
+  (
+    await netlifyRequest<PaginatedResponse<Order>>('get-quote-orders', {
       method: 'GET',
       params,
     })

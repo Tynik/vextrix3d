@@ -8,6 +8,7 @@ export type NetlifyFunction =
   | 'quote-request'
   | 'send-quote'
   | 'get-quotes'
+  | 'get-quote-orders'
   | 'accept-quote'
   | 'reject-quote'
   | 'upload-quote-request-model';

@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
+import type { MouseEventHandler } from 'react';
 
 import { preventDragAndDropEventsPropagation } from '~/utils';
 import type { BackdropStyledProps } from './BackdropStyled';
 import { BackdropStyled } from './BackdropStyled';
 
-export const Backdrop = (props: BackdropStyledProps) => {
+export const Backdrop = ({ onClick, ...props }: BackdropStyledProps) => {
   const { show } = props;
 
   useEffect(() => {
@@ -27,7 +28,18 @@ export const Backdrop = (props: BackdropStyledProps) => {
     }
   }, [show]);
 
+  const handleClick: MouseEventHandler<HTMLDivElement> = e => {
+    e.stopPropagation();
+
+    onClick?.(e);
+  };
+
   return (
-    <BackdropStyled aria-hidden="true" {...preventDragAndDropEventsPropagation()} {...props} />
+    <BackdropStyled
+      aria-hidden="true"
+      onClick={handleClick}
+      {...preventDragAndDropEventsPropagation()}
+      {...props}
+    />
   );
 };

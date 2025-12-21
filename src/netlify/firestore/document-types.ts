@@ -154,9 +154,11 @@ export interface OrderJob {
 interface OrderPricing {
   currency: Currency;
   amount: number;
-  discount: Nullable<number>;
-  vat: Nullable<number>;
-  total: Nullable<number>;
+  discountPct: number;
+  discountAmount: number;
+  vatPct: number;
+  vatAmount: number;
+  total: number;
 }
 
 interface OrderPayment {

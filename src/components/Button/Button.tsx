@@ -1,5 +1,5 @@
 import React, { cloneElement } from 'react';
-import type { ElementType, ReactElement } from 'react';
+import type { ElementType, ReactElement, MouseEventHandler } from 'react';
 
 import type { IconProps } from '~/components';
 import { Progress } from '~/components';
@@ -18,11 +18,18 @@ export const Button = <Element extends ElementType = 'button'>({
   icon,
   iconProps,
   disabled,
+  onClick,
   ...props
 }: ButtonProps<Element>) => {
+  const handleClick: MouseEventHandler<Element> = e => {
+    e.stopPropagation();
+
+    onClick?.(e);
+  };
+
   return (
     // @ts-expect-error
-    <ButtonStyled disabled={loading || disabled} {...props}>
+    <ButtonStyled disabled={loading || disabled} {...props} onClick={handleClick}>
       {loading ? (
         <Progress color="neutral.white" size="16px" lineWidth="2px" />
       ) : (

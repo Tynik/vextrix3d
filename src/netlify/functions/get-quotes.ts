@@ -14,8 +14,9 @@ export const handler = createHandler(
   {
     allowedMethods: ['GET'],
   },
-  withSession<GetQuotesPayload>(async ({ decodedIdToken, isAdmin, payload }) => {
-    const limit = Math.min(payload?.limit ?? 20, 50);
+  withSession<GetQuotesPayload>(async ({ decodedIdToken, isAdmin, event }) => {
+    const limit = Math.min(+(event.queryStringParameters?.limit ?? 20), 50);
+    const cursor = +(event.queryStringParameters?.cursor ?? 0);
 
     let quotesQuery = getQuotesCollectionRef()
       .orderBy('createdAt', 'desc')
@@ -25,8 +26,8 @@ export const handler = createHandler(
       quotesQuery = quotesQuery.where('requester.userId', '==', decodedIdToken.uid);
     }
 
-    if (payload?.cursor) {
-      quotesQuery = quotesQuery.startAfter(Timestamp.fromMillis(payload.cursor));
+    if (cursor) {
+      quotesQuery = quotesQuery.startAfter(Timestamp.fromMillis(cursor));
     }
 
     const quotesSnapshot = await quotesQuery.get();
