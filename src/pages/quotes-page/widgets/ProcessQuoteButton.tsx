@@ -1,13 +1,18 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { HoneyBox, HoneyFlex } from '@react-hive/honey-layout';
-import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
+import type {
+  HoneyFormDefaultValues,
+  HoneyFormFieldsConfig,
+  HoneyFormOnSubmit,
+} from '@react-hive/honey-form';
 import { createHoneyFormNumberFilter } from '@react-hive/honey-form';
 import { useQueryClient } from '@tanstack/react-query';
 
 import type { Quote } from '~/netlify/types';
 import { QUOTES_QUERY_KEY } from '~/configs';
 import { handleApiError, sendQuote } from '~/api';
-import { CheckIcon, PlayArrowIcon } from '~/icons';
+import { CheckIcon, CloseIcon, PlayArrowIcon } from '~/icons';
+import type { ButtonProps } from '~/components';
 import { Button, CueShadows, Dialog, Form, TextInput } from '~/components';
 
 type ProcessQuoteFormData = {
@@ -52,11 +57,11 @@ export const PROCESS_QUOTE_FORM_FIELDS: HoneyFormFieldsConfig<ProcessQuoteFormDa
   },
 };
 
-interface ProcessQuoteButtonProps {
+interface ProcessQuoteButtonProps extends ButtonProps {
   quote: Quote;
 }
 
-export const ProcessQuoteButton = ({ quote }: ProcessQuoteButtonProps) => {
+export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps) => {
   const queryClient = useQueryClient();
 
   const [isProcess, setIsProcess] = useState(false);
@@ -85,18 +90,26 @@ export const ProcessQuoteButton = ({ quote }: ProcessQuoteButtonProps) => {
     setIsProcess(false);
   }, []);
 
+  const formDefaults = useMemo<HoneyFormDefaultValues<ProcessQuoteFormData>>(
+    () => ({
+      amount: quote.pricing?.amount,
+    }),
+    [quote],
+  );
+
   return (
     <>
       <Button
         onClick={() => setIsProcess(true)}
         variant="primary"
         icon={<PlayArrowIcon color="neutral.white" />}
+        {...props}
       >
         Process
       </Button>
 
       <Dialog title={`Process Quote ${quote.quoteNumber}`} open={isProcess} onClose={handleClose}>
-        <Form fields={PROCESS_QUOTE_FORM_FIELDS} onSubmit={processQuote}>
+        <Form fields={PROCESS_QUOTE_FORM_FIELDS} defaults={formDefaults} onSubmit={processQuote}>
           {({ formFields, isFormSubmitting }) => (
             <>
               <CueShadows $margin={-2} $padding={2}>
@@ -131,23 +144,23 @@ export const ProcessQuoteButton = ({ quote }: ProcessQuoteButtonProps) => {
                 </HoneyFlex>
               </CueShadows>
 
-              <HoneyBox
-                $display="flex"
-                $gap={2}
-                $justifyContent="flex-end"
-                $paddingTop={2}
-                $marginTop={2}
-              >
+              <HoneyBox $display="flex" $gap={2} $justifyContent="flex-end" $paddingTop={2}>
                 <Button
                   loading={isFormSubmitting}
                   type="submit"
                   variant="primary"
+                  size="full"
                   icon={<CheckIcon color="neutral.white" />}
                 >
                   Submit
                 </Button>
 
-                <Button variant="secondary" onClick={handleClose}>
+                <Button
+                  onClick={handleClose}
+                  variant="secondary"
+                  size="full"
+                  icon={<CloseIcon color="neutral.white" />}
+                >
                   Close
                 </Button>
               </HoneyBox>

@@ -80,37 +80,46 @@ interface QuoteOrderRowProps extends HoneyFlexProps {
 export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
   return (
     <HoneyFlex
+      onClick={e => e.stopPropagation()}
       row
       centerY
       $gap={1}
+      $flexWrap="wrap"
       $padding={1}
       $borderRadius="4px"
       $border="1px solid"
       $borderColor="neutral.grayLight"
       $background={ORDER_STATUS_GRADIENT[order.status]}
+      $cursor="auto"
       // $hover={{
       //   background: ORDER_STATUS_GRADIENT[order.status].replace('0.00', '0.08'),
       // }}
     >
-      <Text variant="body1" $fontWeight={700}>
-        {order.orderNumber}
-      </Text>
-
-      <Text variant="body2" $fontWeight={500}>
-        {order.status}
-      </Text>
-
-      <HoneyFlex row centerY $gap={1} $marginLeft="auto">
-        <Text variant="body1">Total:</Text>
-
-        <Text variant="body1" $fontWeight={700}>
-          {formatCurrency(order.pricing.total)}
+      <HoneyFlex row centerY $gap={1}>
+        <Text variant="body1" $fontWeight={700} $whiteSpace="nowrap">
+          {order.orderNumber}
         </Text>
 
+        <Text variant="body2" $fontWeight={500}>
+          {order.status}
+        </Text>
+      </HoneyFlex>
+
+      <HoneyFlex row centerY $gap={1} $marginLeft="auto">
+        <HoneyFlex row centerY $gap={0.5}>
+          <Text variant="body1">Total:</Text>
+
+          <Text variant="body1" $fontWeight={700}>
+            {formatCurrency(order.pricing.total)}
+          </Text>
+        </HoneyFlex>
+      </HoneyFlex>
+
+      {order.status === 'new' && (
         <Button onClick={() => {}} variant="accent" $marginLeft={1}>
           Pay
         </Button>
-      </HoneyFlex>
+      )}
     </HoneyFlex>
   );
 };

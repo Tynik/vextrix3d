@@ -38,7 +38,7 @@ export const handler = createHandler(
     const data = quoteDocs.map<Quote>(doc => {
       const quote = doc.data();
 
-      const { job, model, pricing } = quote;
+      const { requester, job, model, pricing } = quote;
 
       const isExposePricing = isAdmin || QUOTE_PRICING_ALLOWED_STATUSES.includes(quote.status);
 
@@ -46,6 +46,20 @@ export const handler = createHandler(
         id: quote.id,
         quoteNumber: quote.quoteNumber,
         status: quote.status,
+        requester: isAdmin
+          ? {
+              type: requester.type,
+              userId: requester.userId,
+              guest: requester.guest
+                ? {
+                    firstName: requester.guest.firstName,
+                    lastName: requester.guest.lastName,
+                    email: requester.guest.email,
+                    phone: requester.guest.phone,
+                  }
+                : null,
+            }
+          : null,
         job: {
           technology: job.technology,
           material: job.material,
@@ -55,6 +69,7 @@ export const handler = createHandler(
         },
         model: {
           fileName: model.fileName,
+          fileUrl: model.fileUrl,
         },
         pricing: isExposePricing
           ? {

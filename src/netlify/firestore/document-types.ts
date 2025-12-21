@@ -7,6 +7,7 @@ import type {
   UserId,
   QuoteStatus,
   QuoteJobTechnology,
+  QuoteRequesterType,
   QuoteId,
   OrderId,
   OrderStatus,
@@ -18,8 +19,6 @@ import type {
 export type QuoteHistoryChangeId = string;
 
 export type QuoteChangeRequestId = string;
-
-type QuoteRequesterType = 'registered' | 'guest';
 
 type QuotePricingStage = 'estimated' | 'final';
 

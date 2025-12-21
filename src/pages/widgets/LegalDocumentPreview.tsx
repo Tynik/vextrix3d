@@ -3,6 +3,7 @@ import { HoneyBox } from '@react-hive/honey-layout';
 
 import type { LegalDocumentType } from '~/configs';
 import { LEGAL_DOCUMENTS } from '~/configs';
+import { CloseIcon } from '~/icons';
 import { Button, CueShadows, Dialog, Text } from '~/components';
 
 interface LegalDocumentPreviewProps {
@@ -44,7 +45,11 @@ export const LegalDocumentPreview = ({ documentType }: LegalDocumentPreviewProps
           $paddingTop={2}
           $marginTop={2}
         >
-          <Button variant="secondary" onClick={handleClosePolicy}>
+          <Button
+            onClick={handleClosePolicy}
+            variant="secondary"
+            icon={<CloseIcon color="neutral.white" />}
+          >
             Close
           </Button>
         </HoneyBox>

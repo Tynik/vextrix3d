@@ -27,3 +27,5 @@ export * from './DescriptionIcon';
 export * from './ThumbUpIcon';
 export * from './ThumbDownIcon';
 export * from './PlayArrowIcon';
+export * from './DownloadIcon';
+export * from './CloseIcon';

@@ -10,6 +10,7 @@ import { Text } from '~/components';
 export interface InfoTableRow {
   label: string;
   value: ReactNode;
+  visible?: boolean;
 }
 
 interface InfoTableProps<Item extends HoneyListItem> extends Omit<
@@ -29,23 +30,25 @@ export const InfoTable = <Item extends HoneyListItem>({
 }: InfoTableProps<Item>) => {
   return (
     <HoneyList items={rows} itemKey="label" $gap={1} data-testid="user-profile" {...props}>
-      {row => (
-        <HoneyFlex row $gap={2}>
-          <Text variant={textVariant} {...rowProps}>
-            {row.label}:
-          </Text>
+      {row =>
+        row.visible !== false && (
+          <HoneyFlex row $gap={2}>
+            <Text variant={textVariant} {...rowProps}>
+              {row.label}:
+            </Text>
 
-          {isNilOrEmptyString(row.value) ? (
-            <Text variant={textVariant} $color="neutral.grayMedium" $fontStyle="italic">
-              Empty
-            </Text>
-          ) : (
-            <Text variant={textVariant} $display="flex" $gap={1} $alignItems="center" ellipsis>
-              {row.value}
-            </Text>
-          )}
-        </HoneyFlex>
-      )}
+            {isNilOrEmptyString(row.value) ? (
+              <Text variant={textVariant} $color="neutral.grayMedium" $fontStyle="italic">
+                Empty
+              </Text>
+            ) : (
+              <Text variant={textVariant} $display="flex" $gap={1} $alignItems="center" ellipsis>
+                {row.value}
+              </Text>
+            )}
+          </HoneyFlex>
+        )
+      }
     </HoneyList>
   );
 };

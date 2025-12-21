@@ -22,6 +22,8 @@ export type ActorRole = AccountRole | 'system';
 
 export type QuoteJobTechnology = 'FDM' | 'SLA';
 
+export type QuoteRequesterType = 'registered' | 'guest';
+
 // https://www.iso.org/iso-4217-currency-codes.html
 export type Currency = 'gbp' | 'eur' | 'usd';
 
@@ -131,12 +133,28 @@ export interface Order {
   createdAt: number;
 }
 
+interface QuoteRequester {
+  type: QuoteRequesterType;
+  userId: Nullable<UserId>;
+  guest: Nullable<{
+    firstName: string;
+    lastName: string;
+    email: string;
+    phone: Nullable<string>;
+  }>;
+}
+
 interface QuoteJob {
   technology: QuoteJobTechnology;
   material: Nullable<string>;
   color: Nullable<string>;
   quantity: number;
   notes: Nullable<string>;
+}
+
+interface QuoteModel {
+  fileName: string;
+  fileUrl: string;
 }
 
 interface QuotePricing {
@@ -152,10 +170,9 @@ export interface Quote {
   id: QuoteId;
   quoteNumber: string;
   status: QuoteStatus;
+  requester: Nullable<QuoteRequester>;
   job: QuoteJob;
-  model: {
-    fileName: string;
-  };
+  model: QuoteModel;
   pricing: Nullable<QuotePricing>;
   pricedAt: Nullable<number>;
   acceptedAt: Nullable<number>;

@@ -1,4 +1,5 @@
 import React from 'react';
+import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyList } from '@react-hive/honey-layout';
 import { useQuery } from '@tanstack/react-query';
 
@@ -7,11 +8,11 @@ import { getQuoteOrders } from '~/api';
 import { Alert, Progress } from '~/components';
 import { QuoteOrderRow } from './QuoteOrderRow';
 
-interface QuoteOrdersListProps {
+interface QuoteOrdersListProps extends HoneyFlexProps {
   quoteId: string;
 }
 
-export const QuoteOrdersList = ({ quoteId }: QuoteOrdersListProps) => {
+export const QuoteOrdersList = ({ quoteId, ...props }: QuoteOrdersListProps) => {
   const {
     data: orders,
     isFetching,
@@ -35,6 +36,7 @@ export const QuoteOrdersList = ({ quoteId }: QuoteOrdersListProps) => {
       itemKey="id"
       $flexGrow={1}
       $gap={1}
+      {...props}
       // Data
       data-testid="quote-orders-list"
     >
