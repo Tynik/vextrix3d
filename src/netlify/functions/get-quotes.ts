@@ -3,7 +3,7 @@ import { Timestamp } from 'firebase-admin/firestore';
 import type { Quote } from '../types';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
-import { getQuotesCollection, QUOTE_PRICING_ALLOWED_STATUSES } from '../firestore';
+import { getQuotesCollectionRef, QUOTE_PRICING_ALLOWED_STATUSES } from '../firestore';
 
 export type GetQuotesPayload = {
   limit?: number;
@@ -17,7 +17,7 @@ export const handler = createHandler(
   withSession<GetQuotesPayload>(async ({ decodedIdToken, isAdmin, payload }) => {
     const limit = Math.min(payload?.limit ?? 20, 50);
 
-    let quotesQuery = getQuotesCollection()
+    let quotesQuery = getQuotesCollectionRef()
       .orderBy('createdAt', 'desc')
       .limit(limit + 1);
 
@@ -32,15 +32,16 @@ export const handler = createHandler(
     const quotesSnapshot = await quotesQuery.get();
 
     const hasNextPage = quotesSnapshot.docs.length > limit;
-    const quoteDocuments = quotesSnapshot.docs.slice(0, limit);
+    const quoteDocs = quotesSnapshot.docs.slice(0, limit);
 
-    const data = quoteDocuments.map<Quote>(document => {
-      const quote = document.data();
+    const data = quoteDocs.map<Quote>(doc => {
+      const quote = doc.data();
 
       const { job, model, pricing } = quote;
 
       return {
         id: quote.id,
+        quoteNumber: quote.quoteNumber,
         status: quote.status,
         job: {
           technology: job.technology,
@@ -52,14 +53,15 @@ export const handler = createHandler(
         model: {
           fileName: model.fileName,
         },
-        pricing: QUOTE_PRICING_ALLOWED_STATUSES.includes(quote.status)
-          ? {
-              amount: pricing.amount,
-              discount: pricing.discount,
-              vat: pricing.vat,
-              total: pricing.total,
-            }
-          : null,
+        pricing:
+          isAdmin || QUOTE_PRICING_ALLOWED_STATUSES.includes(quote.status)
+            ? {
+                amount: pricing.amount,
+                discount: pricing.discount,
+                vat: pricing.vat,
+                total: pricing.total,
+              }
+            : null,
         quotedAt: quote.quotedAt?.toMillis() ?? null,
         acceptedAt: quote.acceptedAt?.toMillis() ?? null,
         inProductionAt: quote.inProductionAt?.toMillis() ?? null,

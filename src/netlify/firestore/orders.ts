@@ -1,9 +1,11 @@
 import admin from 'firebase-admin';
-import { Timestamp } from 'firebase-admin/firestore';
-import { v4 as uuidv4 } from 'uuid';
+import { Timestamp, Transaction } from 'firebase-admin/firestore';
+import { assert } from '@react-hive/honey-utils';
 
 import type { OrderStatus } from '~/netlify/types';
-import { getOrderDocumentRef } from './document-references';
+import type { QuoteDocument, UserDocument } from './document-types';
+import { getOrdersCollectionRef, ORDERS_COLLECTION_NAME } from './collections';
+import { getNextSequence } from './utils';
 
 const ALLOWED_ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   new: ['paid', 'cancelled', 'expired'],
@@ -16,17 +18,59 @@ const ALLOWED_ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   expired: [],
 };
 
+export const getNextOrderNumber = async () => {
+  const seq = await getNextSequence(ORDERS_COLLECTION_NAME);
+
+  return `OR-${seq}`;
+};
+
 interface CreateOrderOptions {
-  //
+  user: UserDocument;
+  quote: QuoteDocument;
 }
 
-export const createOrder = async (options: CreateOrderOptions) => {
+export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderOptions) => {
   const firestore = admin.firestore();
 
-  const orderId = uuidv4();
+  assert(user.firstName, 'First name is missing');
+  assert(user.lastName, 'Last name is missing');
+
+  const ordersCollRef = getOrdersCollectionRef(firestore);
+  const orderDocRef = ordersCollRef.doc();
+
+  const orderNumber = await getNextOrderNumber();
   const now = Timestamp.now();
 
-  await firestore.runTransaction(async tx => {
-    const orderRef = getOrderDocumentRef(orderId, firestore);
+  tx.set(orderDocRef, {
+    id: orderDocRef.id,
+    quoteId: quote.id,
+    orderNumber,
+    status: 'new',
+    customer: {
+      userId: quote.requester.userId,
+      stripeCustomerId: '',
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+    },
+    job: {
+      technology: quote.job.technology,
+      material: quote.job.material,
+      color: quote.job.color,
+      quantity: quote.job.quantity,
+      notes: quote.job.notes,
+    },
+    pricing: {
+      currency: quote.pricing.currency,
+      amount: quote.pricing.amount,
+      discount: quote.pricing.discount,
+      vat: quote.pricing.vat,
+      total: quote.pricing.total,
+    },
+    payment: null,
+    shipping: null,
+    updatedAt: null,
+    createdAt: now,
   });
 };

@@ -54,6 +54,7 @@ export const withSession =
           error: {
             name: e instanceof FirebaseAuthError ? 'FirebaseAuthError' : 'FirebaseError',
             code: error.code,
+            message: error.message,
           },
         },
       };

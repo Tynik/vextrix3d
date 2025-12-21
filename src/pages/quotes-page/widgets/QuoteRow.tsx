@@ -1,11 +1,16 @@
 import React, { useMemo } from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
+import { QUOTES_QUERY_KEY } from '~/configs';
+import { acceptQuote, handleApiError, rejectQuote } from '~/api';
 import { formatCurrency, formatDatetime } from '~/utils';
 import type { Quote } from '~/netlify/types';
+import { useAppContext } from '~/models';
+import { ThumbDownIcon, ThumbUpIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
-import { Divider, InfoTable, Text } from '~/components';
+import { Button, Divider, InfoTable, Text } from '~/components';
 import { QuoteStatusInfo } from './QuoteStatus';
 
 interface QuoteProps extends HoneyFlexProps {
@@ -13,18 +18,53 @@ interface QuoteProps extends HoneyFlexProps {
 }
 
 export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
+  const queryClient = useQueryClient();
+  const { isAdmin } = useAppContext();
+
+  const acceptQuoteMutation = useMutation({
+    mutationFn: acceptQuote,
+  });
+
+  const rejectQuoteMutation = useMutation({
+    mutationFn: rejectQuote,
+  });
+
+  const handleAcceptQuote = async () => {
+    try {
+      await acceptQuoteMutation.mutateAsync({
+        quoteId: quote.id,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [QUOTES_QUERY_KEY],
+      });
+    } catch (e) {
+      handleApiError(e);
+    }
+  };
+
+  const handleRejectQuote = async () => {
+    try {
+      await rejectQuoteMutation.mutateAsync({
+        quoteId: quote.id,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [QUOTES_QUERY_KEY],
+      });
+    } catch (e) {
+      handleApiError(e);
+    }
+  };
+
   const infoTableRows = useMemo<InfoTableRow[]>(
     () => [
       {
-        label: 'Technology',
-        value: quote.job.technology,
+        label: 'File name',
+        value: quote.model.fileName,
       },
       {
-        label: 'Quantity',
-        value: quote.job.quantity,
-      },
-      {
-        label: 'Submitted',
+        label: 'Submitted on',
         value: formatDatetime(quote.createdAt),
       },
     ],
@@ -42,6 +82,10 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       {...props}
     >
       <HoneyFlex row centerY $gap={1}>
+        <Text variant="body1" $fontWeight={700}>
+          {quote.quoteNumber}
+        </Text>
+
         <QuoteStatusInfo status={quote.status} />
 
         {quote.pricing && (
@@ -54,8 +98,10 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       <Divider />
 
       <HoneyFlex row centerY $gap={1}>
-        <Text variant="subtitle1" ellipsis>
-          {quote.model.fileName}
+        <Text variant="body2">
+          {[quote.job.technology, quote.job.material, `Qty: ${quote.job.quantity}`]
+            .filter(Boolean)
+            .join(' | ')}
         </Text>
       </HoneyFlex>
 
@@ -64,10 +110,43 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
         textVariant="body2"
         rowProps={{
           $width: '100%',
-          $maxWidth: '70px',
+          $maxWidth: '90px',
           $color: 'neutral.grayMedium',
         }}
       />
+
+      <HoneyFlex row $gap={1} $justifyContent="flex-end" $marginTop={1}>
+        {isAdmin && quote.status === 'new' && (
+          <Button variant="primary" onClick={() => {}}>
+            Quote
+          </Button>
+        )}
+
+        {quote.status === 'quoted' && (
+          <Button
+            loading={acceptQuoteMutation.isPending}
+            disabled={rejectQuoteMutation.isPending}
+            onClick={handleAcceptQuote}
+            variant="success"
+            icon={<ThumbUpIcon color="neutral.white" />}
+          >
+            Accept
+          </Button>
+        )}
+
+        {(isAdmin && quote.status === 'new') ||
+          (quote.status === 'quoted' && (
+            <Button
+              loading={rejectQuoteMutation.isPending}
+              disabled={acceptQuoteMutation.isPending}
+              onClick={handleRejectQuote}
+              variant="danger"
+              icon={<ThumbDownIcon color="neutral.white" />}
+            >
+              Reject
+            </Button>
+          ))}
+      </HoneyFlex>
     </HoneyFlex>
   );
 };

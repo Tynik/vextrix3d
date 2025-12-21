@@ -4,7 +4,7 @@ import { HoneyBox } from '@react-hive/honey-layout';
 import type { HoneyColor, HoneyCSSDimensionValue } from '@react-hive/honey-style';
 import { css, styled, pxToRem, resolveColor } from '@react-hive/honey-style';
 
-type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'success';
+type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'success' | 'danger';
 
 type ButtonSize = 'small' | 'medium' | 'large' | 'full';
 
@@ -46,6 +46,12 @@ const VARIANTS_CONFIG: Record<ButtonVariant, ColorsConfig> = {
     hover: '#008E58',
     color: 'neutral.white',
     border: '#007A4B',
+  },
+  danger: {
+    backgroundColor: 'error.signalCoral',
+    hover: 'error.crimsonRed',
+    color: 'neutral.white',
+    border: 'error.crimsonRed',
   },
 };
 

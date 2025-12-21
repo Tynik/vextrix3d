@@ -25,6 +25,10 @@ type QuotePricingStage = 'estimated' | 'final';
 
 type QuoteChangeRequestStatus = 'new' | 'accepted' | 'rejected';
 
+export interface SequenceDocument {
+  value: number;
+}
+
 interface Document<Id extends string> {
   id: Id;
   createdAt: Timestamp;
@@ -89,6 +93,7 @@ export interface QuotePricing {
 }
 
 export interface QuoteDocument extends Document<QuoteId> {
+  quoteNumber: string;
   requester: QuoteRequester;
   status: QuoteStatus;
   job: QuoteJob;
@@ -136,9 +141,25 @@ interface OrderCustomer {
   phone: Nullable<string>;
 }
 
+export interface OrderJob {
+  technology: QuoteJobTechnology;
+  material: Nullable<string>;
+  color: Nullable<string>;
+  quantity: number;
+  notes: Nullable<string>;
+}
+
+interface OrderPricing {
+  currency: Currency;
+  amount: number;
+  discount: Nullable<number>;
+  vat: Nullable<number>;
+  total: Nullable<number>;
+}
+
 interface OrderPayment {
   paymentIntentId: StripePaymentIntentId;
-  paidAt: Timestamp;
+  paidAt: Nullable<Timestamp>;
   refundedAt: Nullable<Timestamp>;
 }
 
@@ -160,11 +181,12 @@ interface OrderShipping {
 
 export interface OrderDocument extends Document<OrderId> {
   quoteId: QuoteId;
+  orderNumber: string;
   status: OrderStatus;
   customer: OrderCustomer;
-  job: QuoteJob;
-  pricing: QuotePricing;
-  payment: OrderPayment;
+  job: OrderJob;
+  pricing: OrderPricing;
+  payment: Nullable<OrderPayment>;
   shipping: Nullable<OrderShipping>;
   updatedAt: Nullable<Timestamp>;
 }

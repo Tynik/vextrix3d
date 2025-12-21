@@ -7,6 +7,8 @@ export type NetlifyFunction =
   | 'get-user-profile'
   | 'quote-request'
   | 'get-quotes'
+  | 'accept-quote'
+  | 'reject-quote'
   | 'upload-quote-request-model';
 
 export interface NetlifyRequestResponse<Response = unknown> {

@@ -22,7 +22,9 @@ export const handler = createHandler<SignupPayload>(
         status: 'error',
         statusCode: 400,
         data: {
-          error: 'Invalid data',
+          error: {
+            message: 'Invalid data',
+          },
         },
       };
     }

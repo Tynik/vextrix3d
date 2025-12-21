@@ -115,6 +115,7 @@ interface QuotePricing {
 
 export interface Quote {
   id: QuoteId;
+  quoteNumber: string;
   status: QuoteStatus;
   job: QuoteJob;
   model: {

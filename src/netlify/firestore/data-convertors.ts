@@ -1,11 +1,17 @@
 import type { FirestoreDataConverter } from 'firebase-admin/firestore';
 
 import type {
+  SequenceDocument,
   OrderDocument,
   QuoteDocument,
   QuoteHistoryStatusChangeDocument,
   UserDocument,
 } from './document-types';
+
+export const sequenceConverter: FirestoreDataConverter<SequenceDocument> = {
+  toFirestore: data => data,
+  fromFirestore: snapshot => snapshot.data() as SequenceDocument,
+};
 
 export const userConverter: FirestoreDataConverter<UserDocument> = {
   toFirestore: data => data,

@@ -3,6 +3,7 @@ import type { DocumentReference } from 'firebase-admin/firestore';
 
 import type { OrderId, QuoteId } from '~/netlify/types';
 import type {
+  SequenceDocument,
   OrderDocument,
   QuoteDocument,
   QuoteHistoryChangeId,
@@ -10,31 +11,39 @@ import type {
   UserDocument,
 } from './document-types';
 import {
+  SEQUENCES_COLLECTION_NAME,
   ORDERS_COLLECTION_NAME,
   QUOTE_HISTORY_COLLECTION_NAME,
   QUOTES_COLLECTION_NAME,
   USERS_COLLECTION_NAME,
 } from './collections';
 import {
+  sequenceConverter,
   orderConverter,
   quoteConverter,
   quoteHistoryStatusChangeConverter,
   userConverter,
 } from './data-convertors';
 
-export const getUserDocumentRef = (
+export const getSequenceDocRef = (
+  key: typeof QUOTES_COLLECTION_NAME | typeof ORDERS_COLLECTION_NAME,
+  firestore = admin.firestore(),
+): DocumentReference<SequenceDocument> =>
+  firestore.doc(`${SEQUENCES_COLLECTION_NAME}/${key}`).withConverter(sequenceConverter);
+
+export const getUserDocRef = (
   userId: string,
   firestore = admin.firestore(),
 ): DocumentReference<UserDocument> =>
   firestore.doc(`${USERS_COLLECTION_NAME}/${userId}`).withConverter(userConverter);
 
-export const getQuoteDocumentRef = (
+export const getQuoteDocRef = (
   quoteId: QuoteId,
   firestore = admin.firestore(),
 ): DocumentReference<QuoteDocument> =>
   firestore.doc(`${QUOTES_COLLECTION_NAME}/${quoteId}`).withConverter(quoteConverter);
 
-export const getQuoteHistoryStatusChangeDocumentRef = (
+export const getQuoteHistoryStatusChangeDocRef = (
   quoteId: QuoteId,
   quoteHistoryId: QuoteHistoryChangeId,
   firestore = admin.firestore(),
@@ -43,7 +52,7 @@ export const getQuoteHistoryStatusChangeDocumentRef = (
     .doc(`${QUOTES_COLLECTION_NAME}/${quoteId}/${QUOTE_HISTORY_COLLECTION_NAME}/${quoteHistoryId}`)
     .withConverter(quoteHistoryStatusChangeConverter);
 
-export const getOrderDocumentRef = (
+export const getOrderDocRef = (
   orderId: OrderId,
   firestore = admin.firestore(),
 ): DocumentReference<OrderDocument> =>

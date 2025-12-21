@@ -17,7 +17,9 @@ export const handler = createHandler<SignInPayload>(
         status: 'error',
         statusCode: 400,
         data: {
-          error: 'ID token is required',
+          error: {
+            message: 'ID token is required',
+          },
         },
       };
     }

@@ -52,7 +52,9 @@ export const handler = createHandler<QuoteRequestPayload>(
         status: 'error',
         statusCode: 400,
         data: {
-          error: 'Payload is empty',
+          error: {
+            message: 'Payload is empty',
+          },
         },
       };
     }
@@ -62,7 +64,7 @@ export const handler = createHandler<QuoteRequestPayload>(
 
       let quoteRequester: QuoteRequester;
       let quoteHistoryActor: Actor;
-      let userDocument: Nullable<UserDocument> = null;
+      let user: Nullable<UserDocument> = null;
 
       if (cookies.session) {
         const decodedIdToken = await getAuth().verifySessionCookie(cookies.session, true);
@@ -73,8 +75,8 @@ export const handler = createHandler<QuoteRequestPayload>(
           guest: null,
         };
 
-        userDocument = await getExistingUserDocument(decodedIdToken.uid);
-        quoteHistoryActor = buildQuoteHistoryActor(userDocument);
+        user = await getExistingUserDocument(decodedIdToken.uid);
+        quoteHistoryActor = buildQuoteHistoryActor(user);
       } else {
         assert(payload.firstName, 'The first name must be set');
         assert(payload.lastName, 'The last name must be set');
@@ -97,8 +99,8 @@ export const handler = createHandler<QuoteRequestPayload>(
             guest: null,
           };
 
-          userDocument = await getExistingUserDocument(userRecord.uid);
-          quoteHistoryActor = buildQuoteHistoryActor(userDocument);
+          user = await getExistingUserDocument(userRecord.uid);
+          quoteHistoryActor = buildQuoteHistoryActor(user);
         } else {
           quoteRequester = {
             type: 'guest',
@@ -115,13 +117,13 @@ export const handler = createHandler<QuoteRequestPayload>(
         }
       }
 
-      const email = userDocument?.email ?? payload.email;
+      const email = user?.email ?? payload.email;
       assert(email, 'The email must be set');
 
-      const firstName = userDocument?.firstName ?? payload.firstName;
+      const firstName = user?.firstName ?? payload.firstName;
       assert(firstName, 'The first name must be set');
 
-      const lastName = userDocument?.lastName ?? payload.lastName;
+      const lastName = user?.lastName ?? payload.lastName;
       assert(lastName, 'The last name must be set');
 
       const bucket = getStorage().bucket(FIREBASE_STORAGE_BUCKET);
@@ -152,8 +154,8 @@ export const handler = createHandler<QuoteRequestPayload>(
         by: quoteHistoryActor,
         job: {
           technology: 'FDM',
-          material: 'PLA',
-          color: 'black',
+          material: null,
+          color: null,
           quantity: payload.quantity,
           notes: payload.description,
         },

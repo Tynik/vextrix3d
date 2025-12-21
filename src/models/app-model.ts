@@ -8,6 +8,7 @@ import type { User } from '~/netlify/types';
 export interface AppContextValue {
   auth: Auth;
   user: Nullable<User>;
+  isAdmin: boolean;
   isUserLoading: boolean;
   setUser: (user: User) => void;
 }

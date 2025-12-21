@@ -15,7 +15,9 @@ export const handler = createHandler<{ idToken: string }>(
         status: 'error',
         statusCode: 401,
         data: {
-          error: 'Authorization token is missing',
+          error: {
+            message: 'Authorization token is missing',
+          },
         },
       };
     }
@@ -26,18 +28,17 @@ export const handler = createHandler<{ idToken: string }>(
       await initFirebaseAdminApp();
 
       const decodedIdToken = await getAuth().verifyIdToken(idToken, true);
-
-      const userDocument = await getExistingUserDocument(decodedIdToken.uid);
+      const user = await getExistingUserDocument(decodedIdToken.uid);
 
       return {
         status: 'ok',
         data: {
-          role: userDocument.role,
-          email: userDocument.email,
+          role: user.role,
+          email: user.email,
           isEmailVerified: decodedIdToken.email_verified ?? false,
-          firstName: userDocument.firstName,
-          lastName: userDocument.lastName,
-          phone: userDocument.phone,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          phone: user.phone,
         } satisfies User,
       };
     } catch (e) {

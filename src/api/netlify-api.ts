@@ -4,6 +4,8 @@ import type { SignupPayload } from '~/netlify/functions/sign-up';
 import type { SignInPayload } from '~/netlify/functions/sign-in';
 import type { QuoteRequestPayload } from '~/netlify/functions/quote-request';
 import type { GetQuotesPayload } from '~/netlify/functions/get-quotes';
+import type { AcceptQuotePayload } from '~/netlify/functions/accept-quote';
+import type { RejectQuotePayload } from '~/netlify/functions/reject-quote';
 import type { NetlifyRequestError } from './netlify-request';
 import { netlifyRequest } from './netlify-request';
 
@@ -59,5 +61,21 @@ export const getQuotes = async (params: GetQuotesPayload) =>
     await netlifyRequest<PaginatedResponse<Quote>>('get-quotes', {
       method: 'GET',
       params,
+    })
+  ).data;
+
+export const acceptQuote = async (payload: AcceptQuotePayload) =>
+  (
+    await netlifyRequest('accept-quote', {
+      method: 'POST',
+      payload,
+    })
+  ).data;
+
+export const rejectQuote = async (payload: RejectQuotePayload) =>
+  (
+    await netlifyRequest('reject-quote', {
+      method: 'POST',
+      payload,
     })
   ).data;

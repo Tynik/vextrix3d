@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { HoneyGrid, HoneyGridColumn, HoneyList } from '@react-hive/honey-layout';
 
+import { QUOTES_QUERY_KEY } from '~/configs';
 import { getQuotes } from '~/api';
 import { useAppContext } from '~/models';
 import { EmptyContentIllustration } from '~/illustrations';
@@ -16,7 +17,7 @@ export const QuotesList = () => {
     isFetching,
     isError,
   } = useQuery({
-    queryKey: ['quotes'],
+    queryKey: [QUOTES_QUERY_KEY],
     queryFn: () => getQuotes({}),
     enabled: Boolean(user),
   });

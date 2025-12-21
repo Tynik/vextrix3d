@@ -24,3 +24,5 @@ export * from './VerifiedIcon';
 export * from './ReportProblemIcon';
 export * from './MarkEmailReadIcon';
 export * from './DescriptionIcon';
+export * from './ThumbUpIcon';
+export * from './ThumbDownIcon';

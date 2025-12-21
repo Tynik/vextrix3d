@@ -5,18 +5,18 @@ import { assert } from '@react-hive/honey-utils';
 import type { Nullable } from '~/types';
 import type { UserDocument } from './document-types';
 import type { AccountRole, StripeCustomerId } from '../types';
-import { getUserDocumentRef } from './document-references';
+import { getUserDocRef } from './document-references';
 
 export const getExistingUserDocument = async (userId: string): Promise<UserDocument> => {
-  const documentReference = getUserDocumentRef(userId);
+  const userDocRef = getUserDocRef(userId);
 
-  const documentSnapshot = await documentReference.get();
-  assert(documentSnapshot.exists, 'User document does not exist');
+  const docSnap = await userDocRef.get();
+  assert(docSnap.exists, 'User document does not exist');
 
-  const userDocument = documentSnapshot.data();
-  assert(userDocument, 'User document data is empty');
+  const userDoc = docSnap.data();
+  assert(userDoc, 'User document data is empty');
 
-  return userDocument;
+  return userDoc;
 };
 
 interface CreateUserOptions {
@@ -51,9 +51,9 @@ export const createUser = async ({
     role,
   });
 
-  const userDocument = getUserDocumentRef(userRecord.uid);
+  const userDocRef = getUserDocRef(userRecord.uid);
 
-  await userDocument.set({
+  await userDocRef.set({
     id: userRecord.uid,
     stripeCustomerId,
     role,

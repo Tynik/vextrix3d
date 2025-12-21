@@ -12,7 +12,7 @@ import { IconButton, Text } from '~/components';
 export const ProfilePageTitle = () => {
   const { auth } = useAppContext();
 
-  const signOutMutationRequest = useMutation({
+  const signOutMutation = useMutation({
     mutationFn: async () => {
       try {
         await signOutRequest();
@@ -24,13 +24,13 @@ export const ProfilePageTitle = () => {
 
   const handleSignOut = async () => {
     try {
-      await signOutMutationRequest.mutateAsync();
+      await signOutMutation.mutateAsync();
     } catch (e) {
       handleApiError(e);
     }
   };
 
-  if (signOutMutationRequest.isSuccess) {
+  if (signOutMutation.isSuccess) {
     return <Navigate to={ROUTES.home} replace />;
   }
 
@@ -42,13 +42,11 @@ export const ProfilePageTitle = () => {
         </Text>
 
         <IconButton
-          disabled={signOutMutationRequest.isPending}
+          disabled={signOutMutation.isPending}
           onClick={handleSignOut}
           icon={
             <ExitToAppIcon
-              color={
-                signOutMutationRequest.isPending ? 'neutral.grayMedium' : 'secondary.carbonInk'
-              }
+              color={signOutMutation.isPending ? 'neutral.grayMedium' : 'secondary.carbonInk'}
             />
           }
           $marginLeft="auto"

@@ -13,23 +13,24 @@ export const USERS_COLLECTION_NAME = 'users';
 export const QUOTES_COLLECTION_NAME = 'quotes';
 export const QUOTE_HISTORY_COLLECTION_NAME = 'history';
 export const ORDERS_COLLECTION_NAME = 'orders';
+export const SEQUENCES_COLLECTION_NAME = 'sequences';
 
-export const getUsersCollection = (
+export const getUsersCollectionRef = (
   firestore = admin.firestore(),
 ): CollectionReference<UserDocument> =>
   firestore.collection(USERS_COLLECTION_NAME).withConverter(userConverter);
 
-export const getQuotesCollection = (
+export const getQuotesCollectionRef = (
   firestore = admin.firestore(),
 ): CollectionReference<QuoteDocument> =>
   firestore.collection(QUOTES_COLLECTION_NAME).withConverter(quoteConverter);
 
-export const getQuoteHistoryCollection = (quoteRef: DocumentReference<QuoteDocument>) =>
+export const getQuoteHistoryCollectionRef = (quoteRef: DocumentReference<QuoteDocument>) =>
   quoteRef
     .collection(QUOTE_HISTORY_COLLECTION_NAME)
     .withConverter(quoteHistoryStatusChangeConverter);
 
-export const getOrdersCollection = (
+export const getOrdersCollectionRef = (
   firestore = admin.firestore(),
 ): CollectionReference<OrderDocument> =>
   firestore.collection(ORDERS_COLLECTION_NAME).withConverter(orderConverter);

@@ -26,6 +26,7 @@ export const App = () => {
     () => ({
       auth,
       user,
+      isAdmin: user?.role === 'admin',
       isUserLoading,
       setUser,
     }),
