@@ -29,24 +29,22 @@ export const handler = createHandler(
     const firestore = admin.firestore();
 
     try {
-      const quoteDocRef = getQuoteDocRef(quoteId, firestore);
-      const ordersCollRef = getOrdersCollectionRef(firestore);
+      const quoteRef = getQuoteDocRef(quoteId, firestore);
+      const ordersRef = getOrdersCollectionRef(firestore);
 
       await firestore.runTransaction(async tx => {
-        const quoteDocSnap = await tx.get(quoteDocRef);
-        assert(quoteDocSnap.exists, 'Quote does not exist');
+        const quoteSnap = await tx.get(quoteRef);
+        assert(quoteSnap.exists, 'Quote does not exist');
 
-        const quote = quoteDocSnap.data();
+        const quote = quoteSnap.data();
         assert(quote, 'Quote data is empty');
 
         const isOwner = quote.requester.userId === decodedIdToken.uid;
         assert(isOwner, 'Forbidden');
 
-        assert(quote.status === 'quoted', 'Quote is not eligible for order creation');
+        assert(quote.status === 'priced', 'Quote is not eligible for order creation');
 
-        const existingOrderQuery = await tx.get(
-          ordersCollRef.where('quoteId', '==', quoteId).limit(1),
-        );
+        const existingOrderQuery = await tx.get(ordersRef.where('quoteId', '==', quoteId).limit(1));
 
         if (!existingOrderQuery.empty) {
           return;

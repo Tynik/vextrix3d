@@ -12,6 +12,7 @@ import { ThumbDownIcon, ThumbUpIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
 import { Button, Divider, InfoTable, Text } from '~/components';
 import { QuoteStatusInfo } from './QuoteStatus';
+import { ProcessQuoteButton } from './ProcessQuoteButton';
 
 interface QuoteProps extends HoneyFlexProps {
   quote: Quote;
@@ -116,13 +117,9 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       />
 
       <HoneyFlex row $gap={1} $justifyContent="flex-end" $marginTop={1}>
-        {isAdmin && quote.status === 'new' && (
-          <Button variant="primary" onClick={() => {}}>
-            Quote
-          </Button>
-        )}
+        {isAdmin && quote.status === 'new' && <ProcessQuoteButton quote={quote} />}
 
-        {quote.status === 'quoted' && (
+        {quote.status === 'priced' && (
           <Button
             loading={acceptQuoteMutation.isPending}
             disabled={rejectQuoteMutation.isPending}
@@ -134,18 +131,17 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
           </Button>
         )}
 
-        {(isAdmin && quote.status === 'new') ||
-          (quote.status === 'quoted' && (
-            <Button
-              loading={rejectQuoteMutation.isPending}
-              disabled={acceptQuoteMutation.isPending}
-              onClick={handleRejectQuote}
-              variant="danger"
-              icon={<ThumbDownIcon color="neutral.white" />}
-            >
-              Reject
-            </Button>
-          ))}
+        {((isAdmin && quote.status === 'new') || quote.status === 'priced') && (
+          <Button
+            loading={rejectQuoteMutation.isPending}
+            disabled={acceptQuoteMutation.isPending}
+            onClick={handleRejectQuote}
+            variant="danger"
+            icon={<ThumbDownIcon color="neutral.white" />}
+          >
+            Reject
+          </Button>
+        )}
       </HoneyFlex>
     </HoneyFlex>
   );

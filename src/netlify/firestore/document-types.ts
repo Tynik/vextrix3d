@@ -86,8 +86,10 @@ export interface QuotePricing {
   type: QuotePricingStage;
   currency: Currency;
   amount: number;
-  discount: Nullable<number>;
-  vat: Nullable<number>;
+  discountPct: number;
+  discountAmount: number;
+  vatPct: number;
+  vatAmount: number;
   total: Nullable<number>;
   breakdown: Nullable<QuotePricingBreakdown>;
 }
@@ -99,7 +101,7 @@ export interface QuoteDocument extends Document<QuoteId> {
   job: QuoteJob;
   model: QuoteModel;
   pricing: QuotePricing;
-  quotedAt: Nullable<Timestamp>;
+  pricedAt: Nullable<Timestamp>;
   acceptedAt: Nullable<Timestamp>;
   inProductionAt: Nullable<Timestamp>;
   rejectedAt: Nullable<Timestamp>;

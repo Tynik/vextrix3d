@@ -39,6 +39,8 @@ export const handler = createHandler(
 
       const { job, model, pricing } = quote;
 
+      const isExposePricing = isAdmin || QUOTE_PRICING_ALLOWED_STATUSES.includes(quote.status);
+
       return {
         id: quote.id,
         quoteNumber: quote.quoteNumber,
@@ -53,16 +55,17 @@ export const handler = createHandler(
         model: {
           fileName: model.fileName,
         },
-        pricing:
-          isAdmin || QUOTE_PRICING_ALLOWED_STATUSES.includes(quote.status)
-            ? {
-                amount: pricing.amount,
-                discount: pricing.discount,
-                vat: pricing.vat,
-                total: pricing.total,
-              }
-            : null,
-        quotedAt: quote.quotedAt?.toMillis() ?? null,
+        pricing: isExposePricing
+          ? {
+              amount: pricing.amount,
+              discountPct: pricing.discountPct,
+              discountAmount: pricing.discountAmount,
+              vatPct: pricing.vatPct,
+              vatAmount: pricing.vatAmount,
+              total: pricing.total,
+            }
+          : null,
+        pricedAt: quote.pricedAt?.toMillis() ?? null,
         acceptedAt: quote.acceptedAt?.toMillis() ?? null,
         inProductionAt: quote.inProductionAt?.toMillis() ?? null,
         rejectedAt: quote.rejectedAt?.toMillis() ?? null,

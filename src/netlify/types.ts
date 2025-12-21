@@ -23,7 +23,7 @@ export type ActorRole = AccountRole | 'system';
 export type QuoteJobTechnology = 'FDM' | 'SLA';
 
 // https://www.iso.org/iso-4217-currency-codes.html
-export type Currency = 'GBP' | 'EUR' | 'USD';
+export type Currency = 'gbp' | 'eur' | 'usd';
 
 export type QuoteStatus =
   /**
@@ -37,15 +37,15 @@ export type QuoteStatus =
    * Price, scope, and conditions are visible to the customer.
    * The quote is locked; the customer may only request changes or accept it.
    */
-  | 'quoted'
+  | 'priced'
   /**
-   * The customer has requested changes to a quoted or accepted quote.
+   * The customer has requested changes to a priced or accepted quote.
    * No direct edits are allowed.
    * Awaiting review and action by admin.
    */
   | 'changeRequested'
   /**
-   * The customer has agreed to the quoted price and terms.
+   * The customer has agreed to the price and terms.
    * This status indicates intent only and does NOT imply payment by itself.
    * Typically followed by payment confirmation and transition to production.
    */
@@ -108,8 +108,10 @@ interface QuoteJob {
 
 interface QuotePricing {
   amount: number;
-  discount: Nullable<number>;
-  vat: Nullable<number>;
+  discountPct: number;
+  discountAmount: number;
+  vatPct: number;
+  vatAmount: number;
   total: Nullable<number>;
 }
 
@@ -122,7 +124,7 @@ export interface Quote {
     fileName: string;
   };
   pricing: Nullable<QuotePricing>;
-  quotedAt: Nullable<number>;
+  pricedAt: Nullable<number>;
   acceptedAt: Nullable<number>;
   inProductionAt: Nullable<number>;
   rejectedAt: Nullable<number>;

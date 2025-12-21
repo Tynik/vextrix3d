@@ -1,0 +1,160 @@
+import React, { useCallback, useState } from 'react';
+import { HoneyBox, HoneyFlex } from '@react-hive/honey-layout';
+import type { HoneyFormFieldsConfig, HoneyFormOnSubmit } from '@react-hive/honey-form';
+import { createHoneyFormNumberFilter } from '@react-hive/honey-form';
+import { useQueryClient } from '@tanstack/react-query';
+
+import type { Quote } from '~/netlify/types';
+import { QUOTES_QUERY_KEY } from '~/configs';
+import { handleApiError, sendQuote } from '~/api';
+import { CheckIcon, PlayArrowIcon } from '~/icons';
+import { Button, CueShadows, Dialog, Form, TextInput } from '~/components';
+
+type ProcessQuoteFormData = {
+  amount: number;
+  discount: number;
+  vat: number;
+  note: string;
+};
+
+export const PROCESS_QUOTE_FORM_FIELDS: HoneyFormFieldsConfig<ProcessQuoteFormData> = {
+  amount: {
+    type: 'number',
+    required: true,
+    decimal: true,
+    min: 1,
+    max: 9999,
+    filter: createHoneyFormNumberFilter({
+      negative: false,
+    }),
+  },
+  discount: {
+    type: 'number',
+    decimal: true,
+    min: 0,
+    max: 99,
+    filter: createHoneyFormNumberFilter({
+      negative: false,
+    }),
+  },
+  vat: {
+    type: 'number',
+    decimal: true,
+    min: 0,
+    max: 30,
+    filter: createHoneyFormNumberFilter({
+      negative: false,
+    }),
+  },
+  note: {
+    type: 'string',
+    max: 100,
+  },
+};
+
+interface ProcessQuoteButtonProps {
+  quote: Quote;
+}
+
+export const ProcessQuoteButton = ({ quote }: ProcessQuoteButtonProps) => {
+  const queryClient = useQueryClient();
+
+  const [isProcess, setIsProcess] = useState(false);
+
+  const processQuote: HoneyFormOnSubmit<ProcessQuoteFormData> = async data => {
+    try {
+      await sendQuote({
+        quoteId: quote.id,
+        pricing: {
+          amount: data.amount,
+          discountPct: data.discount,
+          vatPct: data.vat,
+        },
+        note: data.note,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: [QUOTES_QUERY_KEY],
+      });
+    } catch (e) {
+      handleApiError(e);
+    }
+  };
+
+  const handleClose = useCallback(() => {
+    setIsProcess(false);
+  }, []);
+
+  return (
+    <>
+      <Button
+        onClick={() => setIsProcess(true)}
+        variant="primary"
+        icon={<PlayArrowIcon color="neutral.white" />}
+      >
+        Process
+      </Button>
+
+      <Dialog title={`Process Quote ${quote.quoteNumber}`} open={isProcess} onClose={handleClose}>
+        <Form fields={PROCESS_QUOTE_FORM_FIELDS} onSubmit={processQuote}>
+          {({ formFields, isFormSubmitting }) => (
+            <>
+              <CueShadows $margin={-2} $padding={2}>
+                <HoneyFlex $gap={2} $minWidth="300px">
+                  <TextInput
+                    label="* Amount"
+                    disabled={isFormSubmitting}
+                    error={formFields.amount.errors[0]?.message}
+                    {...formFields.amount.props}
+                  />
+
+                  <TextInput
+                    label="Discount, %"
+                    disabled={isFormSubmitting}
+                    error={formFields.discount.errors[0]?.message}
+                    {...formFields.discount.props}
+                  />
+
+                  <TextInput
+                    label="VAT, %"
+                    disabled={isFormSubmitting}
+                    error={formFields.vat.errors[0]?.message}
+                    {...formFields.vat.props}
+                  />
+
+                  <TextInput
+                    label="Note"
+                    disabled={isFormSubmitting}
+                    error={formFields.note.errors[0]?.message}
+                    {...formFields.note.props}
+                  />
+                </HoneyFlex>
+              </CueShadows>
+
+              <HoneyBox
+                $display="flex"
+                $gap={2}
+                $justifyContent="flex-end"
+                $paddingTop={2}
+                $marginTop={2}
+              >
+                <Button
+                  loading={isFormSubmitting}
+                  type="submit"
+                  variant="primary"
+                  icon={<CheckIcon color="neutral.white" />}
+                >
+                  Submit
+                </Button>
+
+                <Button variant="secondary" onClick={handleClose}>
+                  Close
+                </Button>
+              </HoneyBox>
+            </>
+          )}
+        </Form>
+      </Dialog>
+    </>
+  );
+};

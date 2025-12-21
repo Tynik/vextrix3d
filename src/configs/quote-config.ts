@@ -8,7 +8,7 @@ export const QUOTE_STATUS_COLORS_CONFIGS: Record<QuoteStatus, ColorsConfig> = {
     text: 'secondary.carbonInk',
     background: 'neutral.grayUltraLight',
   },
-  quoted: {
+  priced: {
     text: 'neutral.white',
     background: 'accent.infoBlue',
   },

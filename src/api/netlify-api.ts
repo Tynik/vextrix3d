@@ -3,6 +3,7 @@ import type { PaginatedResponse, Quote, User } from '~/netlify/types';
 import type { SignupPayload } from '~/netlify/functions/sign-up';
 import type { SignInPayload } from '~/netlify/functions/sign-in';
 import type { QuoteRequestPayload } from '~/netlify/functions/quote-request';
+import type { SendQuotePayload } from '~/netlify/functions/send-quote';
 import type { GetQuotesPayload } from '~/netlify/functions/get-quotes';
 import type { AcceptQuotePayload } from '~/netlify/functions/accept-quote';
 import type { RejectQuotePayload } from '~/netlify/functions/reject-quote';
@@ -55,6 +56,14 @@ export const quoteRequest = async (payload: QuoteRequestPayload) => {
 
   return uploadModelUrl;
 };
+
+export const sendQuote = async (payload: SendQuotePayload) =>
+  (
+    await netlifyRequest('send-quote', {
+      method: 'POST',
+      payload,
+    })
+  ).data;
 
 export const getQuotes = async (params: GetQuotesPayload) =>
   (

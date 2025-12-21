@@ -64,6 +64,7 @@ export const DialogStyled = styled(HoneyOverlay)`
       > .dialog__content {
         @honey-stack {
           padding: ${2};
+          flex-grow: 1;
 
           overflow-y: auto;
         }

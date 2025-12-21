@@ -26,3 +26,4 @@ export * from './MarkEmailReadIcon';
 export * from './DescriptionIcon';
 export * from './ThumbUpIcon';
 export * from './ThumbDownIcon';
+export * from './PlayArrowIcon';

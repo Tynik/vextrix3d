@@ -3,7 +3,7 @@ import { Transaction, Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
-import type { QuoteId, QuoteStatus, UserId } from '../types';
+import type { QuoteId, QuoteStatus } from '../types';
 import type {
   Actor,
   QuoteDocument,
@@ -22,9 +22,9 @@ import {
 } from './collections';
 
 const ALLOWED_QUOTE_STATUS_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
-  new: ['quoted', 'rejected'],
-  quoted: ['changeRequested', 'accepted', 'rejected', 'expired'],
-  changeRequested: ['quoted', 'rejected'],
+  new: ['priced', 'rejected'],
+  priced: ['changeRequested', 'accepted', 'rejected', 'expired'],
+  changeRequested: ['priced', 'rejected'],
   accepted: ['changeRequested', 'inProduction'],
   rejected: [],
   expired: [],
@@ -33,7 +33,7 @@ const ALLOWED_QUOTE_STATUS_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
 };
 
 export const QUOTE_PRICING_ALLOWED_STATUSES: QuoteStatus[] = [
-  'quoted',
+  'priced',
   'accepted',
   'rejected',
   'expired',
@@ -72,20 +72,20 @@ export const createQuote = async ({ requester, by, job, model, pricing }: Create
 
   await firestore.runTransaction(async tx => {
     const quotesCollRef = getQuotesCollectionRef(firestore);
-    const quoteDocRef = quotesCollRef.doc();
+    const quoteRef = quotesCollRef.doc();
 
     const quoteNumber = await getNextQuoteNumber();
     const now = Timestamp.now();
 
-    tx.set(quoteDocRef, {
-      id: quoteDocRef.id,
+    tx.set(quoteRef, {
+      id: quoteRef.id,
       quoteNumber,
       status: 'new',
       requester,
       job,
       model,
       pricing,
-      quotedAt: null,
+      pricedAt: null,
       acceptedAt: null,
       rejectedAt: null,
       inProductionAt: null,
@@ -95,7 +95,7 @@ export const createQuote = async ({ requester, by, job, model, pricing }: Create
       createdAt: now,
     });
 
-    const quoteHistoryCollRef = getQuoteHistoryCollectionRef(quoteDocRef);
+    const quoteHistoryCollRef = getQuoteHistoryCollectionRef(quoteRef);
     const quoteHistoryDocRef = quoteHistoryCollRef.doc();
 
     tx.set(quoteHistoryDocRef, {
@@ -122,7 +122,7 @@ export const changeQuoteStatusTx = async (
   { reason = null }: ChangeQuoteStatusOptions = {},
 ) => {
   const firestore = admin.firestore();
-  const quoteDocRef = getQuoteDocRef(quote.id, firestore);
+  const quoteRef = getQuoteDocRef(quote.id, firestore);
 
   assert(
     ALLOWED_QUOTE_STATUS_TRANSITIONS[quote.status].includes(toStatus),
@@ -135,8 +135,8 @@ export const changeQuoteStatusTx = async (
     updatedAt: now,
   };
 
-  if (toStatus === 'quoted') {
-    quoteStatusUpdate.quotedAt = now;
+  if (toStatus === 'priced') {
+    quoteStatusUpdate.pricedAt = now;
   }
   if (toStatus === 'accepted') {
     quoteStatusUpdate.acceptedAt = now;
@@ -154,9 +154,9 @@ export const changeQuoteStatusTx = async (
     quoteStatusUpdate.completedAt = now;
   }
 
-  tx.update(quoteDocRef, quoteStatusUpdate);
+  tx.update(quoteRef, quoteStatusUpdate);
 
-  const quoteHistoryCollRef = getQuoteHistoryCollectionRef(quoteDocRef);
+  const quoteHistoryCollRef = getQuoteHistoryCollectionRef(quoteRef);
   const quoteHistoryDocRef = quoteHistoryCollRef.doc();
 
   tx.set(quoteHistoryDocRef, {

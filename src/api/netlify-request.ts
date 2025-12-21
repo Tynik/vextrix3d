@@ -6,6 +6,7 @@ export type NetlifyFunction =
   | 'sign-out'
   | 'get-user-profile'
   | 'quote-request'
+  | 'send-quote'
   | 'get-quotes'
   | 'accept-quote'
   | 'reject-quote'
