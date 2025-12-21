@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 import { QUOTES_QUERY_KEY } from '~/configs';
 import { acceptQuote, handleApiError, rejectQuote } from '~/api';
@@ -40,6 +41,10 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
         quoteId: quote.id,
       });
 
+      toast('Quote successfully accepted', {
+        type: 'success',
+      });
+
       await queryClient.invalidateQueries({
         queryKey: [QUOTES_QUERY_KEY],
       });
@@ -52,6 +57,10 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
     try {
       await rejectQuoteMutation.mutateAsync({
         quoteId: quote.id,
+      });
+
+      toast('Quote successfully rejected', {
+        type: 'success',
       });
 
       await queryClient.invalidateQueries({
@@ -93,7 +102,7 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
     >
       <HoneyFlex row centerY $gap={1} $flexWrap="wrap">
         <Text variant="body1" $fontWeight={700} $whiteSpace="nowrap">
-          {quote.quoteNumber}
+          #{quote.quoteNumber}
         </Text>
 
         <QuoteStatusInfo status={quote.status} />

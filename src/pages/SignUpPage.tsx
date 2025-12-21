@@ -50,7 +50,7 @@ export const SignUpPage = () => {
         password: data.password,
       });
 
-      toast('Welcome! Your account has been created. Please sign in to continue.');
+      toast('Welcome! Your account has been created. Please sign in to continue');
 
       navigate(ROUTES.auth.signIn, {
         replace: true,

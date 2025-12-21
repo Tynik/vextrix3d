@@ -57,6 +57,7 @@ export const handler = createHandler(
 
       return {
         id: order.id,
+        quoteId: order.quoteId,
         orderNumber: order.orderNumber,
         status: order.status,
         job: {

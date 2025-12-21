@@ -3,10 +3,18 @@ import webpack from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import CopyPlugin from 'copy-webpack-plugin';
 import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
 
 // Recreate __dirname in ESM
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const envFile = process.env.NODE_ENV === 'production' ? '.env.production' : '.env.local';
+
+// Load env vars explicitly
+dotenv.config({
+  path: path.resolve(__dirname, envFile),
+});
 
 export default {
   entry: path.resolve(__dirname, 'src/index.tsx'),
@@ -46,6 +54,7 @@ export default {
     new webpack.DefinePlugin({
       'process.env.LOCAL_ENV': JSON.stringify(process.env.LOCAL_ENV),
       'process.env.NETLIFY_SERVER': JSON.stringify(process.env.NETLIFY_SERVER),
+      'process.env.STRIPE_PUBLISHABLE_KEY': JSON.stringify(process.env.STRIPE_PUBLISHABLE_KEY),
     }),
     new HtmlWebpackPlugin({
       template: 'src/index.ejs',

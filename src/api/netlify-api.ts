@@ -8,6 +8,7 @@ import type { GetQuotesPayload } from '~/netlify/functions/get-quotes';
 import type { GetQuoteOrdersPayload } from '~/netlify/functions/get-quote-orders';
 import type { AcceptQuotePayload } from '~/netlify/functions/accept-quote';
 import type { RejectQuotePayload } from '~/netlify/functions/reject-quote';
+import type { PayOrderPayload } from '~/netlify/functions/pay-order';
 import type { NetlifyRequestError } from './netlify-request';
 import { netlifyRequest } from './netlify-request';
 
@@ -93,6 +94,14 @@ export const acceptQuote = async (payload: AcceptQuotePayload) =>
 export const rejectQuote = async (payload: RejectQuotePayload) =>
   (
     await netlifyRequest('reject-quote', {
+      method: 'POST',
+      payload,
+    })
+  ).data;
+
+export const payOrder = async (payload: PayOrderPayload) =>
+  (
+    await netlifyRequest<{ clientSecret: string }>('pay-order', {
       method: 'POST',
       payload,
     })

@@ -125,6 +125,7 @@ interface OrderPayment {
 
 export interface Order {
   id: OrderId;
+  quoteId: QuoteId;
   orderNumber: string;
   status: OrderStatus;
   job: OrderJob;

@@ -11,6 +11,7 @@ export type NetlifyFunction =
   | 'get-quote-orders'
   | 'accept-quote'
   | 'reject-quote'
+  | 'pay-order'
   | 'upload-quote-request-model';
 
 export interface NetlifyRequestResponse<Response = unknown> {

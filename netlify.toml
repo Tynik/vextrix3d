@@ -1,6 +1,11 @@
 [functions]
   directory = "src/netlify/functions"
 
+[[headers]]
+  for = "/.netlify/functions/stripe-webhook"
+  [headers.values]
+    Content-Type = "application/json"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

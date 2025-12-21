@@ -49,7 +49,7 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
     status: 'new',
     customer: {
       userId: quote.requester.userId,
-      stripeCustomerId: '',
+      stripeCustomerId: null,
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,

@@ -2191,7 +2191,16 @@
     "@netlify/dev-utils" "4.3.0"
     "@netlify/runtime-utils" "2.2.0"
 
-"@netlify/blobs@10.4.4", "@netlify/blobs@^10.4.1":
+"@netlify/blobs@10.5.0":
+  version "10.5.0"
+  resolved "https://registry.yarnpkg.com/@netlify/blobs/-/blobs-10.5.0.tgz#c23f614000336d7bb2927736f5ae18decf06f2f1"
+  integrity sha512-yrdt6H1X56DYz7pS3exU/iHO+iOW5sVzseaQwRQQ9OYChB/pVjXQzkBKAjS9dHIecSpv0oynkLxd/mwSJfAJLQ==
+  dependencies:
+    "@netlify/dev-utils" "4.3.3"
+    "@netlify/otel" "^5.1.1"
+    "@netlify/runtime-utils" "2.2.1"
+
+"@netlify/blobs@^10.4.1":
   version "10.4.4"
   resolved "https://registry.yarnpkg.com/@netlify/blobs/-/blobs-10.4.4.tgz#75cacecf68ca820e6e7302c4219da8aa355b18e3"
   integrity sha512-vN/qi/oqza0l3/nrP5jWcylLPaLBwhhXY5nLckMLyfkSrkUIYvYoAj++l9EF3ZPsptCGeFx9upsW16uQQ85N9w==
@@ -3206,6 +3215,18 @@
   dependencies:
     color "^5.0.2"
     text-hex "1.0.x"
+
+"@stripe/react-stripe-js@5.4.1":
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/@stripe/react-stripe-js/-/react-stripe-js-5.4.1.tgz#7eb2b7cfb5791383e42efd527d581a388575eada"
+  integrity sha512-ipeYcAHa4EPmjwfv0lFE+YDVkOQ0TMKkFWamW+BqmnSkEln/hO8rmxGPPWcd9WjqABx6Ro8Xg4pAS7evCcR9cw==
+  dependencies:
+    prop-types "^15.7.2"
+
+"@stripe/stripe-js@8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@stripe/stripe-js/-/stripe-js-8.6.0.tgz#ce7d32cdea44faa353f71e2c93dff7fd5f5eef25"
+  integrity sha512-EB0/GGgs4hfezzkiMkinlRgWtjz8fSdwVQhwYS7Sg/RQrSvuNOz+ssPjD+lAzqaYTCB0zlbrt0fcqVziLJrufQ==
 
 "@szmarczak/http-timer@^5.0.1":
   version "5.0.1"
@@ -9740,7 +9761,7 @@ process@^0.11.10:
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
   integrity sha512-cdGef/drWFoydD1JsMzuFf8100nZl+GT+yacc2bEced5f9Rjk4z+WtFUTBu9PhOi9j/jfmBPu0mMEY4wIdAF8A==
 
-prop-types@^15.8.1:
+prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==

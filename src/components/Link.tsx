@@ -21,7 +21,7 @@ const LinkStyled = styled(
 )<LinkProps>``;
 
 export const Link = ({ icon, ...props }: LinkProps) => {
-  const component = <Text as={LinkStyled} {...props} />;
+  const component = <Text as={LinkStyled} $width="max-content" {...props} />;
 
   if (icon) {
     return (

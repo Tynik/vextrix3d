@@ -135,7 +135,7 @@ export interface QuoteChangeRequestDocument extends Document<QuoteChangeRequestI
 
 interface OrderCustomer {
   userId: Nullable<UserId>;
-  stripeCustomerId: StripeCustomerId;
+  stripeCustomerId: Nullable<StripeCustomerId>;
   email: string;
   firstName: string;
   lastName: string;

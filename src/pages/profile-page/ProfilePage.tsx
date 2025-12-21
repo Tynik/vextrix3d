@@ -59,13 +59,13 @@ export const ProfilePage = () => {
       saveEmailVerificationCooldown(VERIFY_EMAIL_COOLDOWN_MS);
       setEmailVerificationCooldownMs(VERIFY_EMAIL_COOLDOWN_MS);
 
-      toast('Verification email sent. Please check your inbox.', {
+      toast('Verification email sent. Please check your inbox', {
         type: 'success',
       });
 
       return Promise.resolve();
     } catch (e) {
-      toast('Failed to send verification email. Please try again later.', {
+      toast('Failed to send verification email. Please try again later', {
         type: 'error',
       });
     } finally {

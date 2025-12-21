@@ -18,7 +18,7 @@ export const QuoteOrdersList = ({ quoteId, ...props }: QuoteOrdersListProps) => 
     isFetching,
     isError,
   } = useQuery({
-    queryKey: [QUOTE_ORDERS_QUERY_KEY],
+    queryKey: [QUOTE_ORDERS_QUERY_KEY, quoteId],
     queryFn: () => getQuoteOrders({ quoteId }),
   });
 

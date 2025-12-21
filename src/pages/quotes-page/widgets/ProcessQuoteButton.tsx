@@ -7,6 +7,7 @@ import type {
 } from '@react-hive/honey-form';
 import { createHoneyFormNumberFilter } from '@react-hive/honey-form';
 import { useQueryClient } from '@tanstack/react-query';
+import { toast } from 'react-toastify';
 
 import type { Quote } from '~/netlify/types';
 import { QUOTES_QUERY_KEY } from '~/configs';
@@ -37,7 +38,7 @@ export const PROCESS_QUOTE_FORM_FIELDS: HoneyFormFieldsConfig<ProcessQuoteFormDa
     type: 'number',
     decimal: true,
     min: 0,
-    max: 99,
+    max: 100,
     filter: createHoneyFormNumberFilter({
       negative: false,
     }),
@@ -78,6 +79,10 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
         note: data.note,
       });
 
+      toast('Quote successfully processed.', {
+        type: 'success',
+      });
+
       await queryClient.invalidateQueries({
         queryKey: [QUOTES_QUERY_KEY],
       });
@@ -108,7 +113,7 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
         Process
       </Button>
 
-      <Dialog title={`Process Quote ${quote.quoteNumber}`} open={isProcess} onClose={handleClose}>
+      <Dialog title={`Process Quote #${quote.quoteNumber}`} open={isProcess} onClose={handleClose}>
         <Form fields={PROCESS_QUOTE_FORM_FIELDS} defaults={formDefaults} onSubmit={processQuote}>
           {({ formFields, isFormSubmitting }) => (
             <>

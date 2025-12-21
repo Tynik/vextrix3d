@@ -29,3 +29,4 @@ export * from './ThumbDownIcon';
 export * from './PlayArrowIcon';
 export * from './DownloadIcon';
 export * from './CloseIcon';
+export * from './AttachMoneyIcon';

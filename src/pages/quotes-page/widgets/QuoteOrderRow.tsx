@@ -2,9 +2,10 @@ import React from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
-import { formatCurrency } from '~/utils';
 import type { Order, OrderStatus } from '~/netlify/types';
-import { Button, Text } from '~/components';
+import { formatCurrency } from '~/utils';
+import { Text } from '~/components';
+import { PayOrderButton } from './PayOrderButton';
 
 const ORDER_STATUS_GRADIENT: Record<OrderStatus, string> = {
   new: `
@@ -97,12 +98,18 @@ export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
     >
       <HoneyFlex row centerY $gap={1}>
         <Text variant="body1" $fontWeight={700} $whiteSpace="nowrap">
-          {order.orderNumber}
+          #{order.orderNumber}
         </Text>
 
         <Text variant="body2" $fontWeight={500}>
           {order.status}
         </Text>
+
+        {Boolean(order.payment?.paymentIntentId) && (
+          <Text variant="body2" $color="warning.orange">
+            (UNFINISHED)
+          </Text>
+        )}
       </HoneyFlex>
 
       <HoneyFlex row centerY $gap={1} $marginLeft="auto">
@@ -115,11 +122,7 @@ export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
         </HoneyFlex>
       </HoneyFlex>
 
-      {order.status === 'new' && (
-        <Button onClick={() => {}} variant="accent" $marginLeft={1}>
-          Pay
-        </Button>
-      )}
+      {order.status === 'new' && <PayOrderButton order={order} />}
     </HoneyFlex>
   );
 };

@@ -27,7 +27,7 @@ export const DialogStyled = styled(HoneyOverlay)`
       flex-direction: column;
 
       max-width: 1200px;
-      max-height: calc(100% - ${TOP_PERCENTAGE} - 24px);
+      max-height: calc(100% - 24px);
 
       left: 50%;
       top: ${TOP_PERCENTAGE};
