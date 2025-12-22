@@ -4,9 +4,10 @@ import { HoneyFlex } from '@react-hive/honey-layout';
 import { sendEmailVerification } from '@firebase/auth';
 import { toast } from 'react-toastify';
 
-import { useAppContext } from '~/models';
-import { DescriptionIcon, VerifiedIcon } from '~/icons';
 import { ROUTE_PATHS } from '~/configs';
+import { useAppContext } from '~/models';
+import { auth } from '~/firebase';
+import { DescriptionIcon, VerifiedIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
 import { Button, InfoTable, Tooltip, Text, Link } from '~/components';
 import { Page } from '~/pages';
@@ -38,7 +39,7 @@ const saveEmailVerificationCooldown = (cooldown: number) => {
 };
 
 export const ProfilePage = () => {
-  const { auth, user } = useAppContext();
+  const { user } = useAppContext();
 
   const [emailVerificationCooldownMs, setEmailVerificationCooldownMs] = useState(
     getEmailVerificationRemainingMs,

@@ -1,7 +1,7 @@
 import admin from 'firebase-admin';
 import { assert } from '@react-hive/honey-utils';
 
-import type { QuoteId } from '../types';
+import type { QuoteId } from '~/netlify/types';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
 import {

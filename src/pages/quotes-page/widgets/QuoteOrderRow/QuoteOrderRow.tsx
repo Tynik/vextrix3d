@@ -24,11 +24,11 @@ export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
           {order.status}
         </Text>
 
-        {order.status === 'new' && Boolean(order.payment?.paymentIntentId) && (
-          <Text variant="body2" $color="warning.orange">
-            (UNFINISHED)
-          </Text>
-        )}
+        {/*{order.status === 'new' && Boolean(order.payment) && (*/}
+        {/*  <Text variant="body2" $color="warning.orange">*/}
+        {/*    (UNFINISHED)*/}
+        {/*  </Text>*/}
+        {/*)}*/}
       </HoneyFlex>
 
       <HoneyFlex row centerY $gap={1} $marginLeft="auto">

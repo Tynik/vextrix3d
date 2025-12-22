@@ -4,14 +4,12 @@ import { HoneyFlex } from '@react-hive/honey-layout';
 import { Navigate } from 'react-router-dom';
 
 import { ROUTES } from '~/configs';
+import { auth } from '~/firebase';
 import { handleApiError, signOutRequest } from '~/api';
 import { ExitToAppIcon } from '~/icons';
-import { useAppContext } from '~/models';
 import { IconButton, Text } from '~/components';
 
 export const ProfilePageTitle = () => {
-  const { auth } = useAppContext();
-
   const signOutMutation = useMutation({
     mutationFn: async () => {
       try {

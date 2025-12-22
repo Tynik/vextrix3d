@@ -20,17 +20,16 @@ export const App = () => {
     });
   }, [location.pathname]);
 
-  const { auth, user, setUser, isUserLoading } = useAuth();
+  const { user, setUser, isUserLoading } = useAuth();
 
   const contextValue = useMemo<AppContextValue>(
     () => ({
-      auth,
       user,
       isAdmin: user?.role === 'admin',
       isUserLoading,
       setUser,
     }),
-    [auth, user, isUserLoading],
+    [user, isUserLoading],
   );
 
   return (

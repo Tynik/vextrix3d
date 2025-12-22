@@ -4,10 +4,11 @@ import { Firestore, Timestamp } from 'firebase-admin/firestore';
 import type { Handler } from '@netlify/functions';
 import { assert } from '@react-hive/honey-utils';
 
+import type { Nullable } from '~/types';
 import { STRIPE_WEBHOOK_SECRET } from '../constants';
 import { initFirebaseAdminApp } from '../firebase';
 import { initStripeClient } from '../stripe';
-import { getOrdersCollectionRef } from '../firestore';
+import { getOrderPrivatePaymentRef, getOrderRef } from '../firestore';
 
 const handlePaymentSucceeded = async (
   firestore: Firestore,
@@ -16,7 +17,7 @@ const handlePaymentSucceeded = async (
   const orderId = paymentIntent.metadata.orderId;
   assert(orderId, 'Missing orderId in PaymentIntent metadata');
 
-  const orderRef = getOrdersCollectionRef().doc(orderId);
+  const orderRef = getOrderRef(orderId);
 
   await firestore.runTransaction(async tx => {
     const orderSnap = await tx.get(orderRef);
@@ -34,9 +35,7 @@ const handlePaymentSucceeded = async (
     tx.update(orderRef, {
       status: 'paid',
       payment: {
-        paymentIntentId: paymentIntent.id,
         paidAt: now,
-        refundedAt: null,
       },
       updatedAt: now,
     });
@@ -44,30 +43,37 @@ const handlePaymentSucceeded = async (
 };
 
 const handleRefunded = async (firestore: Firestore, charge: Stripe.Charge) => {
-  const paymentIntentId = charge.payment_intent as string;
+  const paymentIntentId = charge.payment_intent as Nullable<string>;
   if (!paymentIntentId) {
     return;
   }
 
-  const ordersQuery = await getOrdersCollectionRef()
-    .where('payment.paymentIntentId', '==', paymentIntentId)
-    .limit(1)
-    .get();
+  const orderId = charge.metadata?.orderId;
+  assert(orderId, 'Missing orderId in charge metadata');
 
-  if (ordersQuery.empty) {
-    return;
-  }
-
-  const orderRef = ordersQuery.docs[0].ref;
+  const orderRef = getOrderRef(orderId);
+  const privatePaymentRef = getOrderPrivatePaymentRef(orderId);
 
   await firestore.runTransaction(async tx => {
-    const orderSnap = await tx.get(orderRef);
+    const [orderSnap, privatePaymentSnap] = await Promise.all([
+      tx.get(orderRef),
+      tx.get(privatePaymentRef),
+    ]);
+
     if (!orderSnap.exists) {
       return;
     }
 
     const order = orderSnap.data();
     if (!order || order.status === 'refunded') {
+      return;
+    }
+
+    // Optional safety check
+    if (
+      privatePaymentSnap.exists &&
+      privatePaymentSnap.data()?.paymentIntentId !== paymentIntentId
+    ) {
       return;
     }
 
@@ -87,7 +93,8 @@ const handlePaymentCanceled = async (firestore: Firestore, intent: Stripe.Paymen
     return;
   }
 
-  const orderRef = getOrdersCollectionRef().doc(orderId);
+  const orderRef = getOrderRef(orderId);
+  const orderPrivatePaymentRef = getOrderPrivatePaymentRef(orderId);
 
   await firestore.runTransaction(async tx => {
     const orderSnap = await tx.get(orderRef);
@@ -104,9 +111,12 @@ const handlePaymentCanceled = async (firestore: Firestore, intent: Stripe.Paymen
       return;
     }
 
+    tx.update(orderPrivatePaymentRef, {
+      paymentIntentId: null,
+    });
+
     tx.update(orderRef, {
       payment: {
-        paymentIntentId: null,
         paidAt: null,
         refundedAt: null,
       },

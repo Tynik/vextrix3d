@@ -8,8 +8,9 @@ import { delay } from '@react-hive/honey-utils';
 import { toast } from 'react-toastify';
 
 import { FIREBASE_AUTH_ERRORS, ROUTE_PATHS } from '~/configs';
+import { auth } from '~/firebase';
 import { handleApiError, signInRequest } from '~/api';
-import { useAppContext, useQueryParams } from '~/models';
+import { useQueryParams } from '~/models';
 import { CheckIcon } from '~/icons';
 import { Button, Form, TextInput } from '~/components';
 import { Page } from '~/pages';
@@ -38,8 +39,6 @@ const SIGN_IN_FORM_FIELDS: HoneyFormFieldsConfig<SignInFormData> = {
 export const SignInPage = () => {
   const navigate = useNavigate();
   const queryParams = useQueryParams();
-
-  const { auth } = useAppContext();
 
   const signIn: HoneyFormOnSubmit<SignInFormData> = async data => {
     try {

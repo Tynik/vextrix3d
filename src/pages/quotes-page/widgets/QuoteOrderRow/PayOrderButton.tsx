@@ -2,6 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { HoneyBox } from '@react-hive/honey-layout';
 import { Elements } from '@stripe/react-stripe-js';
+import { delay } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
 import type { Order } from '~/netlify/types';
@@ -42,6 +43,8 @@ export const PayOrderButton = ({ order }: PayOrderButtonProps) => {
   }, []);
 
   const handlePaymentSuccess = async () => {
+    await delay(3000);
+
     setClientSecret(null);
 
     await queryClient.invalidateQueries({

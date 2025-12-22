@@ -9,6 +9,7 @@ import {
   userConverter,
 } from './data-convertors';
 
+export const PRIVATE_COLLECTION_NAME = 'private';
 export const USERS_COLLECTION_NAME = 'users';
 export const QUOTES_COLLECTION_NAME = 'quotes';
 export const QUOTE_HISTORY_COLLECTION_NAME = 'history';

@@ -3,10 +3,11 @@ import admin from 'firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
+import type { OrderPayment } from '~/netlify/types';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
 import { initStripeClient } from '../stripe';
-import { getOrderDocRef } from '../firestore';
+import { getOrderPrivatePaymentRef, getOrderRef } from '../firestore';
 
 export type PayOrderPayload = {
   orderId: string;
@@ -18,7 +19,7 @@ export const handler = createHandler(
     assert(payload?.orderId, 'Order ID is required');
 
     const firestore = admin.firestore();
-    const orderRef = getOrderDocRef(payload.orderId, firestore);
+    const orderRef = getOrderRef(payload.orderId, firestore);
 
     const orderSnap = await orderRef.get();
     assert(orderSnap.exists, 'Order not found');
@@ -35,25 +36,21 @@ export const handler = createHandler(
 
     let stripeCustomerId = order.customer.stripeCustomerId;
     if (!stripeCustomerId) {
-      let stripeCustomer: Stripe.Customer;
-
       const existingStripeCustomer = await stripe.customers.search({
         query: `email:"${order.customer.email}"`,
         limit: 1,
       });
 
-      if (existingStripeCustomer.data.length) {
-        stripeCustomer = existingStripeCustomer.data[0];
-      } else {
-        stripeCustomer = await stripe.customers.create({
-          email: order.customer.email,
-          name: `${order.customer.firstName} ${order.customer.lastName}`,
-          phone: order.customer.phone ?? undefined,
-          metadata: {
-            userId: order.customer.userId,
-          },
-        });
-      }
+      const stripeCustomer = existingStripeCustomer.data.length
+        ? existingStripeCustomer.data[0]
+        : await stripe.customers.create({
+            email: order.customer.email,
+            name: `${order.customer.firstName} ${order.customer.lastName}`,
+            phone: order.customer.phone ?? undefined,
+            metadata: {
+              userId: order.customer.userId,
+            },
+          });
 
       stripeCustomerId = stripeCustomer.id;
 
@@ -63,31 +60,47 @@ export const handler = createHandler(
       });
     }
 
-    const paymentIntentId = order.payment?.paymentIntentId ?? null;
+    const privatePaymentRef = getOrderPrivatePaymentRef(payload.orderId, firestore);
+    const privatePaymentSnap = await privatePaymentRef.get();
+    const privatePayment = privatePaymentSnap.exists ? privatePaymentSnap.data() : null;
+
     let paymentIntent: Stripe.PaymentIntent;
 
-    if (paymentIntentId) {
-      paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    if (privatePayment?.paymentIntentId) {
+      paymentIntent = await stripe.paymentIntents.retrieve(privatePayment.paymentIntentId);
     } else {
-      paymentIntent = await stripe.paymentIntents.create({
-        amount: Math.round(order.pricing.total * 100),
-        currency: order.pricing.currency,
-        customer: stripeCustomerId,
-        automatic_payment_methods: {
-          enabled: true,
+      paymentIntent = await stripe.paymentIntents.create(
+        {
+          amount: Math.round(order.pricing.total * 100),
+          currency: order.pricing.currency,
+          customer: stripeCustomerId,
+          automatic_payment_methods: {
+            enabled: true,
+          },
+          metadata: {
+            orderId: order.id,
+            orderNumber: order.orderNumber,
+          },
         },
-        metadata: {
-          orderId: order.id,
-          orderNumber: order.orderNumber,
+        {
+          idempotencyKey: `order:${order.id}`,
         },
-      });
+      );
+
+      await privatePaymentRef.set(
+        {
+          paymentIntentId: paymentIntent.id,
+        },
+        {
+          merge: true,
+        },
+      );
 
       await orderRef.update({
         payment: {
-          paymentIntentId: paymentIntent.id,
           paidAt: null,
           refundedAt: null,
-        },
+        } satisfies OrderPayment,
         updatedAt: Timestamp.now(),
       });
     }
