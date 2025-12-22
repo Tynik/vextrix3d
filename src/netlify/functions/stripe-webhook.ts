@@ -32,13 +32,19 @@ const handlePaymentSucceeded = async (
 
     const now = Timestamp.now();
 
-    tx.update(orderRef, {
-      status: 'paid',
-      payment: {
-        paidAt: now,
+    tx.set(
+      orderRef,
+      {
+        status: 'paid',
+        payment: {
+          paidAt: now,
+        },
+        updatedAt: now,
       },
-      updatedAt: now,
-    });
+      {
+        merge: true,
+      },
+    );
   });
 };
 
@@ -79,11 +85,19 @@ const handleRefunded = async (firestore: Firestore, charge: Stripe.Charge) => {
 
     const now = Timestamp.now();
 
-    tx.update(orderRef, {
-      status: 'refunded',
-      'payment.refundedAt': now,
-      updatedAt: now,
-    });
+    tx.set(
+      orderRef,
+      {
+        status: 'refunded',
+        payment: {
+          refundedAt: now,
+        },
+        updatedAt: now,
+      },
+      {
+        merge: true,
+      },
+    );
   });
 };
 
@@ -115,13 +129,19 @@ const handlePaymentCanceled = async (firestore: Firestore, intent: Stripe.Paymen
       paymentIntentId: null,
     });
 
-    tx.update(orderRef, {
-      payment: {
-        paidAt: null,
-        refundedAt: null,
+    tx.set(
+      orderRef,
+      {
+        payment: {
+          paidAt: null,
+          refundedAt: null,
+        },
+        updatedAt: Timestamp.now(),
       },
-      updatedAt: Timestamp.now(),
-    });
+      {
+        merge: true,
+      },
+    );
   });
 };
 
