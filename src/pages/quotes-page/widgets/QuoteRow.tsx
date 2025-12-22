@@ -158,7 +158,7 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
         )}
 
         <HoneyFlex row centerY $gap={1} $marginLeft="auto">
-          {quote.status === 'new' && <ProcessQuoteButton quote={quote} />}
+          {isAdmin && quote.status === 'new' && <ProcessQuoteButton quote={quote} />}
 
           {quote.status === 'priced' && (
             <Button

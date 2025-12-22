@@ -105,7 +105,7 @@ export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
           {order.status}
         </Text>
 
-        {Boolean(order.payment?.paymentIntentId) && (
+        {order.status === 'new' && Boolean(order.payment?.paymentIntentId) && (
           <Text variant="body2" $color="warning.orange">
             (UNFINISHED)
           </Text>
