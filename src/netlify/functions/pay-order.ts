@@ -35,14 +35,25 @@ export const handler = createHandler(
 
     let stripeCustomerId = order.customer.stripeCustomerId;
     if (!stripeCustomerId) {
-      const stripeCustomer = await stripe.customers.create({
-        email: order.customer.email,
-        name: `${order.customer.firstName} ${order.customer.lastName}`,
-        phone: order.customer.phone ?? undefined,
-        metadata: {
-          userId: order.customer.userId,
-        },
+      let stripeCustomer: Stripe.Customer;
+
+      const existingStripeCustomer = await stripe.customers.search({
+        query: `email:"${order.customer.email}"`,
+        limit: 1,
       });
+
+      if (existingStripeCustomer.data.length) {
+        stripeCustomer = existingStripeCustomer.data[0];
+      } else {
+        stripeCustomer = await stripe.customers.create({
+          email: order.customer.email,
+          name: `${order.customer.firstName} ${order.customer.lastName}`,
+          phone: order.customer.phone ?? undefined,
+          metadata: {
+            userId: order.customer.userId,
+          },
+        });
+      }
 
       stripeCustomerId = stripeCustomer.id;
 

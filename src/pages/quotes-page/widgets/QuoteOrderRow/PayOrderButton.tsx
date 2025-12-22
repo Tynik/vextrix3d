@@ -7,8 +7,9 @@ import type { Nullable } from '~/types';
 import type { Order } from '~/netlify/types';
 import { stripePromise } from '~/stripe';
 import { handleApiError, payOrder } from '~/api';
-import { AttachMoneyIcon, CheckIcon, CloseIcon } from '~/icons';
-import { Button, CueShadows, Dialog } from '~/components';
+import { AttachMoneyIcon, CloseIcon } from '~/icons';
+import { Button, Dialog } from '~/components';
+import { QUOTE_ORDERS_QUERY_KEY } from '~/configs';
 import { PayOrderForm } from './PayOrderForm';
 
 interface PayOrderButtonProps {
@@ -31,10 +32,6 @@ export const PayOrderButton = ({ order }: PayOrderButtonProps) => {
       });
 
       setClientSecret(clientSecret);
-
-      // await queryClient.invalidateQueries({
-      //   queryKey: [QUOTE_ORDERS_QUERY_KEY, order.quoteId],
-      // });
     } catch (e) {
       handleApiError(e);
     }
@@ -44,10 +41,19 @@ export const PayOrderButton = ({ order }: PayOrderButtonProps) => {
     setClientSecret(null);
   }, []);
 
+  const handlePaymentSuccess = async () => {
+    setClientSecret(null);
+
+    await queryClient.invalidateQueries({
+      queryKey: [QUOTE_ORDERS_QUERY_KEY, order.quoteId],
+    });
+  };
+
   return (
     <>
       <Button
         loading={payOrderMutation.isPending}
+        disabled={Boolean(clientSecret)}
         onClick={handlePayOrder}
         variant="accent"
         size="small"
@@ -72,7 +78,7 @@ export const PayOrderButton = ({ order }: PayOrderButtonProps) => {
               },
             }}
           >
-            <PayOrderForm />
+            <PayOrderForm onSuccess={handlePaymentSuccess} />
           </Elements>
         )}
 

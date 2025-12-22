@@ -19,24 +19,26 @@ const handlePaymentSucceeded = async (
   const orderRef = getOrdersCollectionRef().doc(orderId);
 
   await firestore.runTransaction(async tx => {
-    const snap = await tx.get(orderRef);
-    if (!snap.exists) {
+    const orderSnap = await tx.get(orderRef);
+    if (!orderSnap.exists) {
       return;
     }
 
-    const order = snap.data();
+    const order = orderSnap.data();
     if (!order || order.status !== 'new') {
       return;
     }
+
+    const now = Timestamp.now();
 
     tx.update(orderRef, {
       status: 'paid',
       payment: {
         paymentIntentId: paymentIntent.id,
-        paidAt: Timestamp.now(),
+        paidAt: now,
         refundedAt: null,
       },
-      updatedAt: Timestamp.now(),
+      updatedAt: now,
     });
   });
 };
@@ -59,19 +61,55 @@ const handleRefunded = async (firestore: Firestore, charge: Stripe.Charge) => {
   const orderRef = ordersQuery.docs[0].ref;
 
   await firestore.runTransaction(async tx => {
-    const snap = await tx.get(orderRef);
-    if (!snap.exists) {
+    const orderSnap = await tx.get(orderRef);
+    if (!orderSnap.exists) {
       return;
     }
 
-    const order = snap.data();
+    const order = orderSnap.data();
     if (!order || order.status === 'refunded') {
       return;
     }
 
+    const now = Timestamp.now();
+
     tx.update(orderRef, {
       status: 'refunded',
-      'payment.refundedAt': Timestamp.now(),
+      'payment.refundedAt': now,
+      updatedAt: now,
+    });
+  });
+};
+
+const handlePaymentCanceled = async (firestore: Firestore, intent: Stripe.PaymentIntent) => {
+  const orderId = intent.metadata.orderId;
+  if (!orderId) {
+    return;
+  }
+
+  const orderRef = getOrdersCollectionRef().doc(orderId);
+
+  await firestore.runTransaction(async tx => {
+    const orderSnap = await tx.get(orderRef);
+    if (!orderSnap.exists) {
+      return;
+    }
+
+    const order = orderSnap.data();
+    if (!order) {
+      return;
+    }
+
+    if (order.status !== 'new') {
+      return;
+    }
+
+    tx.update(orderRef, {
+      payment: {
+        paymentIntentId: null,
+        paidAt: null,
+        refundedAt: null,
+      },
       updatedAt: Timestamp.now(),
     });
   });
@@ -116,16 +154,17 @@ export const handler: Handler = async event => {
   try {
     switch (stripeEvent.type) {
       case 'payment_intent.succeeded': {
-        const intent = stripeEvent.data.object as Stripe.PaymentIntent;
+        await handlePaymentSucceeded(firestore, stripeEvent.data.object);
+        break;
+      }
 
-        await handlePaymentSucceeded(firestore, intent);
+      case 'payment_intent.canceled': {
+        await handlePaymentCanceled(firestore, stripeEvent.data.object);
         break;
       }
 
       case 'charge.refunded': {
-        const charge = stripeEvent.data.object as Stripe.Charge;
-
-        await handleRefunded(firestore, charge);
+        await handleRefunded(firestore, stripeEvent.data.object);
         break;
       }
 

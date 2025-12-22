@@ -5,7 +5,11 @@ import type { Nullable } from '~/types';
 import { AttachMoneyIcon } from '~/icons';
 import { Alert, Button } from '~/components';
 
-export const PayOrderForm = () => {
+interface PayOrderFormProps {
+  onSuccess: () => void;
+}
+
+export const PayOrderForm = ({ onSuccess }: PayOrderFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
 
@@ -33,8 +37,7 @@ export const PayOrderForm = () => {
       return;
     }
 
-    // Success handled by webhook
-    setLoading(false);
+    onSuccess();
   };
 
   return (
