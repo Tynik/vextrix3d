@@ -79,8 +79,9 @@ export const QuoteOrderRowStyled = styled('div')<QuoteOrderRowStyledProps>`
     align-items: center;
     gap: ${1};
     flex-wrap: wrap;
+    justify-content: space-between;
 
-    height: 54px;
+    min-height: 54px;
     padding: ${1};
 
     border-radius: 4px;

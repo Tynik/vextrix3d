@@ -3,7 +3,6 @@ import admin from 'firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
-import type { OrderPayment } from '~/netlify/types';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
 import { initStripeClient } from '../stripe';
@@ -15,7 +14,7 @@ export type PayOrderPayload = {
 
 export const handler = createHandler(
   { allowedMethods: ['POST'] },
-  withSession<PayOrderPayload>(async ({ decodedIdToken, isAdmin, payload }) => {
+  withSession<PayOrderPayload>(async ({ decodedIdToken, payload }) => {
     assert(payload?.orderId, 'Order ID is required');
 
     const firestore = admin.firestore();
@@ -27,8 +26,8 @@ export const handler = createHandler(
     const order = orderSnap.data();
     assert(order, 'Order data missing');
 
-    const isOwner = order.customer.userId === decodedIdToken.uid;
-    assert(isAdmin || isOwner, 'Forbidden');
+    const isOrderOwner = order.customer.userId === decodedIdToken.uid;
+    assert(isOrderOwner, 'Forbidden');
 
     assert(order.status === 'new', 'Order is not payable');
 

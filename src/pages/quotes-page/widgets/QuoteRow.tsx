@@ -6,7 +6,8 @@ import { toast } from 'react-toastify';
 
 import { QUOTES_QUERY_KEY } from '~/configs';
 import { acceptQuote, handleApiError, rejectQuote } from '~/api';
-import { formatCurrency, formatDatetime } from '~/utils';
+import { formatCurrency } from '~/shared';
+import { formatDatetime } from '~/utils';
 import type { Quote } from '~/netlify/types';
 import { useAppContext } from '~/models';
 import { DownloadIcon, KeyboardDoubleArrowDownIcon, ThumbDownIcon, ThumbUpIcon } from '~/icons';
@@ -76,8 +77,10 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       {
         label: 'File name',
         value: (
-          <HoneyFlex row centerY $gap={1}>
-            <span>{quote.model.fileName}</span>
+          <HoneyFlex row centerY $gap={1} $overflow="hidden">
+            <Text variant="inherit" ellipsis>
+              {quote.model.fileName}
+            </Text>
 
             {isAdmin && (
               <Link to={quote.model.fileUrl} variant="body2">
@@ -112,18 +115,19 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       $border="1px solid"
       $borderColor="neutral.grayLight"
       $backgroundColor="neutral.white"
-      $cursor={isOrdersCanBeViewed ? 'pointer' : undefined}
       {...props}
     >
-      <HoneyFlex row centerY $gap={1} $flexWrap="wrap">
-        <Text variant="body1" $fontWeight={700} $whiteSpace="nowrap">
-          #{quote.quoteNumber}
-        </Text>
+      <HoneyFlex row centerY $gap={1} $justifyContent="space-between">
+        <HoneyFlex row centerY $gap={1}>
+          <Text variant="body1" $fontWeight={700} $whiteSpace="nowrap">
+            #{quote.quoteNumber}
+          </Text>
 
-        <QuoteStatusInfo status={quote.status} />
+          <QuoteStatusInfo status={quote.status} />
+        </HoneyFlex>
 
         {quote.pricing && (
-          <HoneyFlex row centerY $gap={1} $marginLeft="auto">
+          <HoneyFlex row centerY $gap={1}>
             <Text variant="body1" $fontWeight={700}>
               {formatCurrency(quote.pricing.total)}
             </Text>
@@ -191,19 +195,23 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
         )}
       </HoneyFlex>
 
-      {!isViewOrders && isOrdersCanBeViewed && (
-        <Button
-          onClick={() => setIsViewOrders(true)}
-          icon={<KeyboardDoubleArrowDownIcon color="neutral.white" />}
-          variant="accent"
-          size="large"
-          $margin={[0, 'auto']}
-        >
-          Load Orders
-        </Button>
-      )}
+      {isOrdersCanBeViewed && (
+        <HoneyFlex $gap={1}>
+          <Text variant="body1" $fontWeight={500}>
+            Orders
+          </Text>
 
-      {isViewOrders && <QuoteOrdersList quoteId={quote.id} />}
+          {!isViewOrders && (
+            <IconButton
+              onClick={() => setIsViewOrders(true)}
+              icon={<KeyboardDoubleArrowDownIcon color="secondary.slateAlloy" />}
+              $margin={[0, 'auto']}
+            />
+          )}
+
+          {isViewOrders && <QuoteOrdersList quoteId={quote.id} />}
+        </HoneyFlex>
+      )}
     </HoneyFlex>
   );
 };

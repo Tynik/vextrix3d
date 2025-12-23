@@ -4,7 +4,7 @@ import { Firestore, Timestamp, Transaction } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
-import type { OrderStatus } from '~/netlify/types';
+import type { OrderId, OrderStatus } from '~/netlify/types';
 import type { OrderDocument, QuoteDocument, UserDocument } from './document-types';
 import { getNextSequence } from './utils';
 import { getOrdersCollectionRef, ORDERS_COLLECTION_NAME } from './collections';
@@ -21,6 +21,25 @@ const ALLOWED_ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   expired: [],
 };
 
+export const getOrderOrThrowTx = async (
+  tx: Transaction,
+  orderId: OrderId,
+  firestore: Firestore = admin.firestore(),
+) => {
+  const orderRef = getOrderRef(orderId, firestore);
+
+  const orderSnap = await tx.get(orderRef);
+  assert(orderSnap.exists, 'Order document does not exist');
+
+  const order = orderSnap.data();
+  assert(order, 'Order document data is empty');
+
+  return {
+    orderRef,
+    order,
+  };
+};
+
 export const getNextOrderNumber = async () => {
   const seq = await getNextSequence(ORDERS_COLLECTION_NAME);
 
@@ -35,18 +54,20 @@ interface CreateOrderOptions {
 export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderOptions) => {
   const firestore = admin.firestore();
 
-  assert(user.firstName, 'First name is missing');
-  assert(user.lastName, 'Last name is missing');
-  assert(quote.pricing.total, 'Total price is missing');
+  const { job, pricing } = quote;
 
-  const ordersRef = getOrdersCollectionRef(firestore);
-  const orderDocRef = ordersRef.doc();
+  assert(
+    pricing.total && pricing.total > 0 && pricing.total <= 9999,
+    'Total price is missing or invalid',
+  );
+
+  const orderRef = getOrdersCollectionRef(firestore).doc();
 
   const orderNumber = await getNextOrderNumber();
   const now = Timestamp.now();
 
-  tx.set(orderDocRef, {
-    id: orderDocRef.id,
+  tx.set(orderRef, {
+    id: orderRef.id,
     quoteId: quote.id,
     orderNumber,
     status: 'new',
@@ -59,20 +80,20 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
       phone: user.phone,
     },
     job: {
-      technology: quote.job.technology,
-      material: quote.job.material,
-      color: quote.job.color,
-      quantity: quote.job.quantity,
-      notes: quote.job.notes,
+      technology: job.technology,
+      material: job.material,
+      color: job.color,
+      quantity: job.quantity,
+      notes: job.notes,
     },
     pricing: {
-      currency: quote.pricing.currency,
-      amount: quote.pricing.amount,
-      discountPct: quote.pricing.discountPct,
-      discountAmount: quote.pricing.discountAmount,
-      vatPct: quote.pricing.vatPct,
-      vatAmount: quote.pricing.vatAmount,
-      total: quote.pricing.total,
+      currency: pricing.currency,
+      amount: pricing.amount,
+      discountPct: pricing.discountPct,
+      discountAmount: pricing.discountAmount,
+      vatPct: pricing.vatPct,
+      vatAmount: pricing.vatAmount,
+      total: pricing.total,
     },
     payment: null,
     shipping: null,

@@ -16,7 +16,7 @@ export const buildQuotePricingValues = ({
   const discountPct = _discountPct ?? 0;
   const vatPct = _vatPct ?? 0;
 
-  assert(isFiniteNumber(amount) && amount >= 0 && amount <= 9999, 'Invalid amount');
+  assert(isFiniteNumber(amount) && amount > 0 && amount <= 9999, 'Invalid amount');
   assert(
     isFiniteNumber(discountPct) && discountPct >= 0 && discountPct <= 100,
     'Invalid discount percent',

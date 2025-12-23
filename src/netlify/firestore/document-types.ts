@@ -42,8 +42,8 @@ export interface UserDocument extends Document<UserId> {
   stripeCustomerId: Nullable<StripeCustomerId>;
   role: AccountRole;
   email: string;
-  firstName: Nullable<string>;
-  lastName: Nullable<string>;
+  firstName: string;
+  lastName: string;
   phone: Nullable<string>;
   updatedAt: Nullable<Timestamp>;
 }

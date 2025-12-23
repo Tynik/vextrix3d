@@ -1,5 +1,5 @@
 import admin from 'firebase-admin';
-import { Transaction, Timestamp } from 'firebase-admin/firestore';
+import { Transaction, Timestamp, Firestore } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
@@ -41,16 +41,23 @@ export const QUOTE_PRICING_ALLOWED_STATUSES: QuoteStatus[] = [
   'completed',
 ];
 
-export const getExistingQuoteDocument = async (quoteId: QuoteId): Promise<QuoteDocument> => {
-  const docRef = getQuoteDocRef(quoteId);
+export const getQuoteOrThrowTx = async (
+  tx: Transaction,
+  quoteId: QuoteId,
+  firestore: Firestore = admin.firestore(),
+) => {
+  const quoteRef = getQuoteDocRef(quoteId, firestore);
 
-  const docSnap = await docRef.get();
-  assert(docSnap.exists, 'Quote document does not exist');
+  const quoteSnap = await tx.get(quoteRef);
+  assert(quoteSnap.exists, 'Quote document does not exist');
 
-  const quoteDoc = docSnap.data();
-  assert(quoteDoc, 'Quote document data is empty');
+  const quote = quoteSnap.data();
+  assert(quote, 'Quote document data is empty');
 
-  return quoteDoc;
+  return {
+    quoteRef,
+    quote,
+  };
 };
 
 const getNextQuoteNumber = async () => {
@@ -157,10 +164,10 @@ export const changeQuoteStatusTx = async (
   tx.update(quoteRef, quoteStatusUpdate);
 
   const quoteHistoryCollRef = getQuoteHistoryCollectionRef(quoteRef);
-  const quoteHistoryDocRef = quoteHistoryCollRef.doc();
+  const quoteHistoryRef = quoteHistoryCollRef.doc();
 
-  tx.set(quoteHistoryDocRef, {
-    id: quoteHistoryDocRef.id,
+  tx.set(quoteHistoryRef, {
+    id: quoteHistoryRef.id,
     type: 'statusChange',
     by,
     from: quote.status,

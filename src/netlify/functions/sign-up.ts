@@ -37,6 +37,8 @@ export const handler = createHandler<SignupPayload>(
 
     try {
       userRecord = await createUser({
+        firstName: '',
+        lastName: '',
         email: payload.email,
         password: payload.password,
       });

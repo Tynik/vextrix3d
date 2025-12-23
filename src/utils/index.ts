@@ -4,4 +4,3 @@ export * from './other';
 export * from './3d';
 export * from './network';
 export * from './datetime';
-export * from './currency';

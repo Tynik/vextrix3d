@@ -3,7 +3,7 @@ import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 
 import type { Order } from '~/netlify/types';
-import { formatCurrency } from '~/utils';
+import { formatCurrency } from '~/shared';
 import { Text } from '~/components';
 import { PayOrderButton } from './PayOrderButton';
 import { QuoteOrderRowStyled } from './QuoteOrderRowStyled';
@@ -31,7 +31,7 @@ export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
         )}
       </HoneyFlex>
 
-      <HoneyFlex row centerY $gap={1} $marginLeft="auto">
+      <HoneyFlex row centerY $gap={1}>
         <HoneyFlex row centerY $gap={0.5}>
           <Text variant="body1">Total:</Text>
 
@@ -39,9 +39,9 @@ export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
             {formatCurrency(order.pricing.total)}
           </Text>
         </HoneyFlex>
-      </HoneyFlex>
 
-      {order.status === 'new' && <PayOrderButton order={order} />}
+        {order.status === 'new' && <PayOrderButton order={order} />}
+      </HoneyFlex>
     </QuoteOrderRowStyled>
   );
 };

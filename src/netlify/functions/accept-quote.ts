@@ -7,10 +7,10 @@ import { withSession } from '../auth';
 import {
   getExistingUserDocument,
   getOrdersCollectionRef,
-  getQuoteDocRef,
   changeQuoteStatusTx,
   buildQuoteHistoryActor,
   createOrder,
+  getQuoteOrThrowTx,
 } from '../firestore';
 
 export interface AcceptQuotePayload {
@@ -29,24 +29,19 @@ export const handler = createHandler(
     const firestore = admin.firestore();
 
     try {
-      const quoteRef = getQuoteDocRef(quoteId, firestore);
       const ordersRef = getOrdersCollectionRef(firestore);
 
       await firestore.runTransaction(async tx => {
-        const quoteSnap = await tx.get(quoteRef);
-        assert(quoteSnap.exists, 'Quote does not exist');
+        const { quote } = await getQuoteOrThrowTx(tx, quoteId, firestore);
 
-        const quote = quoteSnap.data();
-        assert(quote, 'Quote data is empty');
-
-        const isOwner = quote.requester.userId === decodedIdToken.uid;
-        assert(isOwner, 'Forbidden');
+        const isQuoteOwner = quote.requester.userId === decodedIdToken.uid;
+        assert(isQuoteOwner, 'Forbidden');
 
         assert(quote.status === 'priced', 'Quote is not eligible for order creation');
 
-        const existingOrderQuery = await tx.get(ordersRef.where('quoteId', '==', quoteId).limit(1));
-
-        if (!existingOrderQuery.empty) {
+        const orderQuery = ordersRef.where('quoteId', '==', quoteId).limit(1);
+        const orderQuerySnap = await tx.get(orderQuery);
+        if (!orderQuerySnap.empty) {
           return;
         }
 
@@ -57,9 +52,7 @@ export const handler = createHandler(
           quote,
         });
 
-        await changeQuoteStatusTx(tx, quote, 'accepted', buildQuoteHistoryActor(user), {
-          reason: 'Quote accepted by customer',
-        });
+        await changeQuoteStatusTx(tx, quote, 'accepted', buildQuoteHistoryActor(user));
       });
     } catch (e: any) {
       console.error(e);

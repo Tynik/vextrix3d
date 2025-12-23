@@ -3,11 +3,11 @@ import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
-import { buildQuotePricingValues } from '~/shared';
+import { formatCurrency, buildQuotePricingValues } from '~/shared';
 import type { QuoteId } from '../types';
-import { createHandler } from '../utils';
+import { createHandler, sendEmail } from '../utils';
 import { withSession } from '../auth';
-import { getQuoteDocRef, changeQuoteStatusTx } from '../firestore';
+import { changeQuoteStatusTx, getQuoteDocRef, getUserDocRef } from '../firestore';
 
 export interface SendQuotePayload {
   quoteId: QuoteId;
@@ -23,8 +23,9 @@ export const handler = createHandler(
   {
     allowedMethods: ['POST'],
   },
-  withSession<SendQuotePayload>(async ({ decodedIdToken, payload }) => {
-    assert(decodedIdToken.role === 'admin', 'Forbidden');
+  withSession<SendQuotePayload>(async ({ decodedIdToken, isAdmin, payload }) => {
+    assert(isAdmin, 'Forbidden');
+
     assert(payload?.quoteId, 'Quote ID is missing');
     assert(payload?.pricing, 'Pricing is missing');
 
@@ -32,73 +33,104 @@ export const handler = createHandler(
 
     const firestore = admin.firestore();
 
-    try {
-      await firestore.runTransaction(async tx => {
-        const quoteRef = getQuoteDocRef(quoteId);
-        const quoteSnap = await tx.get(quoteRef);
+    const quoteRef = getQuoteDocRef(quoteId);
+    const quoteSnap = await quoteRef.get();
 
-        assert(quoteSnap.exists, 'Quote not found');
+    assert(quoteSnap.exists, 'Quote not found');
 
-        const quote = quoteSnap.data();
-        assert(quote, 'Quote data is empty');
+    const quote = quoteSnap.data();
+    assert(quote, 'Quote data is empty');
 
-        assert(
-          quote.status === 'new' || quote.status === 'changeRequested',
-          'Quote cannot be sent in its current status',
-        );
+    assert(
+      quote.status === 'new' || quote.status === 'changeRequested',
+      'Quote cannot be sent in its current status',
+    );
 
-        const { amount, discountPct, discountAmount, vatPct, vatAmount, total } =
-          buildQuotePricingValues({
-            amount: pricing.amount,
-            discountPct: pricing.discountPct,
-            vatPct: pricing.vatPct,
-          });
-
-        tx.set(
-          quoteRef,
-          {
-            pricing: {
-              type: 'final',
-              currency: 'gbp',
-              amount,
-              discountPct,
-              discountAmount,
-              vatPct,
-              vatAmount,
-              total,
-            },
-            updatedAt: Timestamp.now(),
-          },
-          {
-            merge: true,
-          },
-        );
-
-        await changeQuoteStatusTx(
-          tx,
-          quote,
-          'priced',
-          {
-            id: decodedIdToken.uid,
-            role: 'admin',
-          },
-          {
-            reason: note,
-          },
-        );
+    const { amount, discountPct, discountAmount, vatPct, vatAmount, total } =
+      buildQuotePricingValues({
+        amount: pricing.amount,
+        discountPct: pricing.discountPct,
+        vatPct: pricing.vatPct,
       });
-    } catch (e: any) {
-      console.error(e);
 
-      return {
-        status: 'error',
-        statusCode: 400,
-        data: {
-          error: {
-            message: e.message,
+    await firestore.runTransaction(async tx => {
+      tx.set(
+        quoteRef,
+        {
+          pricing: {
+            type: 'final',
+            currency: 'gbp',
+            amount,
+            discountPct,
+            discountAmount,
+            vatPct,
+            vatAmount,
+            total,
           },
+          updatedAt: Timestamp.now(),
         },
+        {
+          merge: true,
+        },
+      );
+
+      await changeQuoteStatusTx(
+        tx,
+        quote,
+        'priced',
+        {
+          id: decodedIdToken.uid,
+          role: 'admin',
+        },
+        {
+          reason: note,
+        },
+      );
+    });
+
+    let userInfo: Nullable<{
+      firstName: string;
+      lastName: string;
+      email: string;
+    }> = null;
+
+    if (quote.requester.guest) {
+      userInfo = {
+        firstName: quote.requester.guest.firstName,
+        lastName: quote.requester.guest.lastName,
+        email: quote.requester.guest.email,
       };
+    } else if (quote.requester.userId) {
+      const userRef = await getUserDocRef(quote.requester.userId).get();
+      if (userRef.exists) {
+        const user = userRef.data();
+
+        if (user) {
+          userInfo = {
+            firstName: user.firstName,
+            lastName: user.lastName,
+            email: user.email,
+          };
+        }
+      }
+    }
+
+    if (userInfo) {
+      await sendEmail('send-quote', {
+        from: 'Vextrix3D <no-reply@vextrix3d.co.uk>',
+        to: userInfo.email,
+        subject: `Your quote ${quote.quoteNumber} is ready`,
+        parameters: {
+          customerName: userInfo.firstName,
+          quoteNumber: quote.quoteNumber,
+          amount: formatCurrency(amount),
+          discount: discountAmount ? formatCurrency(discountAmount) : undefined,
+          vat: vatAmount ? formatCurrency(vatAmount) : undefined,
+          total: formatCurrency(total),
+          quoteUrl: 'https://vextrix3d.co.uk/account/quotes',
+          note: note ?? undefined,
+        },
+      });
     }
 
     return {

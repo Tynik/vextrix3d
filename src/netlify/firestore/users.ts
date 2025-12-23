@@ -20,21 +20,21 @@ export const getExistingUserDocument = async (userId: string): Promise<UserDocum
 };
 
 interface CreateUserOptions {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   role?: AccountRole;
-  firstName?: Nullable<string>;
-  lastName?: Nullable<string>;
   phone?: Nullable<string>;
   stripeCustomerId?: Nullable<StripeCustomerId>;
 }
 
 export const createUser = async ({
+  firstName,
+  lastName,
   email,
   password,
   role = 'customer',
-  firstName = null,
-  lastName = null,
   phone = null,
   stripeCustomerId = null,
 }: CreateUserOptions) => {

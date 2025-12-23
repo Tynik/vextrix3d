@@ -14,7 +14,7 @@ export type StripePaymentIntentId = Stripe.PaymentIntent['id'];
 
 export type Email = `${string}@${string}.${string}`;
 
-export type EmailTemplateName = 'quote-request';
+export type EmailTemplateName = 'quote-request' | 'send-quote';
 
 export type AccountRole = 'customer' | 'admin';
 
@@ -95,8 +95,8 @@ export interface User {
   role: AccountRole;
   email: string;
   isEmailVerified: boolean;
-  firstName: Nullable<string>;
-  lastName: Nullable<string>;
+  firstName: string;
+  lastName: string;
   phone: Nullable<string>;
 }
 

@@ -4,7 +4,7 @@ import { assert } from '@react-hive/honey-utils';
 import type { QuoteId } from '../types';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
-import { changeQuoteStatusTx, getQuoteDocRef } from '../firestore';
+import { changeQuoteStatusTx, getQuoteOrThrowTx } from '../firestore';
 
 export type RejectQuotePayload = {
   quoteId: QuoteId;
@@ -20,45 +20,25 @@ export const handler = createHandler(
 
     const firestore = admin.firestore();
 
-    try {
-      await firestore.runTransaction(async tx => {
-        const quoteRef = getQuoteDocRef(payload.quoteId);
-        const quoteSnap = await tx.get(quoteRef);
+    await firestore.runTransaction(async tx => {
+      const { quote } = await getQuoteOrThrowTx(tx, payload.quoteId, firestore);
 
-        assert(quoteSnap.exists, 'Quote does not exist');
+      const isQuoteOwner = quote.requester.userId === decodedIdToken.uid;
+      assert(isAdmin || isQuoteOwner, 'Forbidden');
 
-        const quote = quoteSnap.data();
-        assert(quote, 'Quote data is empty');
-
-        const isQuoteOwner = quote.requester.userId === decodedIdToken.uid;
-        assert(isAdmin || isQuoteOwner, 'Forbidden');
-
-        await changeQuoteStatusTx(
-          tx,
-          quote,
-          'rejected',
-          {
-            id: decodedIdToken.uid,
-            role: isAdmin ? 'admin' : 'customer',
-          },
-          {
-            reason: payload.reason,
-          },
-        );
-      });
-    } catch (e: any) {
-      console.error(e);
-
-      return {
-        status: 'error',
-        statusCode: 400,
-        data: {
-          error: {
-            message: e.message,
-          },
+      await changeQuoteStatusTx(
+        tx,
+        quote,
+        'rejected',
+        {
+          id: decodedIdToken.uid,
+          role: isAdmin ? 'admin' : 'customer',
         },
-      };
-    }
+        {
+          reason: payload.reason,
+        },
+      );
+    });
 
     return {
       status: 'ok',
