@@ -14,12 +14,14 @@ import { QUOTES_QUERY_KEY } from '~/configs';
 import { handleApiError, sendQuote } from '~/api';
 import { CheckIcon, CloseIcon, PlayArrowIcon } from '~/icons';
 import type { ButtonProps } from '~/components';
-import { Button, CueShadows, Dialog, Form, TextInput } from '~/components';
+import { Button, CueShadows, Dialog, Form, TextInput, Checkbox } from '~/components';
 
 type ProcessQuoteFormData = {
   amount: number;
+  applyDiscount: boolean;
   discount: number;
-  vat: number;
+  includeVat: boolean;
+  vat: number | undefined;
   note: string;
 };
 
@@ -34,6 +36,10 @@ export const PROCESS_QUOTE_FORM_FIELDS: HoneyFormFieldsConfig<ProcessQuoteFormDa
       negative: false,
     }),
   },
+  applyDiscount: {
+    type: 'checkbox',
+    defaultValue: false,
+  },
   discount: {
     type: 'number',
     decimal: true,
@@ -42,15 +48,22 @@ export const PROCESS_QUOTE_FORM_FIELDS: HoneyFormFieldsConfig<ProcessQuoteFormDa
     filter: createHoneyFormNumberFilter({
       negative: false,
     }),
+    skip: ({ formValues }) => !formValues.applyDiscount,
+  },
+  includeVat: {
+    type: 'checkbox',
+    defaultValue: false,
   },
   vat: {
     type: 'number',
     decimal: true,
     min: 0,
     max: 30,
+    defaultValue: 22,
     filter: createHoneyFormNumberFilter({
       negative: false,
     }),
+    skip: ({ formValues }) => !formValues.includeVat,
   },
   note: {
     type: 'string',
@@ -74,7 +87,7 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
         pricing: {
           amount: data.amount,
           discountPct: data.discount,
-          vatPct: data.vat,
+          vatPct: data.vat ?? null,
         },
         note: data.note,
       });
@@ -115,7 +128,7 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
 
       <Dialog title={`Process Quote #${quote.quoteNumber}`} open={isProcess} onClose={handleClose}>
         <Form fields={PROCESS_QUOTE_FORM_FIELDS} defaults={formDefaults} onSubmit={processQuote}>
-          {({ formFields, isFormSubmitting }) => (
+          {({ formFields, formValues, isFormSubmitting }) => (
             <>
               <CueShadows $margin={-2} $padding={2}>
                 <HoneyFlex $gap={2} $minWidth="300px">
@@ -126,16 +139,30 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
                     {...formFields.amount.props}
                   />
 
+                  <Checkbox
+                    label="Apply Discount"
+                    checked={formValues.applyDiscount}
+                    disabled={isFormSubmitting}
+                    onChange={formFields.applyDiscount.setValue}
+                  />
+
                   <TextInput
                     label="Discount, %"
-                    disabled={isFormSubmitting}
+                    disabled={!formValues.applyDiscount || isFormSubmitting}
                     error={formFields.discount.errors[0]?.message}
                     {...formFields.discount.props}
                   />
 
+                  <Checkbox
+                    label="Include VAT"
+                    checked={formValues.includeVat}
+                    disabled={isFormSubmitting}
+                    onChange={formFields.includeVat.setValue}
+                  />
+
                   <TextInput
                     label="VAT, %"
-                    disabled={isFormSubmitting}
+                    disabled={!formValues.includeVat || isFormSubmitting}
                     error={formFields.vat.errors[0]?.message}
                     {...formFields.vat.props}
                   />
@@ -149,7 +176,7 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
                 </HoneyFlex>
               </CueShadows>
 
-              <HoneyBox $display="flex" $gap={2} $justifyContent="flex-end" $paddingTop={2}>
+              <HoneyBox $display="flex" $gap={2} $paddingTop={2}>
                 <Button
                   loading={isFormSubmitting}
                   type="submit"
@@ -161,6 +188,7 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
                 </Button>
 
                 <Button
+                  loading={isFormSubmitting}
                   onClick={handleClose}
                   variant="secondary"
                   size="full"

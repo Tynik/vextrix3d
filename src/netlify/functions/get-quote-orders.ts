@@ -77,6 +77,7 @@ export const handler = createHandler(
         },
         payment: order.payment
           ? {
+              paymentIntentId: order.payment.paymentIntentId,
               paidAt: order.payment.paidAt?.toMillis() ?? null,
               refundedAt: order.payment.refundedAt?.toMillis() ?? null,
             }

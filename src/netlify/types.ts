@@ -118,6 +118,7 @@ interface OrderPricing {
 }
 
 export interface OrderPayment {
+  paymentIntentId: StripePaymentIntentId;
   paidAt: Nullable<number>;
   refundedAt: Nullable<number>;
 }

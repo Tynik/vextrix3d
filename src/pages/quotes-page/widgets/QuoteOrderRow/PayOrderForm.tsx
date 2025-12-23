@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { toast } from 'react-toastify';
 
-import type { Nullable } from '~/types';
 import { AttachMoneyIcon } from '~/icons';
-import { Alert, Button } from '~/components';
+import { Button } from '~/components';
 
 interface PayOrderFormProps {
   onSuccess: () => void;
@@ -14,7 +14,6 @@ export const PayOrderForm = ({ onSuccess }: PayOrderFormProps) => {
   const elements = useElements();
 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<Nullable<string>>(null);
 
   const handlePay = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +23,6 @@ export const PayOrderForm = ({ onSuccess }: PayOrderFormProps) => {
     }
 
     setLoading(true);
-    setError(null);
 
     const result = await stripe.confirmPayment({
       elements,
@@ -32,7 +30,10 @@ export const PayOrderForm = ({ onSuccess }: PayOrderFormProps) => {
     });
 
     if (result.error) {
-      setError(result.error.message ?? 'Payment failed');
+      toast(result.error.message ?? 'Payment failed', {
+        type: 'error',
+      });
+
       setLoading(false);
       return;
     }
@@ -43,8 +44,6 @@ export const PayOrderForm = ({ onSuccess }: PayOrderFormProps) => {
   return (
     <form onSubmit={handlePay}>
       <PaymentElement />
-
-      {error && <Alert severity="error">{error}</Alert>}
 
       <Button
         loading={loading}

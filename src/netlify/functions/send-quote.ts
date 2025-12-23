@@ -3,6 +3,7 @@ import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
+import { buildQuotePricingValues } from '~/shared';
 import type { QuoteId } from '../types';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
@@ -46,18 +47,12 @@ export const handler = createHandler(
           'Quote cannot be sent in its current status',
         );
 
-        const discountPct = pricing.discountPct ?? 0; // e.g. 10 = 10%
-        const vatPct = pricing.vatPct ?? 0; // e.g. 20 = 20%
-
-        assert(pricing.amount >= 0, 'Invalid amount');
-        assert(discountPct >= 0 && discountPct <= 100, 'Invalid discount percent');
-        assert(vatPct >= 0 && vatPct <= 30, 'Invalid VAT percent');
-
-        const discountAmount = pricing.amount * (discountPct / 100);
-        const subtotal = Math.max(0, pricing.amount - discountAmount);
-
-        const vatAmount = subtotal * (vatPct / 100);
-        const total = +(subtotal + vatAmount).toFixed(2);
+        const { amount, discountPct, discountAmount, vatPct, vatAmount, total } =
+          buildQuotePricingValues({
+            amount: pricing.amount,
+            discountPct: pricing.discountPct,
+            vatPct: pricing.vatPct,
+          });
 
         tx.set(
           quoteRef,
@@ -65,7 +60,7 @@ export const handler = createHandler(
             pricing: {
               type: 'final',
               currency: 'gbp',
-              amount: pricing.amount,
+              amount,
               discountPct,
               discountAmount,
               vatPct,
