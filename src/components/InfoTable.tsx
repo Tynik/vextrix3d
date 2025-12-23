@@ -19,21 +19,21 @@ interface InfoTableProps<Item extends HoneyListItem> extends Omit<
 > {
   rows: InfoTableRow[];
   textVariant?: TextProps['variant'];
-  rowProps?: Omit<TextProps, 'variant'>;
+  rowLabelProps?: Omit<TextProps, 'variant'>;
 }
 
 export const InfoTable = <Item extends HoneyListItem>({
   rows,
   textVariant = 'body2',
-  rowProps,
+  rowLabelProps,
   ...props
 }: InfoTableProps<Item>) => {
   return (
     <HoneyList items={rows} itemKey="label" $gap={1} data-testid="user-profile" {...props}>
       {row =>
         row.visible !== false && (
-          <HoneyFlex row $gap={2}>
-            <Text variant={textVariant} {...rowProps}>
+          <HoneyFlex row centerY $gap={2}>
+            <Text variant={textVariant} {...rowLabelProps}>
               {row.label}:
             </Text>
 

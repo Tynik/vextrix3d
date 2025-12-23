@@ -188,7 +188,7 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
                 </Button>
 
                 <Button
-                  loading={isFormSubmitting}
+                  disabled={isFormSubmitting}
                   onClick={handleClose}
                   variant="secondary"
                   size="full"

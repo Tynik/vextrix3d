@@ -1,7 +1,7 @@
 import React from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyList } from '@react-hive/honey-layout';
-import { useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 import { QUOTE_ORDERS_QUERY_KEY } from '~/configs';
 import { getQuoteOrders } from '~/api';
@@ -20,14 +20,15 @@ export const QuoteOrdersList = ({ quoteId, ...props }: QuoteOrdersListProps) => 
   } = useQuery({
     queryKey: [QUOTE_ORDERS_QUERY_KEY, quoteId],
     queryFn: () => getQuoteOrders({ quoteId }),
+    placeholderData: keepPreviousData,
   });
 
   if (isError) {
-    return <Alert severity="error">Failed to fetch orders.</Alert>;
+    return <Alert severity="error">Failed to fetch orders</Alert>;
   }
 
   if (isFetching) {
-    return <Progress $margin="auto" />;
+    return <Progress size="32px" lineWidth="3px" $margin={[2, 'auto']} />;
   }
 
   return (

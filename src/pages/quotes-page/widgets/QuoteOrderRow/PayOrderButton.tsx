@@ -39,8 +39,12 @@ export const PayOrderButton = ({ order }: PayOrderButtonProps) => {
     }
   };
 
-  const handleClose = useCallback(() => {
+  const handleClose = useCallback(async () => {
     setClientSecret(null);
+
+    await queryClient.invalidateQueries({
+      queryKey: [QUOTE_ORDERS_QUERY_KEY, order.quoteId],
+    });
   }, []);
 
   const handlePaymentSuccess = async () => {
@@ -50,11 +54,7 @@ export const PayOrderButton = ({ order }: PayOrderButtonProps) => {
       type: 'success',
     });
 
-    setClientSecret(null);
-
-    await queryClient.invalidateQueries({
-      queryKey: [QUOTE_ORDERS_QUERY_KEY, order.quoteId],
-    });
+    await handleClose();
   };
 
   return (

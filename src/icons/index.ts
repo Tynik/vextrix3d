@@ -30,3 +30,7 @@ export * from './PlayArrowIcon';
 export * from './DownloadIcon';
 export * from './CloseIcon';
 export * from './AttachMoneyIcon';
+export * from './OutgoingMailIcon';
+export * from './ReplayIcon';
+export * from './VisibilityIcon';
+export * from './KeyboardDoubleArrowDownIcon';

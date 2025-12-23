@@ -21,7 +21,7 @@ export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
         </Text>
 
         <Text variant="body2" $fontWeight={500}>
-          {order.status}
+          [{order.status.toUpperCase()}]
         </Text>
 
         {order.status === 'new' && Boolean(order.payment?.paymentIntentId) && (

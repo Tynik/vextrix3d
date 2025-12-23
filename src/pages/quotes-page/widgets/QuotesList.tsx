@@ -1,6 +1,6 @@
 import React from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { HoneyGrid, HoneyGridColumn, HoneyList } from '@react-hive/honey-layout';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { HoneyBox, HoneyGrid, HoneyGridColumn, HoneyList } from '@react-hive/honey-layout';
 
 import { QUOTES_QUERY_KEY } from '~/configs';
 import { getQuotes } from '~/api';
@@ -14,19 +14,21 @@ export const QuotesList = () => {
 
   const {
     data: quotes,
+    isLoading,
     isFetching,
     isError,
   } = useQuery({
     queryKey: [QUOTES_QUERY_KEY],
     queryFn: () => getQuotes({}),
+    placeholderData: keepPreviousData,
     enabled: Boolean(user),
   });
 
   if (isError) {
-    return <Alert severity="error">Failed to fetch quotes.</Alert>;
+    return <Alert severity="error">Failed to fetch quotes</Alert>;
   }
 
-  if (isFetching) {
+  if (isLoading) {
     return <Progress $margin="auto" />;
   }
 
@@ -39,7 +41,27 @@ export const QuotesList = () => {
       <HoneyGridColumn>
         <HoneyList
           items={quotes?.data}
+          loading={isFetching}
+          loadingOverContent={true}
+          loadingContent={
+            <HoneyBox $position="absolute" $inset={0}>
+              <HoneyBox
+                $position="absolute"
+                $inset={0}
+                $backgroundColor="neutral.grayDark"
+                $opacity={0.05}
+              />
+
+              <Progress
+                $position="absolute"
+                $left="50%"
+                $top="50%"
+                $transform="translate(-50%, -50%)"
+              />
+            </HoneyBox>
+          }
           itemKey="id"
+          $position="relative"
           $flexGrow={1}
           $gap={1}
           // Data

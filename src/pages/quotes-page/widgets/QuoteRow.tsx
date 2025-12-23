@@ -9,9 +9,9 @@ import { acceptQuote, handleApiError, rejectQuote } from '~/api';
 import { formatCurrency, formatDatetime } from '~/utils';
 import type { Quote } from '~/netlify/types';
 import { useAppContext } from '~/models';
-import { DownloadIcon, ThumbDownIcon, ThumbUpIcon } from '~/icons';
+import { DownloadIcon, KeyboardDoubleArrowDownIcon, ThumbDownIcon, ThumbUpIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
-import { Button, Divider, InfoTable, Text, Link } from '~/components';
+import { IconButton, Button, Divider, InfoTable, Text, Link } from '~/components';
 import { QuoteStatusInfo } from './QuoteStatus';
 import { ProcessQuoteButton } from './ProcessQuoteButton';
 import { QuoteOrdersList } from './QuoteOrdersList';
@@ -75,7 +75,23 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
     () => [
       {
         label: 'File name',
-        value: quote.model.fileName,
+        value: (
+          <HoneyFlex row centerY $gap={1}>
+            <span>{quote.model.fileName}</span>
+
+            {isAdmin && (
+              <Link to={quote.model.fileUrl} variant="body2">
+                <IconButton
+                  icon={<DownloadIcon />}
+                  iconProps={{
+                    size: 'small',
+                    color: 'secondary.slateAlloy',
+                  }}
+                />
+              </Link>
+            )}
+          </HoneyFlex>
+        ),
       },
       {
         label: 'Submitted on',
@@ -90,7 +106,6 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
 
   return (
     <HoneyFlex
-      onClick={() => isOrdersCanBeViewed && setIsViewOrders(!isViewOrders)}
       $gap={1}
       $padding={2}
       $borderRadius="4px"
@@ -141,52 +156,54 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       <InfoTable
         rows={infoTableRows}
         textVariant="body2"
-        rowProps={{
+        rowLabelProps={{
           $width: '100%',
           $maxWidth: '90px',
           $color: 'neutral.grayMedium',
         }}
       />
 
-      <HoneyFlex row $gap={1} $flexWrap="wrap" $marginTop={1}>
-        {isAdmin && (
-          <Link to={quote.model.fileUrl} variant="body2">
-            <Button variant="secondary" icon={<DownloadIcon color="neutral.white" />}>
-              Download
-            </Button>
-          </Link>
+      <HoneyFlex row centerY $gap={1} $marginLeft="auto">
+        {isAdmin && quote.status === 'new' && <ProcessQuoteButton quote={quote} />}
+
+        {quote.status === 'priced' && (
+          <Button
+            loading={acceptQuoteMutation.isPending}
+            disabled={rejectQuoteMutation.isPending}
+            onClick={handleAcceptQuote}
+            variant="success"
+            icon={<ThumbUpIcon color="neutral.white" />}
+          >
+            Accept
+          </Button>
         )}
 
-        <HoneyFlex row centerY $gap={1} $marginLeft="auto">
-          {isAdmin && quote.status === 'new' && <ProcessQuoteButton quote={quote} />}
-
-          {quote.status === 'priced' && (
-            <Button
-              loading={acceptQuoteMutation.isPending}
-              disabled={rejectQuoteMutation.isPending}
-              onClick={handleAcceptQuote}
-              variant="success"
-              icon={<ThumbUpIcon color="neutral.white" />}
-            >
-              Accept
-            </Button>
-          )}
-
-          {((isAdmin && quote.status === 'new') || quote.status === 'priced') && (
-            <Button
-              loading={rejectQuoteMutation.isPending}
-              disabled={acceptQuoteMutation.isPending}
-              onClick={handleRejectQuote}
-              variant="danger"
-              icon={<ThumbDownIcon color="neutral.white" />}
-            >
-              Reject
-            </Button>
-          )}
-        </HoneyFlex>
+        {((isAdmin && quote.status === 'new') || quote.status === 'priced') && (
+          <Button
+            loading={rejectQuoteMutation.isPending}
+            disabled={acceptQuoteMutation.isPending}
+            onClick={handleRejectQuote}
+            variant="danger"
+            icon={<ThumbDownIcon color="neutral.white" />}
+          >
+            Reject
+          </Button>
+        )}
       </HoneyFlex>
 
-      {isViewOrders && <QuoteOrdersList quoteId={quote.id} $marginTop={1} />}
+      {!isViewOrders && isOrdersCanBeViewed && (
+        <Button
+          onClick={() => setIsViewOrders(true)}
+          icon={<KeyboardDoubleArrowDownIcon color="neutral.white" />}
+          variant="accent"
+          size="large"
+          $margin={[0, 'auto']}
+        >
+          Load Orders
+        </Button>
+      )}
+
+      {isViewOrders && <QuoteOrdersList quoteId={quote.id} />}
     </HoneyFlex>
   );
 };

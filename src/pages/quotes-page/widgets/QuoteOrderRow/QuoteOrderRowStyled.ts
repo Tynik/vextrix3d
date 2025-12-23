@@ -80,6 +80,7 @@ export const QuoteOrderRowStyled = styled('div')<QuoteOrderRowStyledProps>`
     gap: ${1};
     flex-wrap: wrap;
 
+    height: 54px;
     padding: ${1};
 
     border-radius: 4px;

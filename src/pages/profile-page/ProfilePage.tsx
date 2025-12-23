@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 import { ROUTE_PATHS } from '~/configs';
 import { useAppContext } from '~/models';
 import { auth } from '~/firebase';
-import { DescriptionIcon, VerifiedIcon } from '~/icons';
+import { DescriptionIcon, OutgoingMailIcon, ReplayIcon, VerifiedIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
 import { Button, InfoTable, Tooltip, Text, Link } from '~/components';
 import { Page } from '~/pages';
@@ -117,7 +117,15 @@ export const ProfilePage = () => {
                       disabled={emailVerificationCooldownMs > 0}
                       loading={isSendingEmailVerification}
                       onClick={handleSendEmailVerification}
+                      icon={
+                        emailVerificationCooldownMs > 0 ? (
+                          <ReplayIcon color="neutral.white" />
+                        ) : (
+                          <OutgoingMailIcon color="neutral.white" />
+                        )
+                      }
                       variant="secondary"
+                      size="large"
                     >
                       {emailVerificationCooldownMs > 0
                         ? `Retry In ${Math.ceil(emailVerificationCooldownMs / 1000)}s`
@@ -149,7 +157,7 @@ export const ProfilePage = () => {
     >
       <InfoTable
         rows={userProfileInfoRows}
-        rowProps={{
+        rowLabelProps={{
           $width: '100%',
           $maxWidth: '100px',
           $fontWeight: 500,
@@ -165,8 +173,8 @@ export const ProfilePage = () => {
       />
 
       <Link to={ROUTE_PATHS.accountQuotes} variant="body2">
-        <Button variant="accent" icon={<DescriptionIcon color="neutral.white" />}>
-          My Quotes
+        <Button variant="accent" size="large" icon={<DescriptionIcon color="neutral.white" />}>
+          {user.role === 'admin' ? 'Manage Quotes' : 'My Quotes'}
         </Button>
       </Link>
     </Page>
