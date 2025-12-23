@@ -32,25 +32,32 @@ export const handler = createHandler(
 
     assert(order.status === 'new', 'Order is not payable');
 
+    const { customer } = order;
+
     const stripe = initStripeClient();
 
-    let stripeCustomerId = order.customer.stripeCustomerId;
+    let stripeCustomerId = customer.stripeCustomerId;
     if (!stripeCustomerId) {
       const existingStripeCustomer = await stripe.customers.search({
-        query: `email:"${order.customer.email}"`,
+        query: `email:"${customer.email}"`,
         limit: 1,
       });
 
       const stripeCustomer = existingStripeCustomer.data.length
         ? existingStripeCustomer.data[0]
-        : await stripe.customers.create({
-            email: order.customer.email,
-            name: `${order.customer.firstName} ${order.customer.lastName}`,
-            phone: order.customer.phone ?? undefined,
-            metadata: {
-              userId: order.customer.userId,
+        : await stripe.customers.create(
+            {
+              email: customer.email,
+              name: `${customer.firstName} ${customer.lastName}`,
+              phone: customer.phone ?? undefined,
+              metadata: {
+                userId: customer.userId,
+              },
             },
-          });
+            {
+              idempotencyKey: `create-customer:user:${customer.userId}`,
+            },
+          );
 
       stripeCustomerId = stripeCustomer.id;
 
@@ -87,7 +94,7 @@ export const handler = createHandler(
           },
         },
         {
-          idempotencyKey: `order:${order.id}`,
+          idempotencyKey: `create-payment-intent:order:${order.id}`,
         },
       );
 

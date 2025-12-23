@@ -1,11 +1,14 @@
+import Stripe from 'stripe';
 import admin from 'firebase-admin';
-import { Timestamp, Transaction } from 'firebase-admin/firestore';
+import { Firestore, Timestamp, Transaction } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
+import type { Nullable } from '~/types';
 import type { OrderStatus } from '~/netlify/types';
-import type { QuoteDocument, UserDocument } from './document-types';
-import { getOrdersCollectionRef, ORDERS_COLLECTION_NAME } from './collections';
+import type { OrderDocument, QuoteDocument, UserDocument } from './document-types';
 import { getNextSequence } from './utils';
+import { getOrdersCollectionRef, ORDERS_COLLECTION_NAME } from './collections';
+import { getOrderRef } from './document-references';
 
 const ALLOWED_ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   new: ['paid', 'cancelled', 'expired'],
@@ -75,5 +78,157 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
     shipping: null,
     updatedAt: null,
     createdAt: now,
+  });
+};
+
+export const processOrderPaymentSucceeded = async (
+  firestore: Firestore,
+  paymentIntent: Stripe.PaymentIntent,
+) => {
+  const orderId = paymentIntent.metadata.orderId;
+  assert(orderId, 'Missing orderId in PaymentIntent metadata');
+
+  const orderRef = getOrderRef(orderId);
+
+  await firestore.runTransaction(async tx => {
+    const orderSnap = await tx.get(orderRef);
+    if (!orderSnap.exists) {
+      return;
+    }
+
+    const order = orderSnap.data();
+    if (!order || order.status !== 'new') {
+      return;
+    }
+
+    if (!order.payment || order.payment.paymentIntentId !== paymentIntent.id) {
+      return;
+    }
+
+    const now = Timestamp.now();
+
+    tx.set(
+      orderRef,
+      {
+        status: 'paid',
+        payment: {
+          paidAt: now,
+        },
+        updatedAt: now,
+      },
+      {
+        merge: true,
+      },
+    );
+  });
+};
+
+export const processOrderPaymentFailed = async (
+  firestore: Firestore,
+  paymentIntent: Stripe.PaymentIntent,
+) => {
+  const { orderId } = paymentIntent.metadata;
+  if (!orderId) {
+    return;
+  }
+
+  const orderRef = getOrderRef(orderId);
+
+  await firestore.runTransaction(async tx => {
+    const orderSnap = await tx.get(orderRef);
+    if (!orderSnap.exists) {
+      return;
+    }
+
+    const order = orderSnap.data();
+    if (!order || order.status !== 'new') {
+      return;
+    }
+
+    if (!order.payment || order.payment.paymentIntentId !== paymentIntent.id) {
+      return;
+    }
+
+    tx.update(orderRef, {
+      payment: null,
+      updatedAt: Timestamp.now(),
+    } satisfies Partial<OrderDocument>);
+  });
+};
+
+export const processOrderPaymentCanceled = async (
+  firestore: Firestore,
+  paymentIntent: Stripe.PaymentIntent,
+) => {
+  const orderId = paymentIntent.metadata.orderId;
+  if (!orderId) {
+    return;
+  }
+
+  const orderRef = getOrderRef(orderId);
+
+  await firestore.runTransaction(async tx => {
+    const orderSnap = await tx.get(orderRef);
+    if (!orderSnap.exists) {
+      return;
+    }
+
+    const order = orderSnap.data();
+    if (!order || order.status !== 'new') {
+      return;
+    }
+
+    if (!order.payment || order.payment.paymentIntentId !== paymentIntent.id) {
+      return;
+    }
+
+    tx.update(orderRef, {
+      payment: null,
+      updatedAt: Timestamp.now(),
+    } satisfies Partial<OrderDocument>);
+  });
+};
+
+export const processOrderPaymentRefunded = async (firestore: Firestore, charge: Stripe.Charge) => {
+  const paymentIntentId = charge.payment_intent as Nullable<string>;
+  if (!paymentIntentId) {
+    return;
+  }
+
+  const orderId = charge.metadata?.orderId;
+  assert(orderId, 'Missing orderId in charge metadata');
+
+  const orderRef = getOrderRef(orderId);
+
+  await firestore.runTransaction(async tx => {
+    const orderSnap = await tx.get(orderRef);
+    if (!orderSnap.exists) {
+      return;
+    }
+
+    const order = orderSnap.data();
+    if (!order || order.status === 'refunded') {
+      return;
+    }
+
+    if (!order.payment || order.payment.paymentIntentId !== paymentIntentId) {
+      return;
+    }
+
+    const now = Timestamp.now();
+
+    tx.set(
+      orderRef,
+      {
+        status: 'refunded',
+        payment: {
+          refundedAt: now,
+        },
+        updatedAt: now,
+      },
+      {
+        merge: true,
+      },
+    );
   });
 };
