@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Your Quote Is Ready</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #f3f4f6;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 32px auto;
+            background: #ffffff;
+            padding: 28px;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0 0 18px;
+            color: #111827;
+            font-weight: 600;
+        }
+
+        .meta {
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 15px;
+            color: #374151;
+            line-height: 1.6;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .description {
+            line-height: 1.6;
+            white-space: pre-line;
+            font-size: 15px;
+            color: #374151;
+            margin-bottom: 24px;
+        }
+
+        .quote-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 18px;
+            margin-bottom: 28px;
+            font-size: 15px;
+            color: #374151;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .row.total {
+            font-weight: bold;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 18px;
+            background-color: #2563eb;
+            color: #ffffff !important;
+            text-decoration: none;
+            font-size: 15px;
+            border-radius: 6px;
+            margin-top: 8px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #6b7280;
+            margin-top: 40px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <h1>Your Quote Is Ready</h1>
+
+    <div class="meta">
+        <div><span class="label">Quote:</span> {{quoteNumber}}</div>
+        <div><span class="label">Customer:</span> {{customerName}}</div>
+    </div>
+
+    {{#if note}}
+    <div class="description">
+        <span class="label">Note from our team:</span><br/>
+        {{note}}
+    </div>
+    {{/if}}
+
+    <div class="quote-box">
+        <div class="row">
+            <span>Subtotal</span>
+            <span>{{amount}}</span>
+        </div>
+
+        {{#if discount}}
+        <div class="row">
+            <span>Discount</span>
+            <span>-{{discount}}</span>
+        </div>
+        {{/if}}
+
+        {{#if vat}}
+        <div class="row">
+            <span>VAT</span>
+            <span>{{vat}}</span>
+        </div>
+        {{/if}}
+
+        <div class="row total">
+            <span>Total</span>
+            <span>{{total}}</span>
+        </div>
+    </div>
+
+    <a class="button" href="{{quoteUrl}}" target="_blank">
+        View Quote & Proceed
+    </a>
+
+    <div class="footer">
+        If you need changes, you can request them directly from your account.<br/>
+        © Vextrix3D
+    </div>
+
+</div>
+</body>
+</html>
