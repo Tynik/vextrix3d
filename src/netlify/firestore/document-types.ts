@@ -161,6 +161,7 @@ interface OrderPricing {
 }
 
 interface OrderPayment {
+  paymentIntentId: StripePaymentIntentId;
   paidAt: Nullable<Timestamp>;
   refundedAt: Nullable<Timestamp>;
 }
@@ -193,6 +194,6 @@ export interface OrderDocument extends Document<OrderId> {
   updatedAt: Nullable<Timestamp>;
 }
 
-export interface OrderPrivatePaymentDocument {
-  paymentIntentId: StripePaymentIntentId;
+export interface OrderPrivateDocument {
+  //
 }

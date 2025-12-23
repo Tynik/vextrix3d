@@ -9,7 +9,6 @@ import type {
   QuoteHistoryChangeId,
   QuoteHistoryStatusChangeDocument,
   UserDocument,
-  OrderPrivatePaymentDocument,
 } from './document-types';
 import {
   SEQUENCES_COLLECTION_NAME,
@@ -17,7 +16,6 @@ import {
   QUOTE_HISTORY_COLLECTION_NAME,
   QUOTES_COLLECTION_NAME,
   USERS_COLLECTION_NAME,
-  PRIVATE_COLLECTION_NAME,
 } from './collections';
 import {
   sequenceConverter,
@@ -25,7 +23,6 @@ import {
   quoteConverter,
   quoteHistoryStatusChangeConverter,
   userConverter,
-  orderPrivatePaymentConverter,
 } from './data-convertors';
 
 export const getSequenceDocRef = (
@@ -60,12 +57,3 @@ export const getOrderRef = (
   firestore = admin.firestore(),
 ): DocumentReference<OrderDocument> =>
   firestore.doc(`${ORDERS_COLLECTION_NAME}/${orderId}`).withConverter(orderConverter);
-
-export const getOrderPrivatePaymentRef = (
-  orderId: string,
-  firestore = admin.firestore(),
-): DocumentReference<OrderPrivatePaymentDocument> =>
-  getOrderRef(orderId, firestore)
-    .collection(PRIVATE_COLLECTION_NAME)
-    .doc('payment')
-    .withConverter(orderPrivatePaymentConverter);

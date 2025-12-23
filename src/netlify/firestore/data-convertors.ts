@@ -6,7 +6,7 @@ import type {
   QuoteDocument,
   QuoteHistoryStatusChangeDocument,
   UserDocument,
-  OrderPrivatePaymentDocument,
+  OrderPrivateDocument,
 } from './document-types';
 
 export const sequenceConverter: FirestoreDataConverter<SequenceDocument> = {
@@ -35,7 +35,7 @@ export const orderConverter: FirestoreDataConverter<OrderDocument> = {
   fromFirestore: snapshot => snapshot.data() as OrderDocument,
 };
 
-export const orderPrivatePaymentConverter: FirestoreDataConverter<OrderPrivatePaymentDocument> = {
+export const orderPrivateConverter: FirestoreDataConverter<OrderPrivateDocument> = {
   toFirestore: data => data,
-  fromFirestore: snapshot => snapshot.data() as OrderPrivatePaymentDocument,
+  fromFirestore: snapshot => snapshot.data() as OrderPrivateDocument,
 };

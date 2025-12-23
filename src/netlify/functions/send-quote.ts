@@ -59,18 +59,25 @@ export const handler = createHandler(
         const vatAmount = subtotal * (vatPct / 100);
         const total = +(subtotal + vatAmount).toFixed(2);
 
-        tx.update(quoteRef, {
-          pricing: {
-            currency: 'gbp',
-            amount: pricing.amount,
-            discountPct,
-            discountAmount,
-            vatPct,
-            vatAmount,
-            total,
+        tx.set(
+          quoteRef,
+          {
+            pricing: {
+              type: 'final',
+              currency: 'gbp',
+              amount: pricing.amount,
+              discountPct,
+              discountAmount,
+              vatPct,
+              vatAmount,
+              total,
+            },
+            updatedAt: Timestamp.now(),
           },
-          updatedAt: Timestamp.now(),
-        });
+          {
+            merge: true,
+          },
+        );
 
         await changeQuoteStatusTx(
           tx,

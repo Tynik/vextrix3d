@@ -7,7 +7,7 @@ import type { OrderPayment } from '~/netlify/types';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
 import { initStripeClient } from '../stripe';
-import { getOrderPrivatePaymentRef, getOrderRef } from '../firestore';
+import { getOrderRef } from '../firestore';
 
 export type PayOrderPayload = {
   orderId: string;
@@ -54,20 +54,24 @@ export const handler = createHandler(
 
       stripeCustomerId = stripeCustomer.id;
 
-      await orderRef.update({
-        'customer.stripeCustomerId': stripeCustomerId,
-        updatedAt: Timestamp.now(),
-      });
+      await orderRef.set(
+        {
+          customer: {
+            stripeCustomerId,
+          },
+          updatedAt: Timestamp.now(),
+        },
+        {
+          merge: true,
+        },
+      );
     }
 
-    const privatePaymentRef = getOrderPrivatePaymentRef(payload.orderId, firestore);
-    const privatePaymentSnap = await privatePaymentRef.get();
-    const privatePayment = privatePaymentSnap.exists ? privatePaymentSnap.data() : null;
-
+    const paymentIntentId = order.payment?.paymentIntentId;
     let paymentIntent: Stripe.PaymentIntent;
 
-    if (privatePayment?.paymentIntentId) {
-      paymentIntent = await stripe.paymentIntents.retrieve(privatePayment.paymentIntentId);
+    if (paymentIntentId) {
+      paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
     } else {
       paymentIntent = await stripe.paymentIntents.create(
         {
@@ -87,22 +91,19 @@ export const handler = createHandler(
         },
       );
 
-      await privatePaymentRef.set(
+      await orderRef.set(
         {
-          paymentIntentId: paymentIntent.id,
+          payment: {
+            paymentIntentId: paymentIntent.id,
+            paidAt: null,
+            refundedAt: null,
+          },
+          updatedAt: Timestamp.now(),
         },
         {
           merge: true,
         },
       );
-
-      await orderRef.update({
-        payment: {
-          paidAt: null,
-          refundedAt: null,
-        } satisfies OrderPayment,
-        updatedAt: Timestamp.now(),
-      });
     }
 
     return {

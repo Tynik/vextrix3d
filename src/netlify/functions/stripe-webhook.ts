@@ -8,7 +8,7 @@ import type { Nullable } from '~/types';
 import { STRIPE_WEBHOOK_SECRET } from '../constants';
 import { initFirebaseAdminApp } from '../firebase';
 import { initStripeClient } from '../stripe';
-import { getOrderPrivatePaymentRef, getOrderRef } from '../firestore';
+import { getOrderRef } from '../firestore';
 
 const handlePaymentSucceeded = async (
   firestore: Firestore,
@@ -58,14 +58,9 @@ const handleRefunded = async (firestore: Firestore, charge: Stripe.Charge) => {
   assert(orderId, 'Missing orderId in charge metadata');
 
   const orderRef = getOrderRef(orderId);
-  const privatePaymentRef = getOrderPrivatePaymentRef(orderId);
 
   await firestore.runTransaction(async tx => {
-    const [orderSnap, privatePaymentSnap] = await Promise.all([
-      tx.get(orderRef),
-      tx.get(privatePaymentRef),
-    ]);
-
+    const orderSnap = await tx.get(orderRef);
     if (!orderSnap.exists) {
       return;
     }
@@ -75,11 +70,7 @@ const handleRefunded = async (firestore: Firestore, charge: Stripe.Charge) => {
       return;
     }
 
-    // Optional safety check
-    if (
-      privatePaymentSnap.exists &&
-      privatePaymentSnap.data()?.paymentIntentId !== paymentIntentId
-    ) {
+    if (!order.payment || order.payment.paymentIntentId !== paymentIntentId) {
       return;
     }
 
@@ -108,7 +99,6 @@ const handlePaymentCanceled = async (firestore: Firestore, intent: Stripe.Paymen
   }
 
   const orderRef = getOrderRef(orderId);
-  const orderPrivatePaymentRef = getOrderPrivatePaymentRef(orderId);
 
   await firestore.runTransaction(async tx => {
     const orderSnap = await tx.get(orderRef);
@@ -125,17 +115,10 @@ const handlePaymentCanceled = async (firestore: Firestore, intent: Stripe.Paymen
       return;
     }
 
-    tx.update(orderPrivatePaymentRef, {
-      paymentIntentId: null,
-    });
-
     tx.set(
       orderRef,
       {
-        payment: {
-          paidAt: null,
-          refundedAt: null,
-        },
+        payment: null,
         updatedAt: Timestamp.now(),
       },
       {
