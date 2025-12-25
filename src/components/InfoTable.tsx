@@ -1,7 +1,7 @@
 import React from 'react';
 import type { ReactNode } from 'react';
 import { isNilOrEmptyString } from '@react-hive/honey-utils';
-import type { HoneyListProps, HoneyListItem } from '@react-hive/honey-layout';
+import type { HoneyListProps, HoneyListItem, HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex, HoneyList } from '@react-hive/honey-layout';
 
 import type { TextProps } from '~/components';
@@ -19,12 +19,14 @@ interface InfoTableProps<Item extends HoneyListItem> extends Omit<
 > {
   rows: InfoTableRow[];
   textVariant?: TextProps['variant'];
+  rowProps?: HoneyFlexProps;
   rowLabelProps?: Omit<TextProps, 'variant'>;
 }
 
 export const InfoTable = <Item extends HoneyListItem>({
   rows,
   textVariant = 'body2',
+  rowProps,
   rowLabelProps,
   ...props
 }: InfoTableProps<Item>) => {
@@ -32,7 +34,8 @@ export const InfoTable = <Item extends HoneyListItem>({
     <HoneyList items={rows} itemKey="label" $gap={1} data-testid="user-profile" {...props}>
       {row =>
         row.visible !== false && (
-          <HoneyFlex row centerY $gap={2}>
+          // 24px height set because a icon button put inside a row can increase the row's height
+          <HoneyFlex row centerY $gap={2} $minHeight="24px" {...rowProps}>
             <Text variant={textVariant} {...rowLabelProps}>
               {row.label}:
             </Text>

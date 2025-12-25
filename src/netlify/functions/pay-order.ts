@@ -1,12 +1,11 @@
 import Stripe from 'stripe';
-import admin from 'firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
 import { initStripeClient } from '../stripe';
-import { getOrderDocRef } from '../firestore';
+import { getOrderOrThrow } from '../firestore';
 
 export type PayOrderPayload = {
   orderId: string;
@@ -15,17 +14,10 @@ export type PayOrderPayload = {
 export const handler = createHandler(
   { allowedMethods: ['POST'] },
   withSession<PayOrderPayload>(async ({ decodedIdToken, payload }) => {
-    const orderId = payload?.orderId;
+    const { orderId } = payload ?? {};
     assert(orderId, 'Order ID is missing');
 
-    const firestore = admin.firestore();
-    const orderRef = getOrderDocRef(orderId, firestore);
-
-    const orderSnap = await orderRef.get();
-    assert(orderSnap.exists, 'Order does not exist');
-
-    const order = orderSnap.data();
-    assert(order, 'Order document data is empty');
+    const { orderRef, order } = await getOrderOrThrow(orderId);
 
     const isOrderOwner = order.customer.userId === decodedIdToken.uid;
     assert(isOrderOwner, 'Forbidden');

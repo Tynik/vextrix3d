@@ -33,6 +33,7 @@ export const handler = createHandler<{ idToken: string }>(
       return {
         status: 'ok',
         data: {
+          id: user.id,
           role: user.role,
           email: user.email,
           isEmailVerified: decodedIdToken.email_verified ?? false,

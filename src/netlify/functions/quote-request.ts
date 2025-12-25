@@ -47,18 +47,7 @@ export const handler = createHandler<QuoteRequestPayload>(
   async ({ payload, cookies }) => {
     assert(COMPANY_EMAIL, 'The `COMPANY_EMAIL` must be set as environment variable');
 
-    if (!payload) {
-      return {
-        status: 'error',
-        statusCode: 400,
-        data: {
-          error: {
-            message: 'Payload is empty',
-          },
-        },
-      };
-    }
-
+    assert(payload, 'Payload is missing');
     assert(payload.quantity, 'Quantity is missing');
     assert(payload.description, 'Description is missing');
     assert(payload.fileName, 'Filename is missing');

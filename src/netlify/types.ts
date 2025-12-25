@@ -6,6 +6,8 @@ export type UserId = string;
 
 export type QuoteId = string;
 
+export type QuoteChangeRequestId = string;
+
 export type OrderId = string;
 
 export type StripeCustomerId = Stripe.Customer['id'];
@@ -94,9 +96,18 @@ export interface PaginatedResponse<T> {
 }
 
 export interface User {
+  id: UserId;
   role: AccountRole;
   email: string;
   isEmailVerified: boolean;
+  firstName: string;
+  lastName: string;
+  phone: Nullable<string>;
+}
+
+interface OrderCustomer {
+  userId: Nullable<UserId>;
+  email: string;
   firstName: string;
   lastName: string;
   phone: Nullable<string>;
@@ -107,7 +118,7 @@ interface OrderJob {
   material: Nullable<string>;
   color: Nullable<string>;
   quantity: number;
-  notes: Nullable<string>;
+  description: Nullable<string>;
 }
 
 interface OrderPricing {
@@ -128,6 +139,7 @@ export interface OrderPayment {
 export interface Order {
   id: OrderId;
   quoteId: QuoteId;
+  customer: OrderCustomer;
   orderNumber: string;
   status: OrderStatus;
   job: OrderJob;

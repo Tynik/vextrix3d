@@ -1,76 +1,26 @@
 import React, { useMemo, useState } from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
 
-import { QUOTES_QUERY_KEY } from '~/configs';
-import { acceptQuote, handleApiError, rejectQuote } from '~/api';
 import { formatCurrency } from '~/shared';
 import { formatDatetime } from '~/utils';
 import type { Quote } from '~/netlify/types';
 import { useAppContext } from '~/models';
-import { DownloadIcon, KeyboardDoubleArrowDownIcon, ThumbDownIcon, ThumbUpIcon } from '~/icons';
+import { DownloadIcon, KeyboardDoubleArrowDownIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
-import { IconButton, Button, Divider, InfoTable, Text, Link } from '~/components';
-import { QuoteStatusInfo } from './QuoteStatus';
-import { ProcessQuoteButton } from './ProcessQuoteButton';
-import { QuoteOrdersList } from './QuoteOrdersList';
+import { IconButton, Divider, InfoTable, Text, Link } from '~/components';
+import { QuoteStatusInfo } from '../QuoteStatus';
+import { QuoteOrdersList } from '../QuoteOrdersList';
+import { QuoteRowActions } from './QuoteRowActions';
 
 interface QuoteProps extends HoneyFlexProps {
   quote: Quote;
 }
 
 export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
-  const queryClient = useQueryClient();
-
   const { isAdmin } = useAppContext();
 
-  const acceptQuoteMutation = useMutation({
-    mutationFn: acceptQuote,
-  });
-
-  const rejectQuoteMutation = useMutation({
-    mutationFn: rejectQuote,
-  });
-
   const [isViewOrders, setIsViewOrders] = useState(false);
-
-  const handleAcceptQuote = async () => {
-    try {
-      await acceptQuoteMutation.mutateAsync({
-        quoteId: quote.id,
-      });
-
-      toast('Quote successfully accepted', {
-        type: 'success',
-      });
-
-      await queryClient.invalidateQueries({
-        queryKey: [QUOTES_QUERY_KEY],
-      });
-    } catch (e) {
-      handleApiError(e);
-    }
-  };
-
-  const handleRejectQuote = async () => {
-    try {
-      await rejectQuoteMutation.mutateAsync({
-        quoteId: quote.id,
-      });
-
-      toast('Quote successfully rejected', {
-        type: 'success',
-      });
-
-      await queryClient.invalidateQueries({
-        queryKey: [QUOTES_QUERY_KEY],
-      });
-    } catch (e) {
-      handleApiError(e);
-    }
-  };
 
   const infoTableRows = useMemo<InfoTableRow[]>(
     () => [
@@ -109,6 +59,10 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
       {
         label: 'Submitted on',
         value: formatDatetime(quote.createdAt),
+      },
+      {
+        label: 'Description',
+        value: quote.job.description,
       },
     ],
     [quote],
@@ -177,33 +131,7 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
         }}
       />
 
-      <HoneyFlex row centerY $gap={1} $marginLeft="auto">
-        {isAdmin && quote.status === 'new' && <ProcessQuoteButton quote={quote} />}
-
-        {quote.status === 'priced' && (
-          <Button
-            loading={acceptQuoteMutation.isPending}
-            disabled={rejectQuoteMutation.isPending}
-            onClick={handleAcceptQuote}
-            variant="success"
-            icon={<ThumbUpIcon color="neutral.white" />}
-          >
-            Accept
-          </Button>
-        )}
-
-        {((isAdmin && quote.status === 'new') || quote.status === 'priced') && (
-          <Button
-            loading={rejectQuoteMutation.isPending}
-            disabled={acceptQuoteMutation.isPending}
-            onClick={handleRejectQuote}
-            variant="danger"
-            icon={<ThumbDownIcon color="neutral.white" />}
-          >
-            Reject
-          </Button>
-        )}
-      </HoneyFlex>
+      <QuoteRowActions quote={quote} $marginLeft="auto" />
 
       {isOrdersCanBeViewed && (
         <HoneyFlex $gap={1}>

@@ -40,7 +40,7 @@ export const QuoteOrderRow = ({ order }: QuoteOrderRowProps) => {
           </Text>
         </HoneyFlex>
 
-        {order.status === 'new' && <PayOrderButton order={order} />}
+        <PayOrderButton order={order} />
       </HoneyFlex>
     </QuoteOrderRowStyled>
   );

@@ -22,50 +22,35 @@ export const handler = createHandler(
     allowedMethods: ['POST'],
   },
   withSession<AcceptQuotePayload>(async ({ decodedIdToken, payload }) => {
-    const quoteId = payload?.quoteId;
+    const { quoteId } = payload ?? {};
     assert(quoteId, 'Quote ID is missing');
 
     const firestore = admin.firestore();
+    const ordersRef = getOrdersCollectionRef(firestore);
 
-    try {
-      const ordersRef = getOrdersCollectionRef(firestore);
+    await firestore.runTransaction(async tx => {
+      const { quote } = await getQuoteOrThrowTx(tx, quoteId, firestore);
 
-      await firestore.runTransaction(async tx => {
-        const { quote } = await getQuoteOrThrowTx(tx, quoteId, firestore);
+      const isQuoteOwner = quote.requester.userId === decodedIdToken.uid;
+      assert(isQuoteOwner, 'Forbidden');
 
-        const isQuoteOwner = quote.requester.userId === decodedIdToken.uid;
-        assert(isQuoteOwner, 'Forbidden');
+      assert(quote.status === 'priced', 'Quote is not eligible for order creation');
 
-        assert(quote.status === 'priced', 'Quote is not eligible for order creation');
+      const orderQuery = ordersRef.where('quoteId', '==', quoteId).limit(1);
+      const orderQuerySnap = await tx.get(orderQuery);
+      if (!orderQuerySnap.empty) {
+        return;
+      }
 
-        const orderQuery = ordersRef.where('quoteId', '==', quoteId).limit(1);
-        const orderQuerySnap = await tx.get(orderQuery);
-        if (!orderQuerySnap.empty) {
-          return;
-        }
+      const user = await getExistingUserDocument(decodedIdToken.uid);
 
-        const user = await getExistingUserDocument(decodedIdToken.uid);
-
-        await createOrder(tx, {
-          user,
-          quote,
-        });
-
-        await changeQuoteStatusTx(tx, quote, 'accepted', buildQuoteHistoryActor(user));
+      await createOrder(tx, {
+        user,
+        quote,
       });
-    } catch (e: any) {
-      console.error(e);
 
-      return {
-        status: 'error',
-        statusCode: 400,
-        data: {
-          error: {
-            message: e.message,
-          },
-        },
-      };
-    }
+      await changeQuoteStatusTx(tx, quote, 'accepted', buildQuoteHistoryActor(user));
+    });
 
     return {
       status: 'ok',

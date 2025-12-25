@@ -16,7 +16,7 @@ export const handler = createHandler(
     allowedMethods: ['POST'],
   },
   withSession<RejectQuotePayload>(async ({ decodedIdToken, isAdmin, payload }) => {
-    const quoteId = payload?.quoteId;
+    const { quoteId, reason } = payload ?? {};
     assert(quoteId, 'Quote ID is missing');
 
     const firestore = admin.firestore();
@@ -36,7 +36,7 @@ export const handler = createHandler(
           role: isAdmin ? 'admin' : 'customer',
         },
         {
-          reason: payload.reason,
+          reason,
         },
       );
     });

@@ -1,9 +1,10 @@
 import admin from 'firebase-admin';
-import { Transaction, Timestamp, Firestore } from 'firebase-admin/firestore';
+import { Timestamp } from 'firebase-admin/firestore';
+import type { Transaction, Firestore, DocumentReference } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
-import type { QuoteId, QuoteStatus } from '../types';
+import type { QuoteChangeRequestId, QuoteId, QuoteStatus } from '../types';
 import type {
   Actor,
   QuoteDocument,
@@ -16,6 +17,7 @@ import type {
 import { getQuoteDocRef, getUserDocRef } from './document-references';
 import { getNextSequence } from './utils';
 import {
+  getQuoteChangeRequestsCollectionRef,
   getQuoteHistoryCollectionRef,
   getQuotesCollectionRef,
   QUOTES_COLLECTION_NAME,
@@ -57,6 +59,25 @@ export const getQuoteOrThrowTx = async (
   return {
     quoteRef,
     quote,
+  };
+};
+
+export const getQuoteChangeRequestOrThrowTx = async (
+  tx: Transaction,
+  quoteRef: DocumentReference<QuoteDocument>,
+  changeRequestId: QuoteChangeRequestId,
+) => {
+  const quoteChangeReqRef = getQuoteChangeRequestsCollectionRef(quoteRef).doc(changeRequestId);
+
+  const quoteChangeReqSnap = await tx.get(quoteChangeReqRef);
+  assert(quoteChangeReqSnap.exists, 'Quote change request not found');
+
+  const quoteChangeReq = quoteChangeReqSnap.data();
+  assert(quoteChangeReq, 'Quote change request document data is empty');
+
+  return {
+    quoteChangeReqRef,
+    quoteChangeReq,
   };
 };
 

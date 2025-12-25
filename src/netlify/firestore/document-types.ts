@@ -16,11 +16,10 @@ import type {
   StripePaymentIntentId,
   QuoteChangeRequestStatus,
   QuotePricingStage,
+  QuoteChangeRequestId,
 } from '../types';
 
 export type QuoteHistoryChangeId = string;
-
-export type QuoteChangeRequestId = string;
 
 export interface SequenceDocument {
   value: number;
@@ -121,7 +120,7 @@ export interface QuoteHistoryStatusChangeDocument extends QuoteHistoryChangeDocu
 interface QuoteChangeRequestFields {
   quantity: Nullable<number>;
   material: Nullable<string>;
-  notes: Nullable<string>;
+  description: Nullable<string>;
 }
 
 export interface QuoteChangeRequestDocument extends Document<QuoteChangeRequestId> {
@@ -147,7 +146,7 @@ export interface OrderJob {
   material: Nullable<string>;
   color: Nullable<string>;
   quantity: number;
-  notes: Nullable<string>;
+  description: Nullable<string>;
 }
 
 interface OrderPricing {

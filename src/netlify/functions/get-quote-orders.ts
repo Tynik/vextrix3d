@@ -1,4 +1,3 @@
-import admin from 'firebase-admin';
 import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
@@ -24,21 +23,19 @@ export const handler = createHandler(
 
     assert(quoteId, 'Quote ID is required');
 
-    const firestore = admin.firestore();
-
     const quoteRef = getQuoteDocRef(quoteId);
-    const quoteSnap = await quoteRef.get();
 
-    assert(quoteSnap.exists, 'Quote not found');
+    const quoteSnap = await quoteRef.get();
+    assert(quoteSnap.exists, 'Quote does not exist');
 
     const quote = quoteSnap.data();
-    assert(quote, 'Quote data is empty');
+    assert(quote, 'Quote document data is empty');
 
     const isQuoteOwner = quote.requester.userId === decodedIdToken.uid;
 
     assert(isAdmin || isQuoteOwner, 'Forbidden');
 
-    let query = getOrdersCollectionRef(firestore)
+    let query = getOrdersCollectionRef()
       .where('quoteId', '==', quoteId)
       .orderBy('createdAt', 'desc')
       .limit(limit + 1);
@@ -55,25 +52,34 @@ export const handler = createHandler(
     const data = docs.map<Order>(doc => {
       const order = doc.data();
 
+      const { customer, job, pricing } = order;
+
       return {
         id: order.id,
         quoteId: order.quoteId,
+        customer: {
+          userId: customer.userId,
+          email: customer.email,
+          firstName: customer.firstName,
+          lastName: customer.lastName,
+          phone: customer.phone,
+        },
         orderNumber: order.orderNumber,
         status: order.status,
         job: {
-          technology: order.job.technology,
-          material: order.job.material,
-          color: order.job.color,
-          quantity: order.job.quantity,
-          notes: order.job.notes,
+          technology: job.technology,
+          material: job.material,
+          color: job.color,
+          quantity: job.quantity,
+          description: job.description,
         },
         pricing: {
-          amount: order.pricing.amount,
-          discountPct: order.pricing.discountPct,
-          discountAmount: order.pricing.discountAmount,
-          vatPct: order.pricing.vatPct,
-          vatAmount: order.pricing.vatAmount,
-          total: order.pricing.total,
+          amount: pricing.amount,
+          discountPct: pricing.discountPct,
+          discountAmount: pricing.discountAmount,
+          vatPct: pricing.vatPct,
+          vatAmount: pricing.vatAmount,
+          total: pricing.total,
         },
         payment: order.payment
           ? {

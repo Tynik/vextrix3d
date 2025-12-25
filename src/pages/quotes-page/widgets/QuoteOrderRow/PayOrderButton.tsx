@@ -8,10 +8,11 @@ import { toast } from 'react-toastify';
 import type { Nullable } from '~/types';
 import type { Order } from '~/netlify/types';
 import { stripePromise } from '~/stripe';
+import { QUOTE_ORDERS_QUERY_KEY } from '~/configs';
 import { handleApiError, payOrder } from '~/api';
 import { AttachMoneyIcon, CloseIcon } from '~/icons';
+import { useAppContext } from '~/models';
 import { Button, Dialog } from '~/components';
-import { QUOTE_ORDERS_QUERY_KEY } from '~/configs';
 import { PayOrderForm } from './PayOrderForm';
 
 interface PayOrderButtonProps {
@@ -21,11 +22,17 @@ interface PayOrderButtonProps {
 export const PayOrderButton = ({ order }: PayOrderButtonProps) => {
   const queryClient = useQueryClient();
 
+  const { user } = useAppContext();
+
   const payOrderMutation = useMutation({
     mutationFn: payOrder,
   });
 
   const [clientSecret, setClientSecret] = useState<Nullable<string>>(null);
+
+  if (order.status !== 'new' || user?.id !== order.customer.userId) {
+    return null;
+  }
 
   const handlePayOrder = async () => {
     try {

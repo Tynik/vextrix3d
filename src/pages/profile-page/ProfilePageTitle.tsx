@@ -1,5 +1,5 @@
 import React from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { HoneyFlex } from '@react-hive/honey-layout';
 import { Navigate } from 'react-router-dom';
 
@@ -10,6 +10,8 @@ import { ExitToAppIcon } from '~/icons';
 import { IconButton, Text } from '~/components';
 
 export const ProfilePageTitle = () => {
+  const queryClient = useQueryClient();
+
   const signOutMutation = useMutation({
     mutationFn: async () => {
       try {
@@ -23,6 +25,8 @@ export const ProfilePageTitle = () => {
   const handleSignOut = async () => {
     try {
       await signOutMutation.mutateAsync();
+
+      queryClient.clear();
     } catch (e) {
       handleApiError(e);
     }

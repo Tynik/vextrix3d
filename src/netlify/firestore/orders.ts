@@ -21,6 +21,24 @@ const ALLOWED_ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   expired: [],
 };
 
+export const getOrderOrThrow = async (
+  orderId: OrderId,
+  firestore: Firestore = admin.firestore(),
+) => {
+  const orderRef = getOrderDocRef(orderId, firestore);
+
+  const orderSnap = await orderRef.get();
+  assert(orderSnap.exists, 'Order does not exist');
+
+  const order = orderSnap.data();
+  assert(order, 'Order document data is empty');
+
+  return {
+    orderRef,
+    order,
+  };
+};
+
 export const getOrderOrThrowTx = async (
   tx: Transaction,
   orderId: OrderId,
@@ -29,7 +47,7 @@ export const getOrderOrThrowTx = async (
   const orderRef = getOrderDocRef(orderId, firestore);
 
   const orderSnap = await tx.get(orderRef);
-  assert(orderSnap.exists, 'Order document does not exist');
+  assert(orderSnap.exists, 'Order does not exist');
 
   const order = orderSnap.data();
   assert(order, 'Order document data is empty');
@@ -84,7 +102,7 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
       material: job.material,
       color: job.color,
       quantity: job.quantity,
-      notes: job.description,
+      description: job.description,
     },
     pricing: {
       currency: pricing.currency,
@@ -161,20 +179,12 @@ export const processOrderPaymentSucceeded = async (
   firestore: Firestore,
   paymentIntent: Stripe.PaymentIntent,
 ) => {
-  const orderId = paymentIntent.metadata.orderId;
-  assert(orderId, 'Missing orderId in PaymentIntent metadata');
-
-  const orderRef = getOrderDocRef(orderId);
+  const { orderId } = paymentIntent.metadata;
+  assert(orderId, 'Missing order id in payment intent metadata');
 
   await firestore.runTransaction(async tx => {
-    const orderSnap = await tx.get(orderRef);
-    if (!orderSnap.exists) {
-      return;
-    }
+    const { order } = await getOrderOrThrowTx(tx, orderId, firestore);
 
-    const order = orderSnap.data();
-
-    assert(order, 'Order document data is empty');
     assert(order.payment, 'Payment is missing in order document');
     assert(order.payment.paymentIntentId === paymentIntent.id, 'Invalid payment intent id');
 
@@ -191,21 +201,11 @@ export const processOrderPaymentFailed = async (
   paymentIntent: Stripe.PaymentIntent,
 ) => {
   const { orderId } = paymentIntent.metadata;
-  if (!orderId) {
-    return;
-  }
-
-  const orderRef = getOrderDocRef(orderId);
+  assert(orderId, 'Missing order id in payment intent metadata');
 
   await firestore.runTransaction(async tx => {
-    const orderSnap = await tx.get(orderRef);
-    if (!orderSnap.exists) {
-      return;
-    }
+    const { orderRef, order } = await getOrderOrThrowTx(tx, orderId, firestore);
 
-    const order = orderSnap.data();
-
-    assert(order, 'Order document data is empty');
     assert(order.payment, 'Payment is missing in order document');
     assert(order.payment.paymentIntentId === paymentIntent.id, 'Invalid payment intent id');
 
@@ -224,21 +224,12 @@ export const processOrderPaymentCanceled = async (
   firestore: Firestore,
   paymentIntent: Stripe.PaymentIntent,
 ) => {
-  const orderId = paymentIntent.metadata.orderId;
-  if (!orderId) {
-    return;
-  }
-
-  const orderRef = getOrderDocRef(orderId);
+  const { orderId } = paymentIntent.metadata;
+  assert(orderId, 'Missing order id in payment intent metadata');
 
   await firestore.runTransaction(async tx => {
-    const orderSnap = await tx.get(orderRef);
-    if (!orderSnap.exists) {
-      return;
-    }
+    const { orderRef, order } = await getOrderOrThrowTx(tx, orderId, firestore);
 
-    const order = orderSnap.data();
-    assert(order, 'Order document data is empty');
     assert(order.payment, 'Payment is missing in order document');
     assert(order.payment.paymentIntentId === paymentIntent.id, 'Invalid payment intent id');
 
@@ -255,24 +246,14 @@ export const processOrderPaymentCanceled = async (
 
 export const processOrderPaymentRefunded = async (firestore: Firestore, charge: Stripe.Charge) => {
   const paymentIntentId = charge.payment_intent as Nullable<string>;
-  if (!paymentIntentId) {
-    return;
-  }
+  assert(paymentIntentId, 'Missing payment intent id in charge');
 
   const orderId = charge.metadata?.orderId;
-  assert(orderId, 'Missing orderId in charge metadata');
-
-  const orderRef = getOrderDocRef(orderId);
+  assert(orderId, 'Missing order id in charge metadata');
 
   await firestore.runTransaction(async tx => {
-    const orderSnap = await tx.get(orderRef);
-    if (!orderSnap.exists) {
-      return;
-    }
+    const { order } = await getOrderOrThrowTx(tx, orderId, firestore);
 
-    const order = orderSnap.data();
-
-    assert(order, 'Order document data is empty');
     assert(order.payment, 'Payment is missing in order document');
     assert(order.payment.paymentIntentId === paymentIntentId, 'Invalid payment intent id');
 

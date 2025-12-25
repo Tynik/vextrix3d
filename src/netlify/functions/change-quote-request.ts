@@ -18,7 +18,7 @@ export interface CreateQuoteChangeRequestPayload {
   fields: {
     quantity?: Nullable<number>;
     material?: Nullable<string>;
-    notes?: Nullable<string>;
+    description?: Nullable<string>;
   };
   message: Nullable<string>;
 }
@@ -26,10 +26,8 @@ export interface CreateQuoteChangeRequestPayload {
 export const handler = createHandler(
   { allowedMethods: ['POST'] },
   withSession<CreateQuoteChangeRequestPayload>(async ({ decodedIdToken, payload }) => {
-    const quoteId = payload?.quoteId;
+    const { quoteId, fields, message = null } = payload ?? {};
     assert(quoteId, 'Quote ID is missing');
-
-    const { fields } = payload;
 
     const firestore = getFirestore();
 
@@ -37,8 +35,6 @@ export const handler = createHandler(
       const { quoteRef, quote } = await getQuoteOrThrowTx(tx, quoteId, firestore);
 
       assert(quote.requester.userId === decodedIdToken.uid, 'Forbidden');
-
-      const quoteChangeReqRef = getQuoteChangeRequestsCollectionRef(quoteRef).doc();
 
       const ordersRef = getOrdersCollectionRef(firestore);
       const ordersQuery = ordersRef
@@ -50,11 +46,11 @@ export const handler = createHandler(
 
       if (!ordersSnap.empty) {
         const orderSnap = ordersSnap.docs[0];
-        assert(orderSnap.exists, 'Order does not exist');
 
         changeOrderStatusTx(tx, orderSnap.data(), 'cancelled');
       }
 
+      const quoteChangeReqRef = getQuoteChangeRequestsCollectionRef(quoteRef).doc();
       const now = Timestamp.now();
 
       tx.create(quoteChangeReqRef, {
@@ -65,10 +61,10 @@ export const handler = createHandler(
           ? {
               quantity: fields.quantity ?? null,
               material: fields.material ?? null,
-              notes: fields.notes ?? null,
+              description: fields.description ?? null,
             }
           : null,
-        message: payload.message ?? null,
+        message,
         acceptedAt: null,
         rejectedAt: null,
         createdAt: now,
