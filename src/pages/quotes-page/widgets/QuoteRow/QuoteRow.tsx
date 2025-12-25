@@ -127,11 +127,12 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
         rowLabelProps={{
           $width: '100%',
           $maxWidth: '90px',
+          $flexShrink: 0,
           $color: 'neutral.grayMedium',
         }}
       />
 
-      <QuoteRowActions quote={quote} $marginLeft="auto" />
+      <QuoteRowActions quote={quote} $marginTop={1} $marginLeft="auto" />
 
       {isOrdersCanBeViewed && (
         <HoneyFlex $gap={1}>

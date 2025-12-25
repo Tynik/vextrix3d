@@ -45,7 +45,13 @@ export const InfoTable = <Item extends HoneyListItem>({
                 Empty
               </Text>
             ) : (
-              <Text variant={textVariant} $display="flex" $gap={1} $alignItems="center" ellipsis>
+              <Text
+                variant={textVariant}
+                $display="flex"
+                $gap={1}
+                $alignItems="center"
+                $overflow="hidden"
+              >
                 {row.value}
               </Text>
             )}
