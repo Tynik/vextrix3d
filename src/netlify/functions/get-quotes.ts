@@ -46,26 +46,13 @@ export const handler = createHandler(
         id: quote.id,
         quoteNumber: quote.quoteNumber,
         status: quote.status,
-        requester: isAdmin
-          ? {
-              type: requester.type,
-              userId: requester.userId,
-              guest: requester.guest
-                ? {
-                    firstName: requester.guest.firstName,
-                    lastName: requester.guest.lastName,
-                    email: requester.guest.email,
-                    phone: requester.guest.phone,
-                  }
-                : null,
-            }
-          : null,
+        requester: isAdmin ? requester : null,
         job: {
           technology: job.technology,
           material: job.material,
           color: job.color,
           quantity: job.quantity,
-          notes: job.notes,
+          description: job.description,
         },
         model: {
           fileName: model.fileName,

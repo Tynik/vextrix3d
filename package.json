@@ -5,7 +5,7 @@
   "scripts": {
     "build:app": "NODE_ENV=production webpack -c webpack.config.mjs",
     "deploy": "yarn run build:app",
-    "start:netlify": "NODE_ENV=development netlify functions:serve",
+    "start:netlify": "NODE_ENV=development BROWSER=none netlify dev -p 9999",
     "start:stripe": "stripe listen --forward-to localhost:9999/.netlify/functions/stripe-webhook",
     "start:app": "LOCAL_ENV=true NETLIFY_SERVER=http://localhost:9999 NODE_ENV=development webpack serve",
     "start": "yarn run start:netlify & yarn run start:app"

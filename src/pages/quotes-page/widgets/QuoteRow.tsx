@@ -75,6 +75,16 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
   const infoTableRows = useMemo<InfoTableRow[]>(
     () => [
       {
+        label: 'Requester',
+        visible: isAdmin,
+        value: quote.requester?.userId ? 'User' : 'Guest',
+      },
+      {
+        label: 'Email',
+        visible: isAdmin && Boolean(quote.requester?.guest),
+        value: quote.requester?.guest?.email,
+      },
+      {
         label: 'File name',
         value: (
           <HoneyFlex row centerY $gap={1} $overflow="hidden">
@@ -126,7 +136,7 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
           <QuoteStatusInfo status={quote.status} />
         </HoneyFlex>
 
-        {quote.pricing && (
+        {quote.status !== 'new' && quote.pricing && (
           <HoneyFlex row centerY $gap={1}>
             <Text variant="body1" $fontWeight={700}>
               {formatCurrency(quote.pricing.total)}

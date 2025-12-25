@@ -6,7 +6,7 @@ import { assert } from '@react-hive/honey-utils';
 import { createHandler } from '../utils';
 import { withSession } from '../auth';
 import { initStripeClient } from '../stripe';
-import { getOrderRef } from '../firestore';
+import { getOrderDocRef } from '../firestore';
 
 export type PayOrderPayload = {
   orderId: string;
@@ -15,16 +15,17 @@ export type PayOrderPayload = {
 export const handler = createHandler(
   { allowedMethods: ['POST'] },
   withSession<PayOrderPayload>(async ({ decodedIdToken, payload }) => {
-    assert(payload?.orderId, 'Order ID is required');
+    const orderId = payload?.orderId;
+    assert(orderId, 'Order ID is missing');
 
     const firestore = admin.firestore();
-    const orderRef = getOrderRef(payload.orderId, firestore);
+    const orderRef = getOrderDocRef(orderId, firestore);
 
     const orderSnap = await orderRef.get();
-    assert(orderSnap.exists, 'Order not found');
+    assert(orderSnap.exists, 'Order does not exist');
 
     const order = orderSnap.data();
-    assert(order, 'Order data missing');
+    assert(order, 'Order document data is empty');
 
     const isOrderOwner = order.customer.userId === decodedIdToken.uid;
     assert(isOrderOwner, 'Forbidden');

@@ -14,15 +14,13 @@ import type {
   StripeCustomerId,
   Currency,
   StripePaymentIntentId,
+  QuoteChangeRequestStatus,
+  QuotePricingStage,
 } from '../types';
 
 export type QuoteHistoryChangeId = string;
 
 export type QuoteChangeRequestId = string;
-
-type QuotePricingStage = 'estimated' | 'final';
-
-type QuoteChangeRequestStatus = 'new' | 'accepted' | 'rejected';
 
 export interface SequenceDocument {
   value: number;
@@ -53,7 +51,7 @@ export interface QuoteJob {
   material: Nullable<string>;
   color: Nullable<string>;
   quantity: number;
-  notes: Nullable<string>;
+  description: Nullable<string>;
 }
 
 interface QuoteGuest {
@@ -120,14 +118,16 @@ export interface QuoteHistoryStatusChangeDocument extends QuoteHistoryChangeDocu
   reason: Nullable<string>;
 }
 
+interface QuoteChangeRequestFields {
+  quantity: Nullable<number>;
+  material: Nullable<string>;
+  notes: Nullable<string>;
+}
+
 export interface QuoteChangeRequestDocument extends Document<QuoteChangeRequestId> {
   userId: UserId;
   status: QuoteChangeRequestStatus;
-  fields: Nullable<{
-    quantity: Nullable<number>;
-    material: Nullable<string>;
-    notes: Nullable<string>;
-  }>;
+  fields: Nullable<QuoteChangeRequestFields>;
   message: Nullable<string>;
   acceptedAt: Nullable<Timestamp>;
   rejectedAt: Nullable<Timestamp>;

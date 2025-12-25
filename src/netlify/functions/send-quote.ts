@@ -3,11 +3,12 @@ import { Timestamp } from 'firebase-admin/firestore';
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
-import { formatCurrency, buildQuotePricingValues } from '~/shared';
-import type { QuoteId } from '../types';
-import { createHandler, sendEmail } from '../utils';
-import { withSession } from '../auth';
-import { changeQuoteStatusTx, getQuoteDocRef, getUserDocRef } from '../firestore';
+import type { QuoteId } from '~/netlify/types';
+import { createHandler } from '~/netlify/utils';
+import { withSession } from '~/netlify/auth';
+import { sendQuotePricedEmail } from '~/netlify/emails';
+import { buildQuotePricingValues } from '~/shared';
+import { changeQuoteStatusTx, getQuoteDocRef } from '../firestore';
 
 export interface SendQuotePayload {
   quoteId: QuoteId;
@@ -16,7 +17,7 @@ export interface SendQuotePayload {
     discountPct: Nullable<number>;
     vatPct: Nullable<number>;
   };
-  note?: Nullable<string>;
+  note: Nullable<string>;
 }
 
 export const handler = createHandler(
@@ -40,11 +41,6 @@ export const handler = createHandler(
 
     const quote = quoteSnap.data();
     assert(quote, 'Quote data is empty');
-
-    assert(
-      quote.status === 'new' || quote.status === 'changeRequested',
-      'Quote cannot be sent in its current status',
-    );
 
     const { amount, discountPct, discountAmount, vatPct, vatAmount, total } =
       buildQuotePricingValues({
@@ -74,64 +70,19 @@ export const handler = createHandler(
         },
       );
 
-      await changeQuoteStatusTx(
-        tx,
-        quote,
-        'priced',
-        {
-          id: decodedIdToken.uid,
-          role: 'admin',
-        },
-        {
-          reason: note,
-        },
-      );
+      await changeQuoteStatusTx(tx, quote, 'priced', {
+        id: decodedIdToken.uid,
+        role: 'admin',
+      });
     });
 
-    let userInfo: Nullable<{
-      firstName: string;
-      lastName: string;
-      email: string;
-    }> = null;
-
-    if (quote.requester.guest) {
-      userInfo = {
-        firstName: quote.requester.guest.firstName,
-        lastName: quote.requester.guest.lastName,
-        email: quote.requester.guest.email,
-      };
-    } else if (quote.requester.userId) {
-      const userRef = await getUserDocRef(quote.requester.userId).get();
-      if (userRef.exists) {
-        const user = userRef.data();
-
-        if (user) {
-          userInfo = {
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-          };
-        }
-      }
-    }
-
-    if (userInfo) {
-      await sendEmail('send-quote', {
-        from: 'Vextrix3D <no-reply@vextrix3d.co.uk>',
-        to: userInfo.email,
-        subject: `Your quote ${quote.quoteNumber} is ready`,
-        parameters: {
-          customerName: userInfo.firstName,
-          quoteNumber: quote.quoteNumber,
-          amount: formatCurrency(amount),
-          discount: discountAmount ? formatCurrency(discountAmount) : undefined,
-          vat: vatAmount ? formatCurrency(vatAmount) : undefined,
-          total: formatCurrency(total),
-          quoteUrl: 'https://vextrix3d.co.uk/account/quotes',
-          note: note ?? undefined,
-        },
-      });
-    }
+    await sendQuotePricedEmail(quote, {
+      amount,
+      discountAmount,
+      vatAmount,
+      total,
+      note,
+    });
 
     return {
       status: 'ok',

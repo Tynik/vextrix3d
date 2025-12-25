@@ -16,12 +16,13 @@ export const handler = createHandler(
     allowedMethods: ['POST'],
   },
   withSession<RejectQuotePayload>(async ({ decodedIdToken, isAdmin, payload }) => {
-    assert(payload?.quoteId, 'Quote ID is missing');
+    const quoteId = payload?.quoteId;
+    assert(quoteId, 'Quote ID is missing');
 
     const firestore = admin.firestore();
 
     await firestore.runTransaction(async tx => {
-      const { quote } = await getQuoteOrThrowTx(tx, payload.quoteId, firestore);
+      const { quote } = await getQuoteOrThrowTx(tx, quoteId, firestore);
 
       const isQuoteOwner = quote.requester.userId === decodedIdToken.uid;
       assert(isAdmin || isQuoteOwner, 'Forbidden');

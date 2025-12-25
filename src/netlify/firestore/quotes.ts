@@ -13,7 +13,7 @@ import type {
   QuoteRequester,
   UserDocument,
 } from './document-types';
-import { getQuoteDocRef } from './document-references';
+import { getQuoteDocRef, getUserDocRef } from './document-references';
 import { getNextSequence } from './utils';
 import {
   getQuoteHistoryCollectionRef,
@@ -49,7 +49,7 @@ export const getQuoteOrThrowTx = async (
   const quoteRef = getQuoteDocRef(quoteId, firestore);
 
   const quoteSnap = await tx.get(quoteRef);
-  assert(quoteSnap.exists, 'Quote document does not exist');
+  assert(quoteSnap.exists, 'Quote does not exist');
 
   const quote = quoteSnap.data();
   assert(quote, 'Quote document data is empty');
@@ -84,7 +84,7 @@ export const createQuote = async ({ requester, by, job, model, pricing }: Create
     const quoteNumber = await getNextQuoteNumber();
     const now = Timestamp.now();
 
-    tx.set(quoteRef, {
+    tx.create(quoteRef, {
       id: quoteRef.id,
       quoteNumber,
       status: 'new',
@@ -105,7 +105,7 @@ export const createQuote = async ({ requester, by, job, model, pricing }: Create
     const quoteHistoryCollRef = getQuoteHistoryCollectionRef(quoteRef);
     const quoteHistoryDocRef = quoteHistoryCollRef.doc();
 
-    tx.set(quoteHistoryDocRef, {
+    tx.create(quoteHistoryDocRef, {
       id: quoteHistoryDocRef.id,
       type: 'statusChange',
       by,
@@ -128,45 +128,44 @@ export const changeQuoteStatusTx = async (
   by: Actor,
   { reason = null }: ChangeQuoteStatusOptions = {},
 ) => {
-  const firestore = admin.firestore();
-  const quoteRef = getQuoteDocRef(quote.id, firestore);
-
   assert(
     ALLOWED_QUOTE_STATUS_TRANSITIONS[quote.status].includes(toStatus),
-    `Illegal status transition: ${quote.status} → ${toStatus}`,
+    `Illegal quote status transition: ${quote.status} → ${toStatus}`,
   );
 
+  const quoteRef = getQuoteDocRef(quote.id);
+
   const now = Timestamp.now();
-  const quoteStatusUpdate: Partial<QuoteDocument> = {
+  const baseUpdate: Partial<QuoteDocument> = {
     status: toStatus,
     updatedAt: now,
   };
 
   if (toStatus === 'priced') {
-    quoteStatusUpdate.pricedAt = now;
+    baseUpdate.pricedAt = now;
   }
   if (toStatus === 'accepted') {
-    quoteStatusUpdate.acceptedAt = now;
+    baseUpdate.acceptedAt = now;
   }
   if (toStatus === 'inProduction') {
-    quoteStatusUpdate.inProductionAt = now;
+    baseUpdate.inProductionAt = now;
   }
   if (toStatus === 'rejected') {
-    quoteStatusUpdate.rejectedAt = now;
+    baseUpdate.rejectedAt = now;
   }
   if (toStatus === 'expired') {
-    quoteStatusUpdate.expiredAt = now;
+    baseUpdate.expiredAt = now;
   }
   if (toStatus === 'completed') {
-    quoteStatusUpdate.completedAt = now;
+    baseUpdate.completedAt = now;
   }
 
-  tx.update(quoteRef, quoteStatusUpdate);
+  tx.update(quoteRef, baseUpdate);
 
   const quoteHistoryCollRef = getQuoteHistoryCollectionRef(quoteRef);
   const quoteHistoryRef = quoteHistoryCollRef.doc();
 
-  tx.set(quoteHistoryRef, {
+  tx.create(quoteHistoryRef, {
     id: quoteHistoryRef.id,
     type: 'statusChange',
     by,
@@ -189,4 +188,43 @@ export const buildQuoteHistoryActor = (user: Nullable<UserDocument>): Actor => {
     role: user.role,
     id: user.id,
   };
+};
+
+interface QuoteRequesterInfo {
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export const resolveQuoteRequesterInfo = async (
+  quote: QuoteDocument,
+): Promise<Nullable<QuoteRequesterInfo>> => {
+  const { requester } = quote;
+
+  if (requester.guest) {
+    return {
+      firstName: requester.guest.firstName,
+      lastName: requester.guest.lastName,
+      email: requester.guest.email,
+    };
+  }
+
+  if (requester.userId) {
+    const userSnap = await getUserDocRef(requester.userId).get();
+    if (!userSnap.exists) {
+      return null;
+    }
+
+    const user = userSnap.data();
+
+    return user
+      ? {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+        }
+      : null;
+  }
+
+  return null;
 };

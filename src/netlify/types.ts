@@ -12,9 +12,7 @@ export type StripeCustomerId = Stripe.Customer['id'];
 
 export type StripePaymentIntentId = Stripe.PaymentIntent['id'];
 
-export type Email = `${string}@${string}.${string}`;
-
-export type EmailTemplateName = 'quote-request' | 'send-quote';
+export type EmailTemplateName = 'quote-request' | 'quote-priced';
 
 export type AccountRole = 'customer' | 'admin';
 
@@ -23,6 +21,10 @@ export type ActorRole = AccountRole | 'system';
 export type QuoteJobTechnology = 'FDM' | 'SLA';
 
 export type QuoteRequesterType = 'registered' | 'guest';
+
+export type QuotePricingStage = 'estimated' | 'final';
+
+export type QuoteChangeRequestStatus = 'new' | 'accepted' | 'rejected';
 
 // https://www.iso.org/iso-4217-currency-codes.html
 export type Currency = 'gbp' | 'eur' | 'usd';
@@ -150,7 +152,7 @@ interface QuoteJob {
   material: Nullable<string>;
   color: Nullable<string>;
   quantity: number;
-  notes: Nullable<string>;
+  description: Nullable<string>;
 }
 
 interface QuoteModel {

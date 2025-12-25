@@ -59,6 +59,12 @@ export const handler = createHandler<QuoteRequestPayload>(
       };
     }
 
+    assert(payload.quantity, 'Quantity is missing');
+    assert(payload.description, 'Description is missing');
+    assert(payload.fileName, 'Filename is missing');
+    assert(payload.model, 'Model is missing');
+    assert(payload.pricing, 'Pricing is missing');
+
     try {
       await initFirebaseAdminApp();
 
@@ -157,7 +163,7 @@ export const handler = createHandler<QuoteRequestPayload>(
           material: null,
           color: null,
           quantity: payload.quantity,
-          notes: payload.description,
+          description: payload.description,
         },
         model: {
           fileName: payload.fileName,
@@ -182,7 +188,6 @@ export const handler = createHandler<QuoteRequestPayload>(
       });
 
       await sendEmail('quote-request', {
-        from: 'Vextrix3D <no-reply@vextrix3d.co.uk>',
         to: COMPANY_EMAIL,
         subject: 'Quote Request',
         parameters: {

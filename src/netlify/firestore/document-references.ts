@@ -52,7 +52,7 @@ export const getQuoteHistoryStatusChangeDocRef = (
     .doc(`${QUOTES_COLLECTION_NAME}/${quoteId}/${QUOTE_HISTORY_COLLECTION_NAME}/${quoteHistoryId}`)
     .withConverter(quoteHistoryStatusChangeConverter);
 
-export const getOrderRef = (
+export const getOrderDocRef = (
   orderId: OrderId,
   firestore = admin.firestore(),
 ): DocumentReference<OrderDocument> =>

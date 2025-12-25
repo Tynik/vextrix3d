@@ -2,7 +2,7 @@ import type { Handler, HandlerResponse, HandlerEvent, HandlerContext } from '@ne
 import { assert } from '@react-hive/honey-utils';
 
 import type { Nullable } from '~/types';
-import type { Email, EmailTemplateName } from './types';
+import type { EmailTemplateName } from './types';
 import { NETLIFY_EMAILS_SECRET, URL, SITE_DOMAIN } from './constants';
 
 type HttpRequestMethod = 'POST' | 'GET' | 'OPTIONS' | 'PUT' | 'PATCH' | 'DELETE';
@@ -100,7 +100,7 @@ export interface HandlerFunctionOptions<Payload = unknown> {
   context: HandlerContext;
   headers: Record<string, string | undefined>;
   cookies: Record<string, string>;
-  payload: Payload | null;
+  payload: Nullable<Partial<Payload>>;
 }
 
 interface CreateHandlerOptions {
@@ -195,18 +195,19 @@ interface SendEmailAttachment {
   type: string;
 }
 
-interface SendEmailOptions {
-  from: string | `${string} <${Email}>`;
+type EmailTemplateParams = Record<string, string | undefined>;
+
+interface SendEmailOptions<Params extends EmailTemplateParams> {
   to: string;
   cc?: string;
   subject: string;
-  parameters: Record<string, string | undefined>;
+  parameters: Params;
   attachments?: SendEmailAttachment[];
 }
 
-export const sendEmail = (
+export const sendEmail = <Params extends EmailTemplateParams>(
   emailTemplate: EmailTemplateName,
-  { from, to, subject, parameters, attachments }: SendEmailOptions,
+  { to, subject, parameters, attachments }: SendEmailOptions<Params>,
 ) => {
   assert(URL, 'The `URL` must be set as environment variable');
   assert(NETLIFY_EMAILS_SECRET, 'The `NETLIFY_EMAILS_SECRET` must be set as environment variable');
@@ -217,7 +218,7 @@ export const sendEmail = (
       'netlify-emails-secret': NETLIFY_EMAILS_SECRET,
     },
     body: JSON.stringify({
-      from,
+      from: 'Vextrix3D <no-reply@vextrix3d.co.uk>',
       to,
       subject,
       parameters,

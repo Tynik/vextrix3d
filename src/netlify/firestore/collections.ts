@@ -1,9 +1,15 @@
 import admin from 'firebase-admin';
 import type { CollectionReference, DocumentReference } from 'firebase-admin/firestore';
 
-import type { OrderDocument, QuoteDocument, UserDocument } from './document-types';
+import type {
+  OrderDocument,
+  QuoteChangeRequestDocument,
+  QuoteDocument,
+  UserDocument,
+} from './document-types';
 import {
   orderConverter,
+  quoteChangeRequestConverter,
   quoteConverter,
   quoteHistoryStatusChangeConverter,
   userConverter,
@@ -13,6 +19,7 @@ export const PRIVATE_COLLECTION_NAME = 'private';
 export const USERS_COLLECTION_NAME = 'users';
 export const QUOTES_COLLECTION_NAME = 'quotes';
 export const QUOTE_HISTORY_COLLECTION_NAME = 'history';
+export const QUOTE_CHANGE_REQUESTS_COLLECTION_NAME = 'changeRequests';
 export const ORDERS_COLLECTION_NAME = 'orders';
 export const SEQUENCES_COLLECTION_NAME = 'sequences';
 
@@ -30,6 +37,13 @@ export const getQuoteHistoryCollectionRef = (quoteRef: DocumentReference<QuoteDo
   quoteRef
     .collection(QUOTE_HISTORY_COLLECTION_NAME)
     .withConverter(quoteHistoryStatusChangeConverter);
+
+export const getQuoteChangeRequestsCollectionRef = (
+  quoteRef: DocumentReference<QuoteDocument>,
+): CollectionReference<QuoteChangeRequestDocument> =>
+  quoteRef
+    .collection(QUOTE_CHANGE_REQUESTS_COLLECTION_NAME)
+    .withConverter(quoteChangeRequestConverter);
 
 export const getOrdersCollectionRef = (
   firestore = admin.firestore(),

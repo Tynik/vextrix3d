@@ -8,14 +8,14 @@ import type { OrderId, OrderStatus } from '~/netlify/types';
 import type { OrderDocument, QuoteDocument, UserDocument } from './document-types';
 import { getNextSequence } from './utils';
 import { getOrdersCollectionRef, ORDERS_COLLECTION_NAME } from './collections';
-import { getOrderRef } from './document-references';
+import { getOrderDocRef } from './document-references';
 
 const ALLOWED_ORDER_STATUS_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   new: ['paid', 'cancelled', 'expired'],
   paid: ['inProduction', 'refunded'],
   inProduction: ['shipped', 'completed'],
   shipped: ['completed'],
-  completed: [],
+  completed: ['refunded'],
   cancelled: [],
   refunded: [],
   expired: [],
@@ -26,7 +26,7 @@ export const getOrderOrThrowTx = async (
   orderId: OrderId,
   firestore: Firestore = admin.firestore(),
 ) => {
-  const orderRef = getOrderRef(orderId, firestore);
+  const orderRef = getOrderDocRef(orderId, firestore);
 
   const orderSnap = await tx.get(orderRef);
   assert(orderSnap.exists, 'Order document does not exist');
@@ -66,7 +66,7 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
   const orderNumber = await getNextOrderNumber();
   const now = Timestamp.now();
 
-  tx.set(orderRef, {
+  tx.create(orderRef, {
     id: orderRef.id,
     quoteId: quote.id,
     orderNumber,
@@ -84,7 +84,7 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
       material: job.material,
       color: job.color,
       quantity: job.quantity,
-      notes: job.notes,
+      notes: job.description,
     },
     pricing: {
       currency: pricing.currency,
@@ -102,6 +102,61 @@ export const createOrder = async (tx: Transaction, { user, quote }: CreateOrderO
   });
 };
 
+export const changeOrderStatusTx = (
+  tx: Transaction,
+  order: OrderDocument,
+  toStatus: OrderStatus,
+) => {
+  assert(
+    ALLOWED_ORDER_STATUS_TRANSITIONS[order.status].includes(toStatus),
+    `Illegal order status transition: ${order.status} → ${toStatus}`,
+  );
+
+  const orderRef = getOrderDocRef(order.id);
+
+  const now = Timestamp.now();
+  const baseUpdate: Partial<OrderDocument> = {
+    status: toStatus,
+    updatedAt: now,
+  };
+
+  if (toStatus === 'paid') {
+    tx.set(
+      orderRef,
+      {
+        ...baseUpdate,
+        payment: {
+          paidAt: now,
+        },
+      },
+      {
+        merge: true,
+      },
+    );
+
+    return;
+  }
+
+  if (toStatus === 'refunded') {
+    tx.set(
+      orderRef,
+      {
+        ...baseUpdate,
+        payment: {
+          refundedAt: now,
+        },
+      },
+      {
+        merge: true,
+      },
+    );
+
+    return;
+  }
+
+  tx.update(orderRef, baseUpdate);
+};
+
 export const processOrderPaymentSucceeded = async (
   firestore: Firestore,
   paymentIntent: Stripe.PaymentIntent,
@@ -109,7 +164,7 @@ export const processOrderPaymentSucceeded = async (
   const orderId = paymentIntent.metadata.orderId;
   assert(orderId, 'Missing orderId in PaymentIntent metadata');
 
-  const orderRef = getOrderRef(orderId);
+  const orderRef = getOrderDocRef(orderId);
 
   await firestore.runTransaction(async tx => {
     const orderSnap = await tx.get(orderRef);
@@ -118,29 +173,16 @@ export const processOrderPaymentSucceeded = async (
     }
 
     const order = orderSnap.data();
-    if (!order || order.status !== 'new') {
+
+    assert(order, 'Order document data is empty');
+    assert(order.payment, 'Payment is missing in order document');
+    assert(order.payment.paymentIntentId === paymentIntent.id, 'Invalid payment intent id');
+
+    if (order.status !== 'new') {
       return;
     }
 
-    if (!order.payment || order.payment.paymentIntentId !== paymentIntent.id) {
-      return;
-    }
-
-    const now = Timestamp.now();
-
-    tx.set(
-      orderRef,
-      {
-        status: 'paid',
-        payment: {
-          paidAt: now,
-        },
-        updatedAt: now,
-      },
-      {
-        merge: true,
-      },
-    );
+    changeOrderStatusTx(tx, order, 'paid');
   });
 };
 
@@ -153,7 +195,7 @@ export const processOrderPaymentFailed = async (
     return;
   }
 
-  const orderRef = getOrderRef(orderId);
+  const orderRef = getOrderDocRef(orderId);
 
   await firestore.runTransaction(async tx => {
     const orderSnap = await tx.get(orderRef);
@@ -162,11 +204,12 @@ export const processOrderPaymentFailed = async (
     }
 
     const order = orderSnap.data();
-    if (!order || order.status !== 'new') {
-      return;
-    }
 
-    if (!order.payment || order.payment.paymentIntentId !== paymentIntent.id) {
+    assert(order, 'Order document data is empty');
+    assert(order.payment, 'Payment is missing in order document');
+    assert(order.payment.paymentIntentId === paymentIntent.id, 'Invalid payment intent id');
+
+    if (order.status !== 'new') {
       return;
     }
 
@@ -186,7 +229,7 @@ export const processOrderPaymentCanceled = async (
     return;
   }
 
-  const orderRef = getOrderRef(orderId);
+  const orderRef = getOrderDocRef(orderId);
 
   await firestore.runTransaction(async tx => {
     const orderSnap = await tx.get(orderRef);
@@ -195,11 +238,11 @@ export const processOrderPaymentCanceled = async (
     }
 
     const order = orderSnap.data();
-    if (!order || order.status !== 'new') {
-      return;
-    }
+    assert(order, 'Order document data is empty');
+    assert(order.payment, 'Payment is missing in order document');
+    assert(order.payment.paymentIntentId === paymentIntent.id, 'Invalid payment intent id');
 
-    if (!order.payment || order.payment.paymentIntentId !== paymentIntent.id) {
+    if (order.status !== 'new') {
       return;
     }
 
@@ -219,7 +262,7 @@ export const processOrderPaymentRefunded = async (firestore: Firestore, charge: 
   const orderId = charge.metadata?.orderId;
   assert(orderId, 'Missing orderId in charge metadata');
 
-  const orderRef = getOrderRef(orderId);
+  const orderRef = getOrderDocRef(orderId);
 
   await firestore.runTransaction(async tx => {
     const orderSnap = await tx.get(orderRef);
@@ -228,28 +271,11 @@ export const processOrderPaymentRefunded = async (firestore: Firestore, charge: 
     }
 
     const order = orderSnap.data();
-    if (!order || order.status === 'refunded') {
-      return;
-    }
 
-    if (!order.payment || order.payment.paymentIntentId !== paymentIntentId) {
-      return;
-    }
+    assert(order, 'Order document data is empty');
+    assert(order.payment, 'Payment is missing in order document');
+    assert(order.payment.paymentIntentId === paymentIntentId, 'Invalid payment intent id');
 
-    const now = Timestamp.now();
-
-    tx.set(
-      orderRef,
-      {
-        status: 'refunded',
-        payment: {
-          refundedAt: now,
-        },
-        updatedAt: now,
-      },
-      {
-        merge: true,
-      },
-    );
+    changeOrderStatusTx(tx, order, 'refunded');
   });
 };

@@ -22,9 +22,8 @@ export const handler = createHandler(
     allowedMethods: ['POST'],
   },
   withSession<AcceptQuotePayload>(async ({ decodedIdToken, payload }) => {
-    assert(payload?.quoteId, 'Quote ID is missing');
-
-    const { quoteId } = payload;
+    const quoteId = payload?.quoteId;
+    assert(quoteId, 'Quote ID is missing');
 
     const firestore = admin.firestore();
 

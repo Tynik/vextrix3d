@@ -184,7 +184,7 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
                   size="full"
                   icon={<CheckIcon color="neutral.white" />}
                 >
-                  Submit
+                  Send
                 </Button>
 
                 <Button

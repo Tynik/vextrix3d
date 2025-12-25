@@ -46,7 +46,6 @@
 
         .description {
             line-height: 1.6;
-            white-space: pre-line;
             font-size: 15px;
             color: #374151;
             margin-bottom: 24px;
@@ -101,13 +100,13 @@
     <h1>Your Quote Is Ready</h1>
 
     <div class="meta">
-        <div><span class="label">Quote:</span> {{quoteNumber}}</div>
-        <div><span class="label">Customer:</span> {{customerName}}</div>
+        <div><span class="label">Quote #:</span> {{quoteNumber}}</div>
+        <div><span class="label">Prepared for:</span> {{firstName}} {{lastName}}</div>
     </div>
 
     {{#if note}}
     <div class="description">
-        <span class="label">Note from our team:</span><br/>
+        <span class="label">Message from our team:</span><br/>
         {{note}}
     </div>
     {{/if}}
@@ -139,11 +138,11 @@
     </div>
 
     <a class="button" href="{{quoteUrl}}" target="_blank">
-        View Quote & Proceed
+        Review Quote & Continue
     </a>
 
     <div class="footer">
-        If you need changes, you can request them directly from your account.<br/>
+        Need changes or have questions? You can request updates directly from your account.<br/>
         © Vextrix3D
     </div>
 
