@@ -43,6 +43,24 @@ export const QUOTE_PRICING_ALLOWED_STATUSES: QuoteStatus[] = [
   'completed',
 ];
 
+export const getQuoteOrThrow = async (
+  quoteId: QuoteId,
+  firestore: Firestore = admin.firestore(),
+) => {
+  const quoteRef = getQuoteDocRef(quoteId, firestore);
+
+  const quoteSnap = await quoteRef.get();
+  assert(quoteSnap.exists, 'Quote does not exist');
+
+  const quote = quoteSnap.data();
+  assert(quote, 'Quote document data is empty');
+
+  return {
+    quoteRef,
+    quote,
+  };
+};
+
 export const getQuoteOrThrowTx = async (
   tx: Transaction,
   quoteId: QuoteId,

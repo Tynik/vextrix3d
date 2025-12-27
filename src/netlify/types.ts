@@ -168,8 +168,7 @@ interface QuoteJob {
 }
 
 interface QuoteModel {
-  fileName: string;
-  fileUrl: string;
+  originalFileName: string;
 }
 
 interface QuotePricing {

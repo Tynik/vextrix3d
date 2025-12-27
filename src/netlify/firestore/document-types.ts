@@ -67,8 +67,8 @@ export interface QuoteRequester {
 }
 
 export interface QuoteModel {
-  fileName: string;
-  fileUrl: string;
+  originalFileName: string;
+  systemFileName: string;
   solidVolumeMm3: number;
 }
 

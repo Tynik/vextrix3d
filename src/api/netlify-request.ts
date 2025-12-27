@@ -9,6 +9,7 @@ export type NetlifyFunction =
   | 'price-quote'
   | 'get-quotes'
   | 'get-quote-orders'
+  | 'get-quote-model-download-url'
   | 'accept-quote'
   | 'reject-quote'
   | 'pay-order'

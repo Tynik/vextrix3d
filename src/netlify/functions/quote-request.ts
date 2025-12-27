@@ -9,7 +9,6 @@ import {
   FIREBASE_STORAGE_BUCKET,
   FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY,
   ONE_MINUTE_MS,
-  ONE_WEEK_MS,
 } from '../constants';
 import { createHandler, sendEmail } from '../utils';
 import { initFirebaseAdminApp } from '../firebase';
@@ -125,17 +124,12 @@ export const handler = createHandler<QuoteRequestPayload>(
       //
       const fileId = uuidv4();
       const [, fileExt] = parseFileName(payload.fileName);
+      const systemFileName = `${fileId}.${fileExt}`;
 
-      const modelPath = `${FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY}/${fileId}.${fileExt}`;
+      const modelPath = `${FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY}/${systemFileName}`;
       const bucketFile = bucket.file(modelPath);
 
       const timestamp = Date.now();
-
-      const [downloadModelUrl] = await bucketFile.getSignedUrl({
-        version: 'v4',
-        action: 'read',
-        expires: timestamp + ONE_WEEK_MS,
-      });
 
       const [uploadModelUrl] = await bucketFile.getSignedUrl({
         version: 'v4',
@@ -155,8 +149,8 @@ export const handler = createHandler<QuoteRequestPayload>(
           description: payload.description,
         },
         model: {
-          fileName: payload.fileName,
-          fileUrl: downloadModelUrl,
+          systemFileName,
+          originalFileName: payload.fileName,
           solidVolumeMm3: payload.model.solidVolumeMm3,
         },
         pricing: {
@@ -183,7 +177,6 @@ export const handler = createHandler<QuoteRequestPayload>(
           firstName,
           lastName,
           email,
-          downloadModelUrl,
           description: payload.description,
           quantity: payload.quantity.toString(),
           estimated: payload.pricing.estimated.toString(),

@@ -1,14 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
+import { useMutation } from '@tanstack/react-query';
 
 import { formatCurrency } from '~/shared';
-import { formatDatetime } from '~/utils';
+import { downloadFile, formatDatetime } from '~/utils';
 import type { Quote } from '~/netlify/types';
+import { getQuoteModelDownloadUrl, handleApiError } from '~/api';
 import { useAppContext } from '~/models';
 import { DownloadIcon, KeyboardDoubleArrowDownIcon } from '~/icons';
 import type { InfoTableRow } from '~/components';
-import { IconButton, Divider, InfoTable, Text, Link } from '~/components';
+import { IconButton, Divider, InfoTable, Text } from '~/components';
 import { QuoteStatusInfo } from '../QuoteStatus';
 import { QuoteOrdersList } from '../QuoteOrdersList';
 import { QuoteRowActions } from './QuoteRowActions';
@@ -21,6 +23,20 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
   const { isAdmin } = useAppContext();
 
   const [isViewOrders, setIsViewOrders] = useState(false);
+
+  const downloadModel = async () => {
+    try {
+      const { url } = await getQuoteModelDownloadUrl({ quoteId: quote.id });
+
+      downloadFile(url);
+    } catch (e) {
+      handleApiError(e);
+    }
+  };
+
+  const downloadModelMutation = useMutation({
+    mutationFn: downloadModel,
+  });
 
   const infoTableRows = useMemo<InfoTableRow[]>(
     () => [
@@ -39,20 +55,18 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
         value: (
           <HoneyFlex row centerY $gap={1} $overflow="hidden">
             <Text variant="inherit" ellipsis>
-              {quote.model.fileName}
+              {quote.model.originalFileName}
             </Text>
 
-            {isAdmin && (
-              <Link to={quote.model.fileUrl} variant="body2">
-                <IconButton
-                  icon={<DownloadIcon />}
-                  iconProps={{
-                    size: 'small',
-                    color: 'secondary.slateAlloy',
-                  }}
-                />
-              </Link>
-            )}
+            <IconButton
+              disabled={downloadModelMutation.isPending}
+              onClick={() => downloadModelMutation.mutateAsync()}
+              icon={<DownloadIcon />}
+              iconProps={{
+                size: 'small',
+                color: 'secondary.slateAlloy',
+              }}
+            />
           </HoneyFlex>
         ),
       },

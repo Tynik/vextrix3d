@@ -55,8 +55,7 @@ export const handler = createHandler(
           description: job.description,
         },
         model: {
-          fileName: model.fileName,
-          fileUrl: model.fileUrl,
+          originalFileName: model.originalFileName,
         },
         pricing: isExposePricing
           ? {
