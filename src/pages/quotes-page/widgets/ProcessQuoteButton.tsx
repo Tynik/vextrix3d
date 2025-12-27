@@ -176,7 +176,7 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
                 </HoneyFlex>
               </CueShadows>
 
-              <HoneyBox $display="flex" $gap={2} $paddingTop={2}>
+              <HoneyBox $display="flex" $gap={1} $paddingTop={2} $marginTop={2}>
                 <Button
                   loading={isFormSubmitting}
                   type="submit"

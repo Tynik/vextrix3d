@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import type { HoneyFlexProps } from '@react-hive/honey-layout';
 import { HoneyFlex } from '@react-hive/honey-layout';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -10,6 +10,7 @@ import { acceptQuote, handleApiError, rejectQuote } from '~/api';
 import { useAppContext } from '~/models';
 import { ThumbDownIcon, ThumbUpIcon } from '~/icons';
 import { Button } from '~/components';
+import { ConfirmationDialog } from '~/pages';
 import { ProcessQuoteButton } from '../ProcessQuoteButton';
 
 interface QuoteRowActionsProps extends HoneyFlexProps {
@@ -28,6 +29,12 @@ export const QuoteRowActions = ({ quote, ...props }: QuoteRowActionsProps) => {
   const rejectQuoteMutation = useMutation({
     mutationFn: rejectQuote,
   });
+
+  const [isRejectQuote, setIsRejectQuote] = useState(false);
+
+  const cancelRejectQuote = useCallback(() => {
+    setIsRejectQuote(false);
+  }, []);
 
   const handleAcceptQuote = async () => {
     try {
@@ -67,11 +74,15 @@ export const QuoteRowActions = ({ quote, ...props }: QuoteRowActionsProps) => {
 
   const isQuoteOwner = user?.id === quote.requester?.userId;
 
+  const isQuoteCanBeAccepted = isQuoteOwner && quote.status === 'priced';
+  const isQuoteCanBeRejected =
+    (isAdmin && quote.status === 'new') || (isQuoteOwner && quote.status === 'priced');
+
   return (
     <HoneyFlex row centerY $gap={1} {...props}>
       {isAdmin && quote.status === 'new' && <ProcessQuoteButton quote={quote} />}
 
-      {quote.status === 'priced' && isQuoteOwner && (
+      {isQuoteCanBeAccepted && (
         <Button
           loading={acceptQuoteMutation.isPending}
           disabled={rejectQuoteMutation.isPending}
@@ -83,16 +94,29 @@ export const QuoteRowActions = ({ quote, ...props }: QuoteRowActionsProps) => {
         </Button>
       )}
 
-      {((isAdmin && quote.status === 'new') || (quote.status === 'priced' && isQuoteOwner)) && (
-        <Button
-          loading={rejectQuoteMutation.isPending}
-          disabled={acceptQuoteMutation.isPending}
-          onClick={handleRejectQuote}
-          variant="danger"
-          icon={<ThumbDownIcon color="neutral.white" />}
-        >
-          Reject
-        </Button>
+      {isQuoteCanBeRejected && (
+        <>
+          <Button
+            loading={rejectQuoteMutation.isPending}
+            disabled={acceptQuoteMutation.isPending}
+            onClick={() => setIsRejectQuote(true)}
+            variant="danger"
+            icon={<ThumbDownIcon color="neutral.white" />}
+          >
+            Reject
+          </Button>
+
+          <ConfirmationDialog
+            open={isRejectQuote}
+            loading={rejectQuoteMutation.isPending}
+            onConfirm={handleRejectQuote}
+            onClose={cancelRejectQuote}
+            severity="danger"
+            title={`Reject Quote #${quote.quoteNumber}`}
+          >
+            Do you really want to reject this quote?
+          </ConfirmationDialog>
+        </>
       )}
     </HoneyFlex>
   );

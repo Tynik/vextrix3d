@@ -99,10 +99,8 @@ export interface QuoteDocument extends Document<QuoteId> {
   pricing: QuotePricing;
   pricedAt: Nullable<Timestamp>;
   acceptedAt: Nullable<Timestamp>;
-  inProductionAt: Nullable<Timestamp>;
   rejectedAt: Nullable<Timestamp>;
   expiredAt: Nullable<Timestamp>;
-  completedAt: Nullable<Timestamp>;
   updatedAt: Nullable<Timestamp>;
 }
 

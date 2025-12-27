@@ -28,12 +28,4 @@ export const QUOTE_STATUS_COLORS_CONFIGS: Record<QuoteStatus, ColorsConfig> = {
     text: 'secondary.carbonInk',
     background: 'neutral.grayLight',
   },
-  inProduction: {
-    text: 'neutral.white',
-    background: 'success.emeraldGreen',
-  },
-  completed: {
-    text: 'neutral.white',
-    background: 'success.emeraldGreen',
-  },
 };

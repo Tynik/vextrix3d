@@ -4,7 +4,7 @@ import { HoneyBox } from '@react-hive/honey-layout';
 import type { HoneyColor, HoneyCSSDimensionValue } from '@react-hive/honey-style';
 import { css, styled, pxToRem, resolveColor } from '@react-hive/honey-style';
 
-type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'success' | 'danger';
+export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'success' | 'danger';
 
 type ButtonSize = 'small' | 'medium' | 'large' | 'full';
 

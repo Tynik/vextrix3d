@@ -46,7 +46,7 @@ export const handler = createHandler(
         id: quote.id,
         quoteNumber: quote.quoteNumber,
         status: quote.status,
-        requester: isAdmin ? requester : null,
+        requester,
         job: {
           technology: job.technology,
           material: job.material,
@@ -69,10 +69,8 @@ export const handler = createHandler(
           : null,
         pricedAt: quote.pricedAt?.toMillis() ?? null,
         acceptedAt: quote.acceptedAt?.toMillis() ?? null,
-        inProductionAt: quote.inProductionAt?.toMillis() ?? null,
         rejectedAt: quote.rejectedAt?.toMillis() ?? null,
         expiredAt: quote.expiredAt?.toMillis() ?? null,
-        completedAt: quote.completedAt?.toMillis() ?? null,
         updatedAt: quote.updatedAt?.toMillis() ?? null,
         createdAt: quote.createdAt.toMillis(),
       };

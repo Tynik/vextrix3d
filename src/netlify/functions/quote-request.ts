@@ -120,18 +120,19 @@ export const handler = createHandler<QuoteRequestPayload>(
       const lastName = user?.lastName ?? payload.lastName;
       assert(lastName, 'The last name must be set');
 
-      const bucket = getStorage().bucket(FIREBASE_STORAGE_BUCKET);
       //
       const fileId = uuidv4();
       const [, fileExt] = parseFileName(payload.fileName);
       const systemFileName = `${fileId}.${fileExt}`;
 
       const modelPath = `${FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY}/${systemFileName}`;
-      const bucketFile = bucket.file(modelPath);
+
+      const bucket = getStorage().bucket(FIREBASE_STORAGE_BUCKET);
+      const modelFile = bucket.file(modelPath);
 
       const timestamp = Date.now();
 
-      const [uploadModelUrl] = await bucketFile.getSignedUrl({
+      const [uploadModelUrl] = await modelFile.getSignedUrl({
         version: 'v4',
         action: 'write',
         expires: timestamp + 5 * ONE_MINUTE_MS, // 5 mins

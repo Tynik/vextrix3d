@@ -26,12 +26,10 @@ import {
 const ALLOWED_QUOTE_STATUS_TRANSITIONS: Record<QuoteStatus, QuoteStatus[]> = {
   new: ['priced', 'rejected'],
   priced: ['changeRequested', 'accepted', 'rejected', 'expired'],
-  changeRequested: ['priced', 'rejected'],
-  accepted: ['changeRequested', 'inProduction'],
+  changeRequested: ['new', 'rejected'],
+  accepted: ['changeRequested'],
   rejected: [],
   expired: [],
-  inProduction: ['completed'],
-  completed: [],
 };
 
 export const QUOTE_PRICING_ALLOWED_STATUSES: QuoteStatus[] = [
@@ -39,8 +37,6 @@ export const QUOTE_PRICING_ALLOWED_STATUSES: QuoteStatus[] = [
   'accepted',
   'rejected',
   'expired',
-  'inProduction',
-  'completed',
 ];
 
 export const getQuoteOrThrow = async (
@@ -134,8 +130,6 @@ export const createQuote = async ({ requester, by, job, model, pricing }: Create
       pricedAt: null,
       acceptedAt: null,
       rejectedAt: null,
-      inProductionAt: null,
-      completedAt: null,
       expiredAt: null,
       updatedAt: null,
       createdAt: now,
@@ -186,17 +180,11 @@ export const changeQuoteStatusTx = async (
   if (toStatus === 'accepted') {
     baseUpdate.acceptedAt = now;
   }
-  if (toStatus === 'inProduction') {
-    baseUpdate.inProductionAt = now;
-  }
   if (toStatus === 'rejected') {
     baseUpdate.rejectedAt = now;
   }
   if (toStatus === 'expired') {
     baseUpdate.expiredAt = now;
-  }
-  if (toStatus === 'completed') {
-    baseUpdate.completedAt = now;
   }
 
   tx.update(quoteRef, baseUpdate);

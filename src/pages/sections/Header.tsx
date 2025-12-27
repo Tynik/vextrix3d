@@ -60,7 +60,13 @@ export const Header = () => {
           </Link>
 
           <Link to={ROUTE_PATHS.accountProfile} variant="body1" $marginLeft="auto">
-            <IconButton variant="dark" icon={<PersonIcon color="neutral.white" />} />
+            <IconButton
+              variant="dark"
+              icon={<PersonIcon />}
+              iconProps={{
+                color: 'neutral.white',
+              }}
+            />
           </Link>
         </HoneyFlex>
       </Container>

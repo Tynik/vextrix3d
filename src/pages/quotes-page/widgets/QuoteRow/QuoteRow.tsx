@@ -64,7 +64,9 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
               icon={<DownloadIcon />}
               iconProps={{
                 size: 'small',
-                color: 'secondary.slateAlloy',
+                color: downloadModelMutation.isPending
+                  ? 'neutral.grayMedium'
+                  : 'secondary.slateAlloy',
               }}
             />
           </HoneyFlex>
@@ -82,8 +84,7 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
     [quote],
   );
 
-  const isOrdersCanBeViewed =
-    quote.status === 'accepted' || quote.status === 'inProduction' || quote.status === 'completed';
+  const areOrdersCanBeViewed = quote.status === 'accepted';
 
   return (
     <HoneyFlex
@@ -148,7 +149,7 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
 
       <QuoteRowActions quote={quote} $marginTop={1} $marginLeft="auto" />
 
-      {isOrdersCanBeViewed && (
+      {areOrdersCanBeViewed && (
         <HoneyFlex $gap={1}>
           <Text variant="body1" $fontWeight={500}>
             Orders
@@ -157,7 +158,10 @@ export const QuoteRow = ({ quote, ...props }: QuoteProps) => {
           {!isViewOrders && (
             <IconButton
               onClick={() => setIsViewOrders(true)}
-              icon={<KeyboardDoubleArrowDownIcon color="secondary.slateAlloy" />}
+              icon={<KeyboardDoubleArrowDownIcon />}
+              iconProps={{
+                color: 'secondary.slateAlloy',
+              }}
               $margin={[0, 'auto']}
             />
           )}

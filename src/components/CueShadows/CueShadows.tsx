@@ -49,7 +49,7 @@ export const CueShadows = ({ ref, children, ...props }: CueShadowsProps) => {
   const mergedRef = mergeRefs(contentRef, ref);
 
   return (
-    <HoneyFlex ref={mergedRef} $overflowY="auto" {...props}>
+    <HoneyFlex ref={mergedRef} $overflowY="auto" data-testid="cue-shadows" {...props}>
       {invokeIfFunction(children, contentRef)}
     </HoneyFlex>
   );

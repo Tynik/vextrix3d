@@ -15,8 +15,6 @@ export type GetQuoteModelDownloadUrlPayload = {
   quoteId: QuoteId;
 };
 
-const SIGNED_URL_EXPIRES_MS = 5 * ONE_MINUTE_MS;
-
 export const handler = createHandler(
   {
     allowedMethods: ['GET'],
@@ -32,13 +30,12 @@ export const handler = createHandler(
 
     const bucket = getStorage().bucket(FIREBASE_STORAGE_BUCKET);
 
-    const file = bucket.file(
-      `${FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY}/${quote.model.systemFileName}`,
-    );
+    const modelPath = `${FIREBASE_QUOTE_REQUEST_MODELS_DIRECTORY}/${quote.model.systemFileName}`;
+    const modelFile = bucket.file(modelPath);
 
-    const expiresAt = Date.now() + SIGNED_URL_EXPIRES_MS;
+    const expiresAt = Date.now() + 5 * ONE_MINUTE_MS;
 
-    const [signedUrl] = await file.getSignedUrl({
+    const [signedUrl] = await modelFile.getSignedUrl({
       version: 'v4',
       action: 'read',
       expires: expiresAt,

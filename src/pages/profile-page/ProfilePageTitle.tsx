@@ -46,11 +46,10 @@ export const ProfilePageTitle = () => {
         <IconButton
           disabled={signOutMutation.isPending}
           onClick={handleSignOut}
-          icon={
-            <ExitToAppIcon
-              color={signOutMutation.isPending ? 'neutral.grayMedium' : 'secondary.carbonInk'}
-            />
-          }
+          icon={<ExitToAppIcon />}
+          iconProps={{
+            color: signOutMutation.isPending ? 'neutral.grayMedium' : 'secondary.slateAlloy',
+          }}
           $marginLeft="auto"
         />
       </HoneyFlex>

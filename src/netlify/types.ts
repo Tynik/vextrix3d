@@ -65,18 +65,7 @@ export type QuoteStatus =
    * Quote has expired due to inactivity or passing its validity period.
    * The customer must submit a new quote request to proceed.
    */
-  | 'expired'
-  /**
-   * Manufacturing is currently in progress.
-   * Printing and post-processing are underway.
-   * No changes or cancellations are permitted.
-   */
-  | 'inProduction'
-  /**
-   * Quote has been fully fulfilled.
-   * The quote is permanently locked and read-only.
-   */
-  | 'completed';
+  | 'expired';
 
 export type OrderStatus =
   | 'new'
@@ -190,10 +179,8 @@ export interface Quote {
   pricing: Nullable<QuotePricing>;
   pricedAt: Nullable<number>;
   acceptedAt: Nullable<number>;
-  inProductionAt: Nullable<number>;
   rejectedAt: Nullable<number>;
   expiredAt: Nullable<number>;
-  completedAt: Nullable<number>;
   updatedAt: Nullable<number>;
   createdAt: number;
 }
