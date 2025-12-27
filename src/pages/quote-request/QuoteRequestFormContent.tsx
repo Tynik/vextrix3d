@@ -199,6 +199,11 @@ export const QuoteRequestFormContent = ({
                 onChange={formFields.isCreateAccount.setValue}
               />
 
+              <Alert severity="info">
+                An account is required to accept and pay for quotes. Creating one lets you securely
+                review, approve, and manage your orders.
+              </Alert>
+
               {formValues.isCreateAccount && (
                 <>
                   <TextInput

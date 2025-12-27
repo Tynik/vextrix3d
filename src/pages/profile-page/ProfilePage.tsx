@@ -5,6 +5,7 @@ import { sendEmailVerification } from '@firebase/auth';
 import { toast } from 'react-toastify';
 
 import { ROUTE_PATHS } from '~/configs';
+import { formatPhone } from '~/shared';
 import { useAppContext } from '~/models';
 import { auth } from '~/firebase';
 import { DescriptionIcon, OutgoingMailIcon, ReplayIcon, VerifiedIcon } from '~/icons';
@@ -137,7 +138,7 @@ export const ProfilePage = () => {
             },
             {
               label: 'Phone',
-              value: user.phone?.replace('+44', ''),
+              value: formatPhone(user.phone?.replace('+44', '')),
             },
           ]
         : [],

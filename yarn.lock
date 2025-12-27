@@ -3154,6 +3154,11 @@
     csstype "3.2.3"
     stylis "4.3.6"
 
+"@react-hive/honey-utils@3.11.0":
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/@react-hive/honey-utils/-/honey-utils-3.11.0.tgz#e285936aa29af0d12caffb4bb956fb8679ea110f"
+  integrity sha512-tJyWt3KURwxYlrFvELIG+pvyKDZz5cpj1KaYpOGZ2Z+sQOPXmoZNvk3NdIDPlRkbstaxMQ6mc8f6S0AUB5ysdw==
+
 "@react-hive/honey-utils@3.6.0":
   version "3.6.0"
   resolved "https://registry.yarnpkg.com/@react-hive/honey-utils/-/honey-utils-3.6.0.tgz#2ef6f5e9ee17f112716977e1c1640233ab6bd7a9"
@@ -8097,7 +8102,7 @@ jsonwebtoken@9.0.2:
     ms "^2.1.1"
     semver "^7.5.4"
 
-jsonwebtoken@^9.0.0:
+jsonwebtoken@^9.0.0, jsonwebtoken@^9.0.3:
   version "9.0.3"
   resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-9.0.3.tgz#6cd57ab01e9b0ac07cb847d53d3c9b6ee31f7ae2"
   integrity sha512-MT/xP0CrubFRNLNKvxJ2BYfy53Zkm++5bX9dtuPbqAeQpTVe0MQTFhao8+Cp//EmJp244xt6Drw/GVEGCUj40g==

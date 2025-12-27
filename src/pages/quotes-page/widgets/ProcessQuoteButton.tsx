@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 
 import type { Quote } from '~/netlify/types';
 import { QUOTES_QUERY_KEY } from '~/configs';
-import { handleApiError, sendQuote } from '~/api';
+import { handleApiError, priceQuote } from '~/api';
 import { CheckIcon, CloseIcon, PlayArrowIcon } from '~/icons';
 import type { ButtonProps } from '~/components';
 import { Button, CueShadows, Dialog, Form, TextInput, Checkbox } from '~/components';
@@ -19,7 +19,7 @@ import { Button, CueShadows, Dialog, Form, TextInput, Checkbox } from '~/compone
 type ProcessQuoteFormData = {
   amount: number;
   applyDiscount: boolean;
-  discount: number;
+  discount: number | undefined;
   includeVat: boolean;
   vat: number | undefined;
   note: string;
@@ -82,17 +82,17 @@ export const ProcessQuoteButton = ({ quote, ...props }: ProcessQuoteButtonProps)
 
   const processQuote: HoneyFormOnSubmit<ProcessQuoteFormData> = async data => {
     try {
-      await sendQuote({
+      await priceQuote({
         quoteId: quote.id,
         pricing: {
           amount: data.amount,
-          discountPct: data.discount,
+          discountPct: data.discount ?? null,
           vatPct: data.vat ?? null,
         },
         note: data.note,
       });
 
-      toast('Quote successfully processed.', {
+      toast('Quote successfully processed', {
         type: 'success',
       });
 

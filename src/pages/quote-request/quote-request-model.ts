@@ -2,6 +2,7 @@ import type { HoneyFormFieldsConfig } from '@react-hive/honey-form';
 
 import type { Nullable } from '~/types';
 import type { User } from '~/netlify/types';
+import { formatPhone } from '~/shared';
 
 export type QuoteRequestFormData = {
   file: File | undefined;
@@ -58,18 +59,7 @@ export const QUOTE_REQUEST_FORM_FIELDS: HoneyFormFieldsConfig<
     required: true,
     skip: ({ formContext }) => Boolean(formContext.user?.phone),
     filter: value => value?.replace(/\D/g, '').slice(0, 11),
-    formatter: value => {
-      if (!value) {
-        return value;
-      }
-
-      // Expect 11 digits starting with 07
-      if (!/^07\d{9}$/.test(value)) {
-        return value;
-      }
-
-      return `${value.slice(0, 5)} ${value.slice(5)}`;
-    },
+    formatter: formatPhone,
   },
   isCreateAccount: {
     type: 'checkbox',

@@ -3,13 +3,9 @@ import type { HoneyBoxProps } from '@react-hive/honey-layout';
 import type { HoneyFontName } from '@react-hive/honey-style';
 import { resolveFont, styled } from '@react-hive/honey-style';
 
-type AlertSeverity = 'error' | 'info' | 'success' | 'warning';
+type AlertSeverity = 'info' | 'success' | 'error' | 'warning';
 
 const SEVERITIES_CONFIG: Record<AlertSeverity, Omit<HoneyBoxProps, 'as'>> = {
-  error: {
-    $borderColor: 'error.signalCoral',
-    $backgroundColor: 'error.signalCoralSoft',
-  },
   info: {
     $borderColor: 'primary.aquaMintPulse',
     $backgroundColor: 'primary.mintGlow',
@@ -17,6 +13,10 @@ const SEVERITIES_CONFIG: Record<AlertSeverity, Omit<HoneyBoxProps, 'as'>> = {
   success: {
     $borderColor: 'success.emeraldGreen',
     $backgroundColor: 'success.mintGreen',
+  },
+  error: {
+    $borderColor: 'error.signalCoral',
+    $backgroundColor: 'error.signalCoralSoft',
   },
   warning: {
     $borderColor: 'warning.amber',

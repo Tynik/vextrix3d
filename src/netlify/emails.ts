@@ -18,7 +18,7 @@ type QuotePricedEmailParams = {
   note: string | undefined;
 };
 
-interface SendQuoteIsPricedEmailOptions {
+interface SendQuotePricedEmailOptions {
   amount: number;
   discountAmount: number;
   vatAmount: number;
@@ -28,7 +28,7 @@ interface SendQuoteIsPricedEmailOptions {
 
 export const sendQuotePricedEmail = async (
   quote: QuoteDocument,
-  { amount, discountAmount, vatAmount, total, note }: SendQuoteIsPricedEmailOptions,
+  { amount, discountAmount, vatAmount, total, note }: SendQuotePricedEmailOptions,
 ) => {
   const quoteRequester = await resolveQuoteRequesterInfo(quote);
 

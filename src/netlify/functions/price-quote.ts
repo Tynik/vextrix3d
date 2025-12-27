@@ -10,7 +10,7 @@ import { sendQuotePricedEmail } from '~/netlify/emails';
 import { buildQuotePricingValues } from '~/shared';
 import { changeQuoteStatusTx, getQuoteDocRef } from '../firestore';
 
-export interface SendQuotePayload {
+export interface PriceQuotePayload {
   quoteId: QuoteId;
   pricing: {
     amount: number;
@@ -24,7 +24,7 @@ export const handler = createHandler(
   {
     allowedMethods: ['POST'],
   },
-  withSession<SendQuotePayload>(async ({ decodedIdToken, isAdmin, payload }) => {
+  withSession<PriceQuotePayload>(async ({ decodedIdToken, isAdmin, payload }) => {
     assert(isAdmin, 'Forbidden');
 
     assert(payload?.quoteId, 'Quote ID is missing');

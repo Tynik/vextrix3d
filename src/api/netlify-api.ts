@@ -3,7 +3,7 @@ import type { Order, PaginatedResponse, Quote, User } from '~/netlify/types';
 import type { SignupPayload } from '~/netlify/functions/sign-up';
 import type { SignInPayload } from '~/netlify/functions/sign-in';
 import type { QuoteRequestPayload } from '~/netlify/functions/quote-request';
-import type { SendQuotePayload } from '~/netlify/functions/send-quote';
+import type { PriceQuotePayload } from '~/netlify/functions/price-quote';
 import type { GetQuotesPayload } from '~/netlify/functions/get-quotes';
 import type { GetQuoteOrdersPayload } from '~/netlify/functions/get-quote-orders';
 import type { AcceptQuotePayload } from '~/netlify/functions/accept-quote';
@@ -59,9 +59,9 @@ export const quoteRequest = async (payload: QuoteRequestPayload) => {
   return uploadModelUrl;
 };
 
-export const sendQuote = async (payload: SendQuotePayload) =>
+export const priceQuote = async (payload: PriceQuotePayload) =>
   (
-    await netlifyRequest('send-quote', {
+    await netlifyRequest('price-quote', {
       method: 'POST',
       payload,
     })

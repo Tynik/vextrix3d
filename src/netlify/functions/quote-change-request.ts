@@ -43,7 +43,6 @@ export const handler = createHandler(
         .limit(1);
 
       const ordersSnap = await tx.get(ordersQuery);
-
       if (!ordersSnap.empty) {
         const orderSnap = ordersSnap.docs[0];
 
